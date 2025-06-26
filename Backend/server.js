@@ -13,7 +13,7 @@ const port = 5000;
  app.use(express.json())
 // Middleware
 const corsOptions = {
-  origin: '*',  // Allow requests from any origin
+  origin: '*',
 };
 app.use(cors(corsOptions));
 
