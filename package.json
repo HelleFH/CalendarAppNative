@@ -11,7 +11,9 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "type": "module",
-    "build": "expo export"
+    "build": "expo export",
+      "build:web": "expo build:web"
+
   },
   "jest": {
     "preset": "jest-expo"
