@@ -303,19 +303,22 @@ selectedDate: reminderDate?.toISOString().split('T')[0] ?? '', // ✅ safe + typ
       )}
 
 
-      <Button
-        title="Create New Entry"
-        disabled={!selectedDate}
-        onPress={() => {
-          setParentObjectId(null);
-          setNotes('');
-          setImages([]);
-          setIsCreateModalVisible(true);
-        }}
-      />
+<View style={styles.buttonWrapper}>
+  <Button
+    title="Create New Entry"
+    disabled={!selectedDate}
+    onPress={() => {
+      setParentObjectId(null);
+      setNotes('');
+      setImages([]);
+      setIsCreateModalVisible(true);
+    }}
+  />
+</View>
 
-      <Button title="Create Update" onPress={() => setIsUpdateModalVisible(true)} />
-
+<View style={styles.buttonWrapper}>
+  <Button title="Create Update" onPress={() => setIsUpdateModalVisible(true)} />
+</View>
 
       {/* Create Entry Modal */}
       <CreateEntryModal
@@ -363,33 +366,81 @@ selectedDate: reminderDate?.toISOString().split('T')[0] ?? '', // ✅ safe + typ
         } }/>
 
 
- <Button
-  title="Create Reminder"
-  onPress={() => {
-    setNotes('');
-    setParentObjectId(null);
-    setIsReminderModalVisible(true);
-  }}
-/>
+<View style={styles.buttonWrapper}>
+  <Button
+    title="Create Reminder"
+    onPress={() => {
+      setNotes('');
+      setParentObjectId(null);
+      setIsReminderModalVisible(true);
+    }}
+  />
+</View>
       <Text>Reminders:</Text>
       {reminders.map((reminder, index) => (
         <Text key={index}>{`Reminder on ${reminder.date}: ${reminder.notes}`}</Text>
       ))}
-      {selectedOriginalEntry && (
-        <Button
-          title="View Entry"
-          onPress={() => setIsViewModalVisible(true)}
-        />
-      )}
+    {selectedOriginalEntry && (
+  <View style={styles.buttonWrapper}>
+    <Button title="View Entry" onPress={() => setIsViewModalVisible(true)} />
+  </View>
+)}
 
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
-  modalContent: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+  container: {
+    flex: 1,
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    backgroundColor: '#F0F4F8',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#2D3748',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#4A5568',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  emptyText: {
+    fontStyle: 'italic',
+    color: '#718096',
+    marginBottom: 10,
+  },
+  entryCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 4,
+    elevation: 2,
+    width: '100%',
+  },
+buttonWrapper: {
+  marginTop: 15,
+  marginBottom: 10,
+  width: '100%',
+},
+  modalContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
 });
+
 
 export default HomeScreen;
