@@ -12,7 +12,7 @@
     "lint": "expo lint",
     "type": "module",
     "build": "expo export",
-      "build:web": "expo build:web"
+      "build:web": "npx expo export:web"
 
   },
   "jest": {
