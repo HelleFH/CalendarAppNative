@@ -19,12 +19,10 @@
         "backgroundColor": "#ffffff"
       }
     },
- "web": {
-    "bundler": "webpack",
-
-  "output": "static",
-  "favicon": "./assets/images/favicon.png"
-},
+   "web": {
+      "output": "static",       
+      "bundler": "webpack"
+    },
     "plugins": [
       "expo-router",
       [
