@@ -3,7 +3,7 @@ import Entry from '../models/entryModel.js';
 import UpdateEntry from '../models/updateEntryModel.js';
 import multer from 'multer';
 import streamifier from 'streamifier';
-import Reminder from '../Models/reminderModel.js';
+import Reminder from '../models/reminderModel.js';
 
 // Cloudinary config
 cloudinary.config({

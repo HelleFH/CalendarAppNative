@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Reminder from "../Models/reminderModel.js";
+import Reminder from "../models/reminderModel.js";
 
 
 export const createReminder = async (req, res) => {

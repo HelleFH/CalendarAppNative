@@ -4,7 +4,7 @@ import { addEntry, getAllNames, deleteEntry, editEntry } from '../Controllers/en
 import Entry from '../models/entryModel.js';
 import { updateEntry, deleteUpdateEntry, editUpdateEntry } from '../Controllers/updateEntryController.js';
 import UpdateEntry from '../models/updateEntryModel.js';
-import Reminder from '../Models/reminderModel.js';
+import Reminder from '../models/reminderModel.js';
 import mongoose from 'mongoose';
 import cloudinary from 'cloudinary';
 import { createReminder, getRemindersByDate, deleteReminder } from '../Controllers/reminderController.js';
