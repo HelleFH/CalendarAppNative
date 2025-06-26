@@ -8,7 +8,7 @@ export const useNames = (currentUserId: string | null) => {
   const fetchNames = async () => {
     if (!currentUserId) return;
     try {
-      const res = await axios.get('http://localhost:5000/entries/names', {
+      const res = await axios.get('https://calendarappnative.onrender.com/entries/names', {
         params: { userId: currentUserId },
       });
       setAllNames(res.data);
