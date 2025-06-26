@@ -4,6 +4,7 @@ import { UpdateNotesAndImages } from './UpdateNotesAndImages';
 import { SelectEntryToUpdate } from './SelectEntryToUpdate';
 import { useNames } from '@/components/UseNames';
 import { useCurrentUser } from './CurrentUser';
+import { AppIconButton } from './AppIconButton';
 
 interface CreateUpdateEntryModalProps {
   visible: boolean;
@@ -65,7 +66,7 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
             setNotes={setNotes}
             setImages={setImages}
             setName={setName}
-            setIsUpdateModalVisible={() => {}}
+            setIsUpdateModalVisible={() => { }}
             onEntrySelected={handleEntrySelected}
           />
         ) : (
@@ -78,12 +79,16 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
               saveEntry={saveEntry}
             />
 
-            <Button
-              title={isEditing ? 'Save Changes' : 'Save Entry'}
+            <AppIconButton
+              icon='save'
+              label={isEditing ? 'Save Changes' : 'Save Entry'}
               onPress={isEditing ? saveEditedUpdateEntry : saveEntry}
+              variant="secondary"
+
             />
 
-            <Button title="Close" onPress={handleClose} />
+            <AppIconButton icon='close' label="Close" variant="close"
+              onPress={handleClose} />
           </>
         )}
       </View>

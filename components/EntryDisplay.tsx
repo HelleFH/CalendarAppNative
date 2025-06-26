@@ -3,6 +3,7 @@ import { View, Text, Image, ScrollView, StyleSheet, Button } from 'react-native'
 import { UpdateEntryDisplay } from './UpdateEntryDisplay';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 import axios from 'axios';
+import { AppIconButton } from './AppIconButton';
 
 
 interface EntryProps {
@@ -75,11 +76,14 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
           <Image key={idx} source={{ uri }} style={styles.image} />
         ))}
       </ScrollView>
-      <Button title="Edit" onPress={() => onEdit(entry)} />
-      <Button
-        title="Delete"
+      
+      <AppIconButton icon='pencil'
+        label="Edit" onPress={() => onEdit(entry)} />
+
+      <AppIconButton
+        icon='remove'
+        label="Delete"
         onPress={() => setShowDeleteModal(true)}
-        color="red"
       />
       {updateEntries.map((u) => (
         <UpdateEntryDisplay

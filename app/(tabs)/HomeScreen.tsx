@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { AppIconButton } from '@/components/AppIconButton';
+
+
 import { CalendarComponent } from '../../components/CalendarComponent';
 import { EntryDisplay } from '../../components/EntryDisplay';
 import { UpdateEntryDisplay } from '../../components/UpdateEntryDisplay';
@@ -9,7 +13,6 @@ import { CreateUpdateEntryModal } from '@/components/CreateUpdateEntryModal';
 import { SelectEntryToUpdate } from '@/components/SelectEntryToUpdate';
 import { useCurrentUser } from '@/components/CurrentUser';
 import { useNames } from '@/components/UseNames';
-import { SelectEntryForReminder } from '@/components/SelectEntryForReminder';
 import { CreateReminderModal } from '@/components/CreateReminderModal';
 import {
   saveEntryHandler,
@@ -35,7 +38,7 @@ interface UpdateEntry {
   date: string;
   notes: string;
   images?: string[];
-  parentObjectId?: string;  // For update entries, you might want to use this
+  parentObjectId?: string;
 }
 
 interface EntryProps {
@@ -45,23 +48,46 @@ interface EntryProps {
   notes: string;
   images?: string[];
 }
+
 interface UpdateEntryProps {
   _id: string;
   date: string;
   notes: string;
   images?: string[];
-  parentObjectId?: string;  // For update entries, you might want to use this
+  parentObjectId?: string;
 }
+
 interface ReminderProps {
   _id: string;
   date: string;
   notes: string;
-  parentObjectId?: string;  // For update entries, you might want to use this
+  parentObjectId?: string;
 }
+
+const IconButton = ({
+  title,
+  iconName,
+  onPress,
+  disabled = false,
+}: {
+  title: string;
+  iconName: string;
+  onPress: () => void;
+  disabled?: boolean;
+}) => (
+  <TouchableOpacity
+    style={[styles.appButton, disabled && styles.buttonDisabled]}
+    onPress={onPress}
+    disabled={disabled}
+    activeOpacity={0.7}
+  >
+    <Icon name={iconName} size={20} color="#fff" style={styles.icon} />
+    <Text style={styles.buttonText}>{title}</Text>
+  </TouchableOpacity>
+);
 
 const HomeScreen = () => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
-
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
   const [images, setImages] = useState<string[]>([]);
@@ -70,7 +96,6 @@ const HomeScreen = () => {
   const [entryForSelectedDate, setEntryForSelectedDate] = useState<any>(null);
   const [updateEntryForSelectedDate, setUpdateEntryForSelectedDate] = useState<any>(null);
   const [reminderForSelectedDate, setReminderForSelectedDate] = useState<any>(null);
-
   const [selectedOriginalEntry, setSelectedOriginalEntry] = useState<any>(null);
   const [creatingUpdate, setCreatingUpdate] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
@@ -83,7 +108,8 @@ const HomeScreen = () => {
   const { allNames, fetchNames } = useNames(currentUserId);
   const [isReminderModalVisible, setIsReminderModalVisible] = useState(false);
   const [creatingReminder, setCreatingReminder] = useState(false);
-const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined);
+  const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined);
+
 
   const handleDayPress = async (day: any) => {
     setSelectedDate(day.dateString);
@@ -101,15 +127,13 @@ const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined);
       setUpdateEntryForSelectedDate(updateEntries);
       setReminderForSelectedDate(reminders);
 
-
       const newMarked = await fetchMarkedDates(currentUserId);
-      setMarkedDates(newMarked); // ✅ Update calendar dots
+      setMarkedDates(newMarked);
     } catch (err) {
       console.error('Error fetching entries:', err);
       setEntryForSelectedDate([]);
       setUpdateEntryForSelectedDate([]);
       setReminderForSelectedDate([]);
-
     }
   };
 
@@ -176,21 +200,21 @@ const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined);
       handleDayPress,
     });
 
-const handleDeleteReminder = (reminderId: string) => {
-  if (!currentUserId) {
-    alert('User ID not available.');
-    return;
-  }
+  const handleDeleteReminder = (reminderId: string) => {
+    if (!currentUserId) {
+      alert('User ID not available.');
+      return;
+    }
 
-  deleteReminderHandler({
-    reminderId,
-    onSuccess: async () => {
-      const newMarked = await fetchMarkedDates(currentUserId); 
-      setMarkedDates(newMarked);
-      handleDayPress({ dateString: selectedDate });
-    },
-  });
-};
+    deleteReminderHandler({
+      reminderId,
+      onSuccess: async () => {
+        const newMarked = await fetchMarkedDates(currentUserId);
+        setMarkedDates(newMarked);
+        handleDayPress({ dateString: selectedDate });
+      },
+    });
+  };
 
   const handleUpdate = () =>
     saveUpdateEntryHandler({
@@ -205,12 +229,13 @@ const handleDeleteReminder = (reminderId: string) => {
       setParentObjectId,
       setEntryForSelectedDate,
     });
+
   const handleEdit = (entry: EntryProps) => {
     setNotes(entry.notes);
     setImages(entry.images || []);
     setName(entry.name);
     setSelectedDate(entry.date);
-    setIsCreateModalVisible(true); // Reuse the modal
+    setIsCreateModalVisible(true);
     setIsEditing(true);
     setEditingEntryId(entry._id);
   };
@@ -219,27 +244,27 @@ const handleDeleteReminder = (reminderId: string) => {
     setNotes(entry.notes);
     setImages(entry.images || []);
     setSelectedDate(entry.date);
-    setIsUpdateModalVisible(true); // Reuse the modal
+    setIsUpdateModalVisible(true);
     setIsEditing(true);
     setEditingEntryId(entry._id);
   };
-
 
   const handleEditReminder = (entry: ReminderProps) => {
     setNotes(entry.notes);
     setSelectedDate(entry.date);
-    setIsReminderModalVisible(true); // Reuse the modal
+    setIsReminderModalVisible(true);
     setIsEditing(true);
     setEditingEntryId(entry._id);
   };
- const handleSaveReminder = () => {
+ 
+ const handleSaveReminder = (reminderDate: Date) => {
   if (!reminderDate || !notes || !parentObjectId || !currentUserId) {
     alert('Please fill in all the required fields.');
     return;
   }
 
-  saveReminderHandler({
-selectedDate: reminderDate?.toISOString().split('T')[0] ?? '', // ✅ safe + typed
+  const payload = {
+    date: reminderDate.toISOString().split('T')[0],
     notes,
     currentUserId,
     parentObjectId,
@@ -248,9 +273,14 @@ selectedDate: reminderDate?.toISOString().split('T')[0] ?? '', // ✅ safe + typ
     setEntryForSelectedDate,
     setSelectedOriginalEntry,
     setParentObjectId,
-    reminderDate: reminderDate.toISOString().split('T')[0],
-  });
+    fetchNames,
+  };
+
+  console.log('Calling saveReminderHandler with:', payload);
+
+  saveReminderHandler(payload);
 };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Plant Calendar</Text>
@@ -260,6 +290,7 @@ selectedDate: reminderDate?.toISOString().split('T')[0] ?? '', // ✅ safe + typ
         markedDates={markedDates}
         onDayPress={handleDayPress}
       />
+
       {Array.isArray(entryForSelectedDate) && entryForSelectedDate.length > 0 ? (
         entryForSelectedDate.map((entry, index) => (
           <EntryDisplay
@@ -279,11 +310,10 @@ selectedDate: reminderDate?.toISOString().split('T')[0] ?? '', // ✅ safe + typ
         updateEntryForSelectedDate.map((entry: UpdateEntry) => (
           <UpdateEntryDisplay
             key={entry._id}
-            entry={{ ...entry, images: entry.images ?? [] }} // 👈 Ensures images is always string[]
+            entry={{ ...entry, images: entry.images ?? [] }}
             onEditUpdate={handleEditUpdate}
             onDeleteUpdate={handleDeleteUpdateEntry}
           />
-
         ))
       ) : (
         <Text>No update entries for selected date</Text>
@@ -302,25 +332,56 @@ selectedDate: reminderDate?.toISOString().split('T')[0] ?? '', // ✅ safe + typ
         <Text>No reminders for selected date</Text>
       )}
 
+      <View style={styles.buttonWrapper}>
 
-<View style={styles.buttonWrapper}>
-  <Button
-    title="Create New Entry"
-    disabled={!selectedDate}
-    onPress={() => {
-      setParentObjectId(null);
-      setNotes('');
-      setImages([]);
-      setIsCreateModalVisible(true);
-    }}
-  />
-</View>
+        <AppIconButton
+          icon="add"
+          label="Create New Entry"
+          onPress={() => {
+            setParentObjectId(null);
+            setNotes('');
+            setImages([]);
+            setIsCreateModalVisible(true);
+          }}
+          disabled={!selectedDate}
+          variant="primary"
+        />
 
-<View style={styles.buttonWrapper}>
-  <Button title="Create Update" onPress={() => setIsUpdateModalVisible(true)} />
-</View>
+      </View>
 
-      {/* Create Entry Modal */}
+      <View style={styles.buttonWrapper}>
+        <AppIconButton
+          label="Create Update"
+          icon="create-outline"
+          onPress={() => setIsUpdateModalVisible(true)}
+          variant="secondary"
+
+        />
+      </View>
+
+      <View style={styles.buttonWrapper}>
+        <AppIconButton
+          label="Create Reminder"
+          icon="alarm-outline"
+          onPress={() => {
+            setNotes('');
+            setParentObjectId(null);
+            setIsReminderModalVisible(true);
+          }}
+        />
+      </View>
+
+      {selectedOriginalEntry && (
+        <View style={styles.buttonWrapper}>
+          <IconButton
+            title="View Entry"
+            iconName="eye-outline"
+            onPress={() => setIsViewModalVisible(true)}
+          />
+        </View>
+      )}
+
+      {/* Modals */}
       <CreateEntryModal
         visible={isCreateModalVisible}
         onClose={() => setIsCreateModalVisible(false)}
@@ -334,6 +395,7 @@ selectedDate: reminderDate?.toISOString().split('T')[0] ?? '', // ✅ safe + typ
         name={name}
         setName={setName}
       />
+
       <CreateUpdateEntryModal
         visible={isUpdateModalVisible}
         onClose={() => setIsUpdateModalVisible(false)}
@@ -346,46 +408,26 @@ selectedDate: reminderDate?.toISOString().split('T')[0] ?? '', // ✅ safe + typ
         setImages={setImages}
         parentObjectId={parentObjectId}
         setParentObjectId={setParentObjectId}
-             allNames={allNames}
+        allNames={allNames}
       />
 
-<CreateReminderModal
+      <CreateReminderModal
         visible={isReminderModalVisible}
         onClose={() => setIsReminderModalVisible(false)}
-        saveReminder={(selectedDate) => {
-          // handle the selectedDate here
-          console.log('Reminder set for:', selectedDate);
-          setIsReminderModalVisible(false);
-        } }
+        saveReminder={handleSaveReminder}
         notes={notes}
         setNotes={setNotes}
         parentObjectId={parentObjectId}
         setParentObjectId={setParentObjectId}
-        allNames={allNames} setReminderDate={function (date: Date | undefined): void {
-          throw new Error('Function not implemented.');
-        } }/>
+        allNames={allNames}
+        setReminderDate={setReminderDate}
+        reminderDate={reminderDate}
+      />
 
-
-<View style={styles.buttonWrapper}>
-  <Button
-    title="Create Reminder"
-    onPress={() => {
-      setNotes('');
-      setParentObjectId(null);
-      setIsReminderModalVisible(true);
-    }}
-  />
-</View>
       <Text>Reminders:</Text>
       {reminders.map((reminder, index) => (
         <Text key={index}>{`Reminder on ${reminder.date}: ${reminder.notes}`}</Text>
       ))}
-    {selectedOriginalEntry && (
-  <View style={styles.buttonWrapper}>
-    <Button title="View Entry" onPress={() => setIsViewModalVisible(true)} />
-  </View>
-)}
-
     </View>
   );
 };
@@ -404,43 +446,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#4A5568',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  emptyText: {
-    fontStyle: 'italic',
-    color: '#718096',
-    marginBottom: 10,
-  },
-  entryCard: {
-    backgroundColor: '#FFFFFF',
+  appButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2F855A',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
     borderRadius: 10,
-    padding: 15,
-    marginVertical: 5,
+    marginVertical: 6,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 4,
-    elevation: 2,
-    width: '100%',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 3,
+    maxWidth: 250,
   },
-buttonWrapper: {
-  marginTop: 15,
-  marginBottom: 10,
-  width: '100%',
-},
-  modalContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 12,
+  },
+  buttonDisabled: {
+    backgroundColor: '#A0AEC0',
+  },
+  icon: {
+    marginRight: 8,
+  },
+  buttonWrapper: {
+    marginTop: 12,
   },
 });
-
 
 export default HomeScreen;

@@ -28,44 +28,52 @@ import {
 } from '@/utils/api';
 import { createFormData } from '@/utils/createFormData';
 
-export const saveReminderHandler = async ({
-  selectedDate,
-  notes,
-  currentUserId,
-  parentObjectId, // this is parentObjectId
-  setMarkedDates,
-  setIsReminderModalVisible,
-  setEntryForSelectedDate,
-  setSelectedOriginalEntry,
-  setParentObjectId,
-  fetchNames,
-  reminderDate,
-}: any) => {
-  if (!selectedDate || !notes || !reminderDate || !currentUserId || !parentObjectId) {
-    alert('Please provide all inputs (date, notes, reminder date, login, and plant).');
+
+export const saveReminderHandler = async (payload: any) => {
+  console.log('saveReminderHandler received:', payload);
+
+  const {
+    date,
+    notes,
+    currentUserId,
+    parentObjectId,
+    setMarkedDates,
+    setIsReminderModalVisible,
+    setEntryForSelectedDate,
+    setSelectedOriginalEntry,
+    setParentObjectId,
+    fetchNames,
+  } = payload;
+
+  if (!date || !notes || !currentUserId || !parentObjectId) {
+    alert('Please provide all inputs (date, notes, user, plant).');
+    console.log('Missing one of these:', { date, notes, currentUserId, parentObjectId });
     return;
   }
+  
 
   try {
     const response = await addReminder({
-      date: selectedDate,
+      date,
       notes,
       userId: currentUserId,
-      parentObjectId: parentObjectId,
+      parentObjectId,
     });
 
     alert('Reminder saved!');
-    setEntryForSelectedDate(response.data.entry);
+    setEntryForSelectedDate(response.entry); // Assuming response.entry exists
 
     setMarkedDates((prev: any) => ({
       ...prev,
-      [selectedDate]: { marked: true, dotColor: '#4CAF50' },
+      [date]: { marked: true, dotColor: '#4CAF50' },
     }));
 
     setIsReminderModalVisible(false);
     setSelectedOriginalEntry(null);
     setParentObjectId(null);
     fetchNames();
+  
+
   } catch (error: any) {
     const message = axios.isAxiosError(error)
       ? error.response?.data?.message || error.message

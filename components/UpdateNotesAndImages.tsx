@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, TextInput, Button, Image, ScrollView, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { AppIconButton } from './AppIconButton';
 
 interface UpdateNotesAndImagesProps {
   notes: string;
@@ -49,7 +50,7 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
         value={notes}
         onChangeText={setNotes}
       />
-      <Button title="Pick Images" onPress={pickImages} />
+      <AppIconButton icon='add' label="Pick Images" onPress={pickImages} />
 
       <ScrollView horizontal>
         {/* Show all images: both picked and initial (for editing) */}

@@ -10,6 +10,7 @@ export const createReminder = async (req, res) => {
   if (!userId || !parentObjectId || !date) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
+console.log('Raw req.body:', req.body);
 
   try {
     const newReminder = new Reminder({
