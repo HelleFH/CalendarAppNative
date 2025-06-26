@@ -11,8 +11,7 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "type": "module",
-  "build": "expo export:web"
-
+    "build": "expo export:web"
   },
   "jest": {
     "preset": "jest-expo"
@@ -63,7 +62,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@expo/webpack-config": "^19.0.1",
+    "@expo/webpack-config": "18.1.2",
     "@types/jest": "^29.5.12",
     "@types/multer": "^1.4.12",
     "@types/react": "~18.3.12",
