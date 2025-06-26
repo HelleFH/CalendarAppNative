@@ -1,0 +1,347 @@
+import axios from 'axios';
+
+interface SaveReminderParams {
+  selectedDate: string;
+  notes: string;
+  parentObjectId: string;
+  currentUserId: string;
+  onSuccess?: () => void;
+}
+
+interface ReminderData {
+  date: string;
+  notes: string;
+  userId: string;
+  parentObjectId: string;  // Add this line to include parentObjectId
+}
+
+import {
+  addEntry,
+  updateEntry,
+  addUpdateEntry,
+  updateUpdateEntry,
+  deleteEntry,
+  deleteUpdateEntry,
+  fetchMarkedDates,
+  deleteReminder,
+  addReminder,
+} from '@/utils/api';
+import { createFormData } from '@/utils/createFormData';
+
+export const saveReminderHandler = async ({
+  selectedDate,
+  notes,
+  currentUserId,
+  parentObjectId, // this is parentObjectId
+  setMarkedDates,
+  setIsReminderModalVisible,
+  setEntryForSelectedDate,
+  setSelectedOriginalEntry,
+  setParentObjectId,
+  fetchNames,
+  reminderDate,
+}: any) => {
+  if (!selectedDate || !notes || !reminderDate || !currentUserId || !parentObjectId) {
+    alert('Please provide all inputs (date, notes, reminder date, login, and plant).');
+    return;
+  }
+
+  try {
+    const response = await addReminder({
+      date: selectedDate,
+      notes,
+      userId: currentUserId,
+      parentObjectId: parentObjectId,
+    });
+
+    alert('Reminder saved!');
+    setEntryForSelectedDate(response.data.entry);
+
+    setMarkedDates((prev: any) => ({
+      ...prev,
+      [selectedDate]: { marked: true, dotColor: '#4CAF50' },
+    }));
+
+    setIsReminderModalVisible(false);
+    setSelectedOriginalEntry(null);
+    setParentObjectId(null);
+    fetchNames();
+  } catch (error: any) {
+    const message = axios.isAxiosError(error)
+      ? error.response?.data?.message || error.message
+      : error instanceof Error
+      ? error.message
+      : 'Unknown error';
+
+    if (message === 'Name already exists. Please choose a different one.') {
+      alert('That name is already used. Please choose a unique name.');
+    } else {
+      alert(`Error saving reminder: ${message}`);
+    }
+  }
+};
+
+export const deleteReminderHandler = async ({
+  
+  reminderId,
+  onSuccess,
+}: {
+  reminderId: string;
+  onSuccess?: () => void;
+  
+}) => {
+  if (!reminderId) {
+    alert('Missing reminder ID for deletion.');
+    return;
+  }
+
+  try {
+    console.log('entry in ReminderDisplay:', reminderId);
+
+    await deleteReminder(reminderId);
+    alert('Reminder deleted!');
+    onSuccess?.();
+  } catch (error: any) {
+    const message = axios.isAxiosError(error)
+      ? error.response?.data?.message || error.message
+      : 'Failed to delete reminder.';
+    alert(message);
+  }
+};
+
+export const saveEntryHandler = async ({
+  selectedDate,
+  notes,
+  images,
+  currentUserId,
+  name,
+  setMarkedDates,
+  setIsCreateModalVisible,
+  setEntryForSelectedDate,
+  setSelectedOriginalEntry,
+  setParentObjectId,
+  fetchNames,
+}: any) => {
+  if (!selectedDate || !notes || images.length === 0 || !currentUserId || !name) {
+    alert('Please provide all inputs (date, notes, images, name, and login).');
+    return;
+  }
+
+  const formData = await createFormData({
+    data: {
+      date: selectedDate,
+      notes,
+      userId: currentUserId,
+      name,
+      createdAt: new Date().toISOString(),
+    },
+    images,
+  });
+
+  try {
+    const response = await addEntry(formData);
+    alert('Entry saved!');
+    setEntryForSelectedDate(response.data.entry);
+    setMarkedDates((prev: any) => ({
+      ...prev,
+      [selectedDate]: { marked: true, dotColor: '#4CAF50' },
+    }));
+    setIsCreateModalVisible(false);
+    setSelectedOriginalEntry(null);
+    setParentObjectId(null);
+    fetchNames();
+  } catch (error: any) {
+    const message = axios.isAxiosError(error)
+      ? error.response?.data?.message || error.message
+      : error instanceof Error
+        ? error.message
+        : 'Unknown error';
+
+    if (message === 'Name already exists. Please choose a different one.') {
+      alert('That name is already used. Please choose a unique name.');
+    } else {
+      alert(`Error saving entry: ${message}`);
+    }
+  }
+};
+
+
+export const saveEditedEntryHandler = async ({
+  editingEntryId,
+  selectedDate,
+  notes,
+  currentUserId,
+  name,
+  images,
+  setIsCreateModalVisible,
+  setIsEditing,
+  setEditingEntryId,
+  handleDayPress,
+  fetchMarkedDates,
+  fetchNames,
+}: any) => {
+  if (!editingEntryId || !selectedDate || !notes || !currentUserId || !name) {
+    alert('Missing data for editing.');
+    return;
+  }
+
+  const formData = await createFormData({
+    data: {
+      date: selectedDate,
+      notes,
+      userId: currentUserId,
+      name,
+      createdAt: new Date().toISOString(),
+    },
+    images,
+  });
+
+  try {
+    await updateEntry({ editingEntryId, formData });
+    alert('Entry updated!');
+    setIsCreateModalVisible(false);
+    setIsEditing(false);
+    setEditingEntryId(null);
+    handleDayPress({ dateString: selectedDate });
+    fetchMarkedDates(currentUserId);
+    fetchNames();
+  } catch (error) {
+    alert('Failed to update entry.');
+  }
+};
+
+export const saveEditedUpdateEntryHandler = async ({
+  editingEntryId,
+  selectedDate,
+  notes,
+  currentUserId,
+  images,
+  setIsCreateModalVisible,
+  setIsEditing,
+  setEditingEntryId,
+  handleDayPress,
+  fetchMarkedDates,
+}: any) => {
+  if (!editingEntryId || !selectedDate || !notes || !currentUserId) {
+    alert('Missing data for editing.');
+    return;
+  }
+
+  const data = {
+    entryId: editingEntryId,
+    date: selectedDate,
+    notes,
+    userId: currentUserId,
+  };
+
+  const formData = await createFormData({ data, images });
+
+  try {
+    await updateUpdateEntry({ editingEntryId, formData });
+    alert('Update entry updated!');
+    setIsCreateModalVisible(false);
+    setIsEditing(false);
+    setEditingEntryId(null);
+    handleDayPress({ dateString: selectedDate });
+    fetchMarkedDates(currentUserId);
+  } catch (error) {
+    alert('Failed to update update entry.');
+  }
+};
+
+export const deleteEntryHandler = async ({
+  entryId,
+  selectedDate,
+  setMarkedDates,
+  setEntryForSelectedDate,
+  setUpdateEntryForSelectedDate,
+  handleDayPress,
+}: any) => {
+  try {
+    await deleteEntry(entryId);
+    alert('Deleted entry');
+
+    setMarkedDates((prev: any) => {
+      const updated = { ...prev };
+      delete updated[selectedDate];
+      return updated;
+    });
+
+    setEntryForSelectedDate(null);
+    setUpdateEntryForSelectedDate([]);
+    handleDayPress({ dateString: selectedDate });
+  } catch (err) {
+    alert('Failed to delete entry');
+  }
+};
+
+export const deleteUpdateEntryHandler = async ({
+  entryId,
+  selectedDate,
+  setMarkedDates,
+  handleDayPress,
+}: any) => {
+  try {
+    await deleteUpdateEntry(entryId);
+    alert('Deleted update entry');
+
+    setMarkedDates((prev: any) => {
+      const updated = { ...prev };
+      delete updated[selectedDate];
+      return updated;
+    });
+
+    handleDayPress({ dateString: selectedDate });
+  } catch (err) {
+    alert('Failed to delete update entry');
+  }
+};
+
+export const saveUpdateEntryHandler = async ({
+  parentObjectId,
+  selectedDate,
+  notes,
+  images,
+  currentUserId,
+  setIsUpdateModalVisible,
+  setMarkedDates,
+  setSelectedOriginalEntry,
+  setParentObjectId,
+  setEntryForSelectedDate,
+}: any) => {
+  if (!parentObjectId) {
+    alert('No entry selected for updating.');
+    return;
+  }
+
+  if (!selectedDate || !notes || images.length === 0 || !currentUserId) {
+    alert('Please provide all inputs (date, notes, images, login).');
+    return;
+  }
+
+  const formData = await createFormData({
+    data: {
+      date: selectedDate,
+      notes,
+      userId: currentUserId,
+      parentObjectId,
+      updatedAt: new Date().toISOString(),
+    },
+    images,
+  });
+
+  try {
+    const response = await addUpdateEntry(formData);
+    alert('Update Entry Saved!');
+    setEntryForSelectedDate(response.data.entry);
+    setMarkedDates((prev: any) => ({
+      ...prev,
+      [selectedDate]: { marked: true, dotColor: '#4CAF50' },
+    }));
+    setIsUpdateModalVisible(false);
+    setSelectedOriginalEntry(null);
+    setParentObjectId(null);
+  } catch (error) {
+    alert('Failed to save update entry.');
+  }
+};

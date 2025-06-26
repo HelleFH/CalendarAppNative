@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "223096754951",
+    "project_id": "plantcalendarapp",
+    "storage_bucket": "plantcalendarapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223096754951:android:d5041bacb29e8e8e17aba2",
+        "android_client_info": {
+          "package_name": "com.hellefh.plantcalendarapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOyyDridzwbw99rxHF_vot_yPtXP3jYyQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

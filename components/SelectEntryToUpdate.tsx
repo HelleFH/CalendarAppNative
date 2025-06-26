@@ -1,0 +1,67 @@
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+
+interface Entry {
+  _id: string;
+  name: string;
+  notes?: string;
+  images?: string[];
+}
+
+interface SelectEntryToUpdateProps {
+  creatingUpdate: boolean;
+  allNames: Entry[];
+  setSelectedOriginalEntry: (entry: Entry) => void;
+  setParentObjectId: (id: string) => void;
+  setNotes: (notes: string) => void;
+  setImages: (images: string[]) => void;
+  setName: (name: string) => void;
+  setIsUpdateModalVisible: (visible: boolean) => void;
+  onEntrySelected: (id: string) => void;
+}
+
+export const SelectEntryToUpdate: React.FC<SelectEntryToUpdateProps> = ({
+  creatingUpdate,
+  allNames,
+  setSelectedOriginalEntry,
+  setParentObjectId,
+  setNotes,
+  setImages,
+  setName,
+  setIsUpdateModalVisible,
+  onEntrySelected,
+}) => {
+  const [selectedValue, setSelectedValue] = useState<string>('');
+
+  if (!creatingUpdate) return null;
+
+  const handleSelect = (itemValue: string) => {
+    const selectedEntry = allNames.find(entry => entry._id === itemValue);
+    if (selectedEntry) {
+      setSelectedOriginalEntry(selectedEntry);
+      setParentObjectId(selectedEntry._id);
+      setNotes(selectedEntry.notes || '');
+      setImages(selectedEntry.images || []);
+      setName(selectedEntry.name);
+      setIsUpdateModalVisible(true);
+      onEntrySelected(selectedEntry._id); // ✅ Notify parent
+      setSelectedValue(''); // Reset selection
+    }
+  };
+
+  return (
+    <View>
+      <Text>Select an entry to update:</Text>
+      <Picker
+        selectedValue={selectedValue}
+        onValueChange={handleSelect}
+      >
+        <Picker.Item label="Select an entry..." value="" />
+        {allNames.map(entry => (
+          <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
+        ))}
+      </Picker>
+    </View>
+  );
+};
