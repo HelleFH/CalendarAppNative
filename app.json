@@ -19,9 +19,9 @@
         "backgroundColor": "#ffffff"
       }
     },
-   "web": {
-      "output": "static",       
-      "bundler": "webpack"
+    "web": {
+      "output": "static",
+      "bundler": "metro"
     },
     "plugins": [
       "expo-router",
