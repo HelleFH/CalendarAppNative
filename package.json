@@ -11,8 +11,7 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "type": "module",
-    "build": "expo export",
-      "build:web": "npx expo export:web"
+  "build": "expo export:web"
 
   },
   "jest": {
