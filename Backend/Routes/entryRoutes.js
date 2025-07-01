@@ -22,8 +22,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const router = express.Router();
 
-router.post('/reminders/create', createReminder);                // POST: Create reminder
-
+router.post('/reminders/create', createReminder); 
 
 router.get('/reminders/dates', async (req, res) => {
   const { userId } = req.query;

@@ -52,7 +52,7 @@ export const NotesAndImages: React.FC<NotesAndImagesProps> = ({
         placeholder="Enter your name"
         value={name}
         onChangeText={setName}
-        editable={true} // Makes it read-only when true
+        editable={true} 
       />
       <TextInput
         style={styles.input}

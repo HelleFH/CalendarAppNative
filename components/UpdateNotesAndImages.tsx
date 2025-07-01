@@ -9,7 +9,7 @@ interface UpdateNotesAndImagesProps {
   images: string[];
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   saveEntry: () => void;
-  initialImages?: string[]; // Initial images when editing
+  initialImages?: string[]; 
 }
 
 export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
@@ -18,7 +18,7 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
   images,
   setImages,
   saveEntry,
-  initialImages = [], // Default to an empty array if not editing
+  initialImages = [], 
 }) => {
   const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({

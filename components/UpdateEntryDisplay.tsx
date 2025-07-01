@@ -1,55 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
+import { AppIconButton } from './AppIconButton';
+import { sharedEntryStyles } from '@/SharedEntryStyles';
+import { UpdateEntryDetailModal } from './UpdateEntryDetailModal'; 
 
 interface UpdateEntryProps {
   _id: string;
   date: string;
   notes: string;
   images?: string[];
-  parentObjectId?: string;  // For update entries, you might want to use this
+  parentObjectId?: string;
 }
 
 interface UpdateEntryDisplayProps {
-  entry: {
-    _id: string;
-    date: string;
-    notes: string;
-    images: string[];
-    parentObjectId?: string;
-  };
+  entry: UpdateEntryProps;
   onEditUpdate: (entry: UpdateEntryProps) => void;
-  onDeleteUpdate: (entryId: string) => void; // or include `type: "original" | "update"` if needed
+  onDeleteUpdate: (entryId: string) => void;
 }
 
 export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
-
   entry,
   onEditUpdate,
   onDeleteUpdate,
 }) => {
-
-  const [showDeleteModal, setShowDeleteModal] = useState(false); // ✅ State
-
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
 
   return (
-    <View style={[styles.container && styles.updateContainer]}>
-      <Text style={styles.title}>{`Update for ${entry.date}`}</Text>
-      <Text style={styles.notes}>{entry.notes}</Text>
-      <ScrollView horizontal>
-        {(entry.images ?? []).map((uri, idx) => (
-          <Image key={idx} source={{ uri }} style={styles.image} />
-        ))}
-      </ScrollView>
-      <View style={{ flexDirection: 'row', marginTop: 10 }}>
-        <Button title="Edit" onPress={() => onEditUpdate(entry)} />
+    <View style={[sharedEntryStyles.container, sharedEntryStyles.updateContainer]}>
+        <Text style={sharedEntryStyles.title}>{`Update for ${entry.date}`}</Text>
+        <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
+      <TouchableOpacity onPress={() => setShowDetailModal(true)} activeOpacity={0.7}>
 
-     <Button
-         title="Delete"
-         onPress={() => setShowDeleteModal(true)}
-         color="red"
-       />
+        <ScrollView horizontal>
+          {(entry.images ?? []).map((uri, idx) => (
+            <Image key={idx} source={{ uri }} style={sharedEntryStyles.image} />
+          ))}
+        </ScrollView>
+      </TouchableOpacity>
+
+      <View style={sharedEntryStyles.buttonWrapper}>
+        <AppIconButton icon="pencil" label="Edit" onPress={() => onEditUpdate(entry)} variant="edit" />
+        <AppIconButton icon="remove" label="Delete" onPress={() => setShowDeleteModal(true)} variant="delete" />
       </View>
+
       <DeleteConfirmationModal
         visible={showDeleteModal}
         onCancel={() => setShowDeleteModal(false)}
@@ -57,38 +52,16 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
           onDeleteUpdate(entry._id);
           setShowDeleteModal(false);
         }}
-        itemType="entry"
+        itemType="update"
+      />
+
+      <UpdateEntryDetailModal
+        visible={showDetailModal}
+        entry={entry}
+        onClose={() => setShowDetailModal(false)}
+        onEdit={onEditUpdate}
+        onDelete={onDeleteUpdate}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: '#F0F8FF',
-    borderRadius: 10,
-  },
-  updateContainer: {
-    backgroundColor: '#E8F7FD', // A lighter blue for updates
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  name: {
-    fontStyle: 'italic',
-    marginBottom: 5,
-  },
-  notes: {
-    marginBottom: 10,
-  },
-  image: {
-    width: 100,
-    height: 100,
-    marginRight: 10,
-    borderRadius: 8,
-  },
-});

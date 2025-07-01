@@ -12,7 +12,7 @@ interface ReminderData {
   date: string;
   notes: string;
   userId: string;
-  parentObjectId: string;  // Add this line to include parentObjectId
+  parentObjectId: string;  
 }
 
 import {
@@ -253,7 +253,7 @@ export const saveEditedUpdateEntryHandler = async ({
     handleDayPress({ dateString: selectedDate });
     fetchMarkedDates(currentUserId);
   } catch (error) {
-    alert('Failed to update update entry.');
+    alert('Failed to save update entry.');
   }
 };
 

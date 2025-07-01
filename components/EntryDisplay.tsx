@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, Button } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { UpdateEntryDisplay } from './UpdateEntryDisplay';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 import axios from 'axios';
 import { AppIconButton } from './AppIconButton';
+import { EntryDetailModal } from './EntryDetailModal';
+import { sharedEntryStyles } from '@/SharedEntryStyles';
 
 
 interface EntryProps {
@@ -15,30 +17,41 @@ interface EntryProps {
 }
 interface EntryDisplayProps {
   entry: EntryProps;
-  onEdit: (entry: EntryProps) => void;
-  onDelete: (entryId: string) => void;
-  onEditUpdate: (entry: UpdateEntryProps) => void; // 👈 Add
-  onDeleteUpdate: (entryId: string) => void;       // 👈 Add
+  onEditEntry: (entry: EntryProps) => void;
+  onEditUpdate: (entry: UpdateEntryProps) => void;
+  onDeleteEntry: (id: string) => void;
+  onDeleteUpdate: (id: string) => void;
+  onPress?: () => void;
+  showUpdatesInline?: boolean;
 }
 interface UpdateEntryProps {
   _id: string;
   date: string;
   notes: string;
   images?: string[];
-  parentObjectId?: string;  // For update entries, you might want to use this
+  parentObjectId?: string;
 }
 
 
 export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   entry,
-  onEdit,
-  onDelete,
+  onEditEntry,
+  onDeleteEntry,
   onEditUpdate,
-  onDeleteUpdate, // ✅ include these
+  onDeleteUpdate,
+  onPress,
+
 }) => {
 
   const [updateEntries, setUpdateEntries] = useState<UpdateEntryProps[]>([]);
-  const [showDeleteModal, setShowDeleteModal] = useState(false); // ✅ State
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEntryModal, setShowEntryModal] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState<EntryProps | null>(null);
+  const [showUpdatesInline, setshowUpdatesInline] = useState(false);
+  const [showUpdateList, setShowUpdateList] = useState(false);
+
+
+
 
   useEffect(() => {
     const fetchUpdateEntries = async () => {
@@ -65,45 +78,88 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
 
 
   return (
-    <View style={[styles.container && styles.updateContainer]}>
-      <Text style={styles.title}>{`Entry for ${entry.date}`}</Text>
+    <View style={sharedEntryStyles.container}>
+      <TouchableOpacity
+        onPress={() => {
+          setSelectedEntry(entry);
+          setShowEntryModal(true);
+        }}
+        activeOpacity={0.7}
+      >
+        <Text style={sharedEntryStyles.title}>{`Entry for ${entry.date}`}</Text>
+        <Text style={sharedEntryStyles.name}>{entry.name}</Text>
+        <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
+        <ScrollView horizontal>
+          {(entry.images ?? []).map((uri, idx) => (
+            <Image key={idx} source={{ uri }} style={sharedEntryStyles.image} />
+          ))}
+        </ScrollView>
+      </TouchableOpacity>
 
-      <Text style={styles.name}>{entry.name}</Text>
-
-      <Text style={styles.notes}>{entry.notes}</Text>
-      <ScrollView horizontal>
-        {(entry.images ?? []).map((uri, idx) => (
-          <Image key={idx} source={{ uri }} style={styles.image} />
-        ))}
-      </ScrollView>
-      
-      <AppIconButton icon='pencil'
-        label="Edit" onPress={() => onEdit(entry)} />
-
-      <AppIconButton
-        icon='remove'
-        label="Delete"
-        onPress={() => setShowDeleteModal(true)}
-      />
-      {updateEntries.map((u) => (
-        <UpdateEntryDisplay
-          key={u._id}
-          entry={{ ...u, images: u.images ?? [] }} // ✅ ensure images is never undefined
-          onEditUpdate={onEditUpdate}
-          onDeleteUpdate={onDeleteUpdate}
+      <View style={sharedEntryStyles.buttonWrapper}>
+        <AppIconButton
+          icon="pencil"
+          label="Edit"
+          onPress={() => {
+            onEditEntry(entry);
+            setShowEntryModal(false);  // Close the EntryDetailModal
+          }}
+          variant="edit"
         />
-      ))}
+        <AppIconButton icon="remove" label="Delete" onPress={() => onDeleteEntry(entry._id)} variant="delete" />
+      </View>
+      {showUpdatesInline ? (
+        updateEntries.map((u) => (
+          <UpdateEntryDisplay
+            key={u._id}
+            entry={{ ...u, images: u.images ?? [] }}
+            onEditUpdate={onEditUpdate}
+            onDeleteUpdate={onDeleteUpdate}
+          />
+        ))
+      ) : (
+        <>
+          {updateEntries.length > 0 && (
+            <AppIconButton
+              icon="eye-outline"
+              label={showUpdateList ? 'Hide Updates' : 'View Updates'}
+              onPress={() => setShowUpdateList((prev) => !prev)}
+              variant="secondary"
+            />
+          )}
+          {showUpdateList &&
+            updateEntries.map((u) => (
+              <UpdateEntryDisplay
+                key={u._id}
+                entry={{ ...u, images: u.images ?? [] }}
+                onEditUpdate={onEditUpdate}
+                onDeleteUpdate={onDeleteUpdate}
+              />
+            ))}
+        </>
+      )}
+
 
       <DeleteConfirmationModal
         visible={showDeleteModal}
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={() => {
-          onDelete(entry._id);
+          onDeleteEntry(entry._id);
           setShowDeleteModal(false);
         }}
         itemType="entry"
       />
+      <EntryDetailModal
+        visible={showEntryModal}
+        entry={entry}
+        onClose={() => setShowEntryModal(false)}
+        onEditUpdate={onEditUpdate}
+        onDeleteUpdate={onDeleteUpdate}
+        onDeleteEntry={onDeleteEntry}
+        onEditEntry={onEditEntry}
+      />
     </View>
+
   );
 };
 

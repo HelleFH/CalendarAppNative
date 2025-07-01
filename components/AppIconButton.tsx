@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-type Variant = 'primary' | 'secondary' | 'close'; 
+type Variant = 'primary' | 'secondary' | 'edit' | 'delete' | 'close';
 
 interface Props {
   icon: keyof typeof Ionicons.glyphMap;
@@ -34,23 +34,32 @@ export const AppIconButton: React.FC<Props> = ({
 };
 
 const getStyles = (variant: Variant, disabled: boolean) => {
-  let backgroundColor: string, textColor: string;
+  let backgroundColor: string | undefined = undefined;
+  let textColor: string;
 
   switch (variant) {
     case 'primary':
-      backgroundColor = disabled ? '#B2F5EA' : '#319795'; // teal
+      backgroundColor = disabled ? '#0E4732' : '#4CAF50'; // leafy
       textColor = '#FFFFFF';
       break;
     case 'secondary':
-      backgroundColor = disabled ? '#CBD5E0' : '#E2E8F0'; // light gray
-      textColor = '#2D3748';
-      break;
-    case 'close':
-      backgroundColor = disabled ? '#FED7D7' : '#E53E3E'; // red for close
+      backgroundColor = disabled ? '#2E7D32' : '#81C784'; // mint
       textColor = '#FFFFFF';
       break;
+    case 'edit':
+      backgroundColor = disabled ? '#90CAF9' : '#1976D2'; // blue
+      textColor = '#FFFFFF';
+      break;
+    case 'delete':
+      backgroundColor = disabled ? '#FFCDD2' : '#D32F2F'; // red
+      textColor = '#FFFFFF';
+      break;
+    case 'close':
+      backgroundColor = 'transparent';
+      textColor = disabled ? '#FFBABA' : '#E53E3E'; // link red
+      break;
     default:
-      backgroundColor = '#319795';
+      backgroundColor = '#4CAF50';
       textColor = '#FFFFFF';
   }
 
@@ -61,13 +70,15 @@ const getStyles = (variant: Variant, disabled: boolean) => {
       backgroundColor,
       paddingVertical: 12,
       paddingHorizontal: 18,
-      borderRadius: 12,
+      borderRadius: variant === 'close' ? 0 : 12,
       marginVertical: 6,
-      shadowColor: '#000',
-      shadowOpacity: 0.1,
-      shadowOffset: { width: 0, height: 2 },
-      shadowRadius: 5,
-      elevation: 3,
+      ...(variant !== 'close' && {
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 5,
+        elevation: 3,
+      }),
     } as ViewStyle,
     icon: {
       color: textColor,
@@ -77,6 +88,7 @@ const getStyles = (variant: Variant, disabled: boolean) => {
       color: textColor,
       fontSize: 16,
       fontWeight: '600',
+      textDecorationLine: variant === 'close' ? 'underline' : 'none',
     } as TextStyle,
     disabledButton: {
       opacity: 0.6,

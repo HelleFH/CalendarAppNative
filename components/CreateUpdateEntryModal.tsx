@@ -1,30 +1,42 @@
-import React, { useState } from 'react';
-import { Modal, View, Button, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Modal, View, StyleSheet } from 'react-native';
 import { UpdateNotesAndImages } from './UpdateNotesAndImages';
 import { SelectEntryToUpdate } from './SelectEntryToUpdate';
 import { useNames } from '@/components/UseNames';
 import { useCurrentUser } from './CurrentUser';
 import { AppIconButton } from './AppIconButton';
 
+interface UpdateEntryProps {
+  _id: string;
+  date: string;
+  notes: string;
+  images?: string[];
+  parentObjectId?: string;
+}
+
 interface CreateUpdateEntryModalProps {
   visible: boolean;
   onClose: () => void;
   isEditing: boolean;
+  editingEntry: UpdateEntryProps | null;
   saveEntry: () => void;
   saveEditedUpdateEntry: () => void;
   notes: string;
-  setNotes: (notes: string) => void;
+  setNotes: (n: string) => void;
   images: string[];
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   parentObjectId: string | null;
   setParentObjectId: (id: string | null) => void;
   allNames: any[];
+  name: string;
+  setName: (n: string) => void;
 }
 
 export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   visible,
   onClose,
   isEditing,
+  editingEntry,
   saveEntry,
   saveEditedUpdateEntry,
   notes,
@@ -34,12 +46,34 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   parentObjectId,
   setParentObjectId,
   allNames,
+  name,
+  setName,
 }) => {
-  const [selectingEntry, setSelectingEntry] = useState(true);
-  const [selectedOriginalEntry, setSelectedOriginalEntry] = useState<any>(null);
-  const [name, setName] = useState<string>('');
   const { currentUserId } = useCurrentUser();
   const { fetchNames } = useNames(currentUserId);
+
+  // When editing, skip select; when creating, start with select
+  const [selectingEntry, setSelectingEntry] = useState(!isEditing);
+
+  useEffect(() => {
+    if (visible) {
+      if (isEditing && editingEntry) {
+        // Preload form fields for editing
+        setParentObjectId(editingEntry.parentObjectId ?? null);
+        setNotes(editingEntry.notes);
+        setImages(editingEntry.images ?? []);
+        setName(''); // or editingEntry.name if you track name
+        setSelectingEntry(false);
+      } else {
+        // Creating new update
+        setParentObjectId(null);
+        setNotes('');
+        setImages([]);
+        setName('');
+        setSelectingEntry(true);
+      }
+    }
+  }, [visible, isEditing, editingEntry, setParentObjectId, setNotes, setImages, setName]);
 
   const handleEntrySelected = (id: string) => {
     setParentObjectId(id);
@@ -47,11 +81,9 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   };
 
   const handleClose = () => {
-    setSelectingEntry(true);
-    setParentObjectId(null);
-    setNotes('');
-    setImages([]);
     onClose();
+    // Reset for next time
+    setSelectingEntry(!isEditing);
   };
 
   return (
@@ -59,14 +91,11 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
       <View style={styles.modalContent}>
         {selectingEntry ? (
           <SelectEntryToUpdate
-            creatingUpdate={true}
             allNames={allNames}
-            setSelectedOriginalEntry={setSelectedOriginalEntry}
             setParentObjectId={setParentObjectId}
             setNotes={setNotes}
             setImages={setImages}
             setName={setName}
-            setIsUpdateModalVisible={() => { }}
             onEntrySelected={handleEntrySelected}
           />
         ) : (
@@ -76,19 +105,23 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
               setNotes={setNotes}
               images={images}
               setImages={setImages}
-              saveEntry={saveEntry}
+              saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
+              initialImages={editingEntry?.images}
             />
 
             <AppIconButton
-              icon='save'
+              icon="save"
               label={isEditing ? 'Save Changes' : 'Save Entry'}
               onPress={isEditing ? saveEditedUpdateEntry : saveEntry}
               variant="secondary"
-
             />
 
-            <AppIconButton icon='close' label="Close" variant="close"
-              onPress={handleClose} />
+            <AppIconButton
+              icon="close"
+              label="Close"
+              variant="close"
+              onPress={handleClose}
+            />
           </>
         )}
       </View>

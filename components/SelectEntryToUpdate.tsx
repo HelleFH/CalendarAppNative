@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 interface Entry {
@@ -10,45 +10,33 @@ interface Entry {
 }
 
 interface SelectEntryToUpdateProps {
-  creatingUpdate: boolean;
   allNames: Entry[];
-  setSelectedOriginalEntry: (entry: Entry) => void;
   setParentObjectId: (id: string) => void;
   setNotes: (notes: string) => void;
   setImages: (images: string[]) => void;
   setName: (name: string) => void;
-  setIsUpdateModalVisible: (visible: boolean) => void;
   onEntrySelected: (id: string) => void;
 }
 
 export const SelectEntryToUpdate: React.FC<SelectEntryToUpdateProps> = ({
-  creatingUpdate,
   allNames,
-  setSelectedOriginalEntry,
   setParentObjectId,
   setNotes,
   setImages,
   setName,
-  setIsUpdateModalVisible,
   onEntrySelected,
 }) => {
   const [selectedValue, setSelectedValue] = useState<string>('');
 
-  if (!creatingUpdate) return null;
-
   const handleSelect = (itemValue: string) => {
     setSelectedValue(itemValue);
-    const selectedEntry = allNames.find(entry => entry._id === itemValue);
+    const selectedEntry = allNames.find((e) => e._id === itemValue);
     if (selectedEntry) {
-      setSelectedOriginalEntry(selectedEntry);
       setParentObjectId(selectedEntry._id);
       setNotes(selectedEntry.notes || '');
       setImages(selectedEntry.images || []);
       setName(selectedEntry.name);
-      setIsUpdateModalVisible(true);
-      onEntrySelected(selectedEntry._id); // Notify parent
-      // Reset selection if you want, or comment this out
-      // setSelectedValue('');
+      onEntrySelected(selectedEntry._id);
     }
   };
 
@@ -64,7 +52,7 @@ export const SelectEntryToUpdate: React.FC<SelectEntryToUpdateProps> = ({
           mode="dropdown"
         >
           <Picker.Item label="Select an entry..." value="" />
-          {allNames.map(entry => (
+          {allNames.map((entry) => (
             <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
           ))}
         </Picker>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, Button } from 'react-native';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
+import { AppIconButton } from './AppIconButton';
 
 interface ReminderProps {
   _id: string;
@@ -38,11 +39,14 @@ export const ReminderDisplay: React.FC<ReminderDisplayProps> = ({
       <View style={{ flexDirection: 'row', marginTop: 10 }}>
         <Button title="Edit" onPress={() => onEditReminder(entry)} />
 
-     <Button
-         title="Delete"
-         onPress={() => setShowDeleteModal(true)}
-         color="red"
-       />
+       <AppIconButton
+            icon="remove"
+            label="Delete"
+            onPress={() => setShowDeleteModal(true)}
+            variant="close"
+          />
+
+     
       </View>
       <DeleteConfirmationModal
         visible={showDeleteModal}

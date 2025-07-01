@@ -102,8 +102,8 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           )}
         </View>
 
-        <AppIconButton icon='save' label="Save Reminder" onPress={handleSaveReminder} />
-        <AppIconButton icon='close' label="Close" onPress={onClose} />
+        <AppIconButton icon='save' label="Save Reminder" onPress={handleSaveReminder} variant="edit"/>
+        <AppIconButton icon='close' label="Close" onPress={onClose} variant="close" />
       </View>
     </Modal>
   );
