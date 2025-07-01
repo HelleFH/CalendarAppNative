@@ -44,15 +44,15 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
         />
 
         <AppIconButton
-          icon='save'
+        icon='save'
           label={isEditing ? 'Save Changes' : 'Save Entry'}
           onPress={isEditing ? saveEditedEntry : saveEntry}
-          variant='edit'
+                    variant='secondary'
 
         />
 
         <AppIconButton
-          icon='close'
+        icon='close'
           label="Close"
           variant='close'
           onPress={() => {

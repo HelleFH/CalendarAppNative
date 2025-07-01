@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet} from 'react-native';
 import { AppIconButton } from '@/components/AppIconButton';
 import { CalendarComponent } from '../../components/CalendarComponent';
@@ -64,8 +64,10 @@ interface ReminderProps {
 
 const HomeScreen = () => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [notes, setNotes] = useState<string>('');
+  const today = new Date().toISOString().split('T')[0];
+
+const [selectedDate, setSelectedDate] = useState<string>(today);  
+const [notes, setNotes] = useState<string>('');
   const [images, setImages] = useState<string[]>([]);
   const [name, setName] = useState<string>('');
   const [markedDates, setMarkedDates] = useState<{ [date: string]: any }>({});
@@ -177,21 +179,23 @@ const HomeScreen = () => {
     });
 
 
-  const handleDeleteReminder = (reminderId: string) => {
-    if (!currentUserId) {
-      alert('User ID not available.');
-      return;
-    }
+const handleDeleteReminder = (reminderId: string) => {
+  console.log('Deleting reminder with id:', reminderId);
 
-    deleteReminderHandler({
-      reminderId,
-      onSuccess: async () => {
-        const newMarked = await fetchMarkedDates(currentUserId);
-        setMarkedDates(newMarked);
-        handleDayPress({ dateString: selectedDate });
-      },
-    });
-  };
+  if (!currentUserId) {
+    alert('User ID not available.');
+    return;
+  }
+
+  deleteReminderHandler({
+    reminderId,
+    onSuccess: async () => {
+      const newMarked = await fetchMarkedDates(currentUserId);
+      setMarkedDates(newMarked);
+      handleDayPress({ dateString: selectedDate });
+    },
+  });
+};
 
   const handleUpdate = () =>
     saveUpdateEntryHandler({
@@ -257,7 +261,9 @@ const handleEditUpdate = (entry: UpdateEntryProps) => {
     saveReminderHandler(payload);
   };
 
-
+useEffect(() => {
+  handleDayPress({ dateString: today });
+}, [currentUserId]);
    return (
   <View style={styles.container}>
     <Text style={commonStyles.title}>Plant Calendar</Text>

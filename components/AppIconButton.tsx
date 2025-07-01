@@ -69,6 +69,8 @@ const getStyles = (variant: Variant, disabled: boolean) => {
       alignItems: 'center',
       backgroundColor,
       paddingVertical: 12,
+      maxWidth:200,
+      width:'100%',
       paddingHorizontal: 18,
       borderRadius: variant === 'close' ? 0 : 12,
       marginVertical: 6,

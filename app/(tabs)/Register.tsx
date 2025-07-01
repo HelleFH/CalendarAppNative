@@ -14,7 +14,6 @@ const SignUpScreen = () => {
       setMessage("✅ Registered successfully!");
       console.log("User:", userCredential.user);
     } catch (error: unknown) {
-      // Type guard: Ensure error is an instance of Error before accessing message
       if (error instanceof Error) {
         setMessage(`❌ ${error.message}`);
         console.error("Registration Error:", error);

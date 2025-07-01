@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, ScrollView, Text, Image, View } from 'react-native';
 import { AppIconButton } from './AppIconButton';
 import { sharedEntryStyles } from '@/SharedEntryStyles';
-import { commonStyles } from '@/SharedStyles'; // Import commonStyles here
+import { commonStyles } from '@/SharedStyles'; 
 
 interface UpdateEntryProps {
   _id: string;
@@ -30,6 +30,8 @@ export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={commonStyles.modalOverlay}>
+                <View style={commonStyles.modalContainer}>
+        
         <ScrollView contentContainerStyle={commonStyles.modalContent}>
           <Text style={sharedEntryStyles.title}>{`Update Entry for ${entry.date}`}</Text>
           <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
@@ -47,6 +49,8 @@ export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
           </View>
         </ScrollView>
       </View>
+            </View>
+      
     </Modal>
   );
 };

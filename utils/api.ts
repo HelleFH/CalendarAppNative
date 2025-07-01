@@ -21,21 +21,30 @@ export const fetchMarkedDates = async (userId: string) => {
 
   ]);
 
-  const markedEntries: { [date: string]: any } = {};
-  entries.data.forEach((date: string) => {
-    markedEntries[date] = { marked: true, dotColor: '#4CAF50' };
-  });
+const markedEntries: { [date: string]: { icons: string[] } } = {};
 
-      reminders.data.forEach((date: string) => {
-    markedEntries[date] = { marked: true, dotColor: 'red' };
-  });
+entries.data.forEach((date: string) => {
+  if (!markedEntries[date]) markedEntries[date] = { icons: [] };
+  if (!markedEntries[date].icons.includes('entry')) {
+    markedEntries[date].icons.push('entry');
+  }
+});
 
-  updates.data.forEach((date: string) => {
-    markedEntries[date] = { marked: true, dotColor: 'blue' };
-  });
-  
+updates.data.forEach((date: string) => {
+  if (!markedEntries[date]) markedEntries[date] = { icons: [] };
+  if (!markedEntries[date].icons.includes('update')) {
+    markedEntries[date].icons.push('update');
+  }
+});
 
-  return markedEntries;
+reminders.data.forEach((date: string) => {
+  if (!markedEntries[date]) markedEntries[date] = { icons: [] };
+  if (!markedEntries[date].icons.includes('reminder')) {
+    markedEntries[date].icons.push('reminder');
+  }
+});
+
+return markedEntries;
 };
 
 

@@ -3,33 +3,37 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { onAuthStateChanged, User } from 'firebase/auth';  
 import { auth } from './firebase';
-
+import { View } from 'react-native';
 import LoginScreen from './app/(tabs)/LoginScreen';
 import HomeScreen from './app/(tabs)/HomeScreen';
 import IndexScreen from './app/(tabs)';
 import SignUpScreen from './app/(tabs)/Register'; 
 import AllEntriesScreen from './app/(tabs)/AllEntriesScreen';
 
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // Type the user state to accept User or null
   const [user, setUser] = useState<User | null>(null); 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);  // user can be either a User or null here
+      setUser(user);
       setLoading(false);
     });
 
-    return unsubscribe; // cleanup listener
+    // Remove any existing beforeunload handlers to prevent confirmation dialog
+    window.onbeforeunload = null;
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
-  if (loading) return null; // Optionally, show a splash screen here
+  if (loading) return null;
 
   return (
+  <View style={{ flex: 1 }}>
     <NavigationContainer>
       <Stack.Navigator>
         {!user ? (
@@ -42,10 +46,12 @@ export default function App() {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Index" component={IndexScreen} />
             <Stack.Screen name="AllEntries" component={AllEntriesScreen} />
-
           </>
         )}
       </Stack.Navigator>
+
     </NavigationContainer>
+
+  </View>
   );
 }

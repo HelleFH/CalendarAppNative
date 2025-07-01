@@ -1,19 +1,6 @@
 import axios from 'axios';
 
-interface SaveReminderParams {
-  selectedDate: string;
-  notes: string;
-  parentObjectId: string;
-  currentUserId: string;
-  onSuccess?: () => void;
-}
 
-interface ReminderData {
-  date: string;
-  notes: string;
-  userId: string;
-  parentObjectId: string;  
-}
 
 import {
   addEntry,
@@ -27,7 +14,6 @@ import {
   addReminder,
 } from '@/utils/api';
 import { createFormData } from '@/utils/createFormData';
-
 
 export const saveReminderHandler = async (payload: any) => {
   console.log('saveReminderHandler received:', payload);
@@ -50,7 +36,6 @@ export const saveReminderHandler = async (payload: any) => {
     console.log('Missing one of these:', { date, notes, currentUserId, parentObjectId });
     return;
   }
-  
 
   try {
     const response = await addReminder({
@@ -61,7 +46,7 @@ export const saveReminderHandler = async (payload: any) => {
     });
 
     alert('Reminder saved!');
-    setEntryForSelectedDate(response.entry); // Assuming response.entry exists
+    setEntryForSelectedDate(response.entry); 
 
     setMarkedDates((prev: any) => ({
       ...prev,
@@ -72,14 +57,12 @@ export const saveReminderHandler = async (payload: any) => {
     setSelectedOriginalEntry(null);
     setParentObjectId(null);
     fetchNames();
-  
-
   } catch (error: any) {
     const message = axios.isAxiosError(error)
       ? error.response?.data?.message || error.message
       : error instanceof Error
-      ? error.message
-      : 'Unknown error';
+        ? error.message
+        : 'Unknown error';
 
     if (message === 'Name already exists. Please choose a different one.') {
       alert('That name is already used. Please choose a unique name.');
@@ -90,13 +73,11 @@ export const saveReminderHandler = async (payload: any) => {
 };
 
 export const deleteReminderHandler = async ({
-  
   reminderId,
   onSuccess,
 }: {
   reminderId: string;
   onSuccess?: () => void;
-  
 }) => {
   if (!reminderId) {
     alert('Missing reminder ID for deletion.');
@@ -105,7 +86,6 @@ export const deleteReminderHandler = async ({
 
   try {
     console.log('entry in ReminderDisplay:', reminderId);
-
     await deleteReminder(reminderId);
     alert('Reminder deleted!');
     onSuccess?.();
@@ -172,7 +152,6 @@ export const saveEntryHandler = async ({
     }
   }
 };
-
 
 export const saveEditedEntryHandler = async ({
   editingEntryId,
@@ -253,7 +232,7 @@ export const saveEditedUpdateEntryHandler = async ({
     handleDayPress({ dateString: selectedDate });
     fetchMarkedDates(currentUserId);
   } catch (error) {
-    alert('Failed to save update entry.');
+    alert('Failed to  update entry.');
   }
 };
 

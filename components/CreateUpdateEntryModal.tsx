@@ -75,16 +75,29 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
     }
   }, [visible, isEditing, editingEntry, setParentObjectId, setNotes, setImages, setName]);
 
+const handleSave = () => {
+  if (isEditing) {
+    saveEditedUpdateEntry();
+  } else {
+    saveEntry();
+  }
+  onClose();
+  setSelectingEntry(!isEditing);
+  setParentObjectId(null);
+  setNotes('');
+  setImages([]);
+  setName('');
+};
+
+
   const handleEntrySelected = (id: string) => {
     setParentObjectId(id);
     setSelectingEntry(false);
   };
-
-  const handleClose = () => {
-    onClose();
-    // Reset for next time
-    setSelectingEntry(!isEditing);
-  };
+const handleClose = () => {
+  onClose();
+  setSelectingEntry(false);
+};
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
@@ -109,12 +122,12 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
               initialImages={editingEntry?.images}
             />
 
-            <AppIconButton
-              icon="save"
-              label={isEditing ? 'Save Changes' : 'Save Entry'}
-              onPress={isEditing ? saveEditedUpdateEntry : saveEntry}
-              variant="secondary"
-            />
+        <AppIconButton
+  icon="save"
+  label={isEditing ? 'Save Changes' : 'Save Entry'}
+  onPress={handleSave}
+  variant="secondary"
+/>
 
             <AppIconButton
               icon="close"

@@ -37,8 +37,12 @@ export const ReminderDisplay: React.FC<ReminderDisplayProps> = ({
       <Text style={styles.notes}>{entry.notes}</Text>
      
       <View style={{ flexDirection: 'row', marginTop: 10 }}>
-        <Button title="Edit" onPress={() => onEditReminder(entry)} />
-
+     <AppIconButton
+          icon="pencil"
+          label="Edit"
+        onPress={() => onEditReminder(entry)} 
+          variant="edit"
+        />
        <AppIconButton
             icon="remove"
             label="Delete"
@@ -71,7 +75,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   updateContainer: {
-    backgroundColor: '#E8F7FD', // A lighter blue for updates
+    backgroundColor: '#E8F7FD', 
   },
   title: {
     fontWeight: 'bold',
