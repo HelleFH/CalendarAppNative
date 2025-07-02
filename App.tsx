@@ -7,7 +7,6 @@ import { View } from 'react-native';
 import LoginScreen from './app/(tabs)/LoginScreen';
 import HomeScreen from './app/(tabs)/HomeScreen';
 import IndexScreen from './app/(tabs)';
-import SignUpScreen from './app/(tabs)/Register'; 
 import AllEntriesScreen from './app/(tabs)/AllEntriesScreen';
 
 const Stack = createNativeStackNavigator();
@@ -22,7 +21,6 @@ export default function App() {
       setLoading(false);
     });
 
-    // Remove any existing beforeunload handlers to prevent confirmation dialog
     window.onbeforeunload = null;
 
     return () => {
@@ -39,7 +37,6 @@ export default function App() {
         {!user ? (
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
           </>
         ) : (
           <>

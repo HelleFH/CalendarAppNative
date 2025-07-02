@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, TextInput, Button, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, TextInput, Image, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AppIconButton } from './AppIconButton';
+import { formStyles } from '@/FormStyles';
 
 interface UpdateNotesAndImagesProps {
   notes: string;
@@ -9,7 +10,7 @@ interface UpdateNotesAndImagesProps {
   images: string[];
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   saveEntry: () => void;
-  initialImages?: string[]; 
+  initialImages?: string[];
 }
 
 export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
@@ -18,7 +19,7 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
   images,
   setImages,
   saveEntry,
-  initialImages = [], 
+  initialImages = [],
 }) => {
   const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -35,35 +36,27 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
     }
   };
 
-  // If editing, initialize images with the images that are part of the entry.
   useEffect(() => {
-    if (initialImages && initialImages.length > 0) {
+    if (initialImages.length > 0) {
       setImages(initialImages);
     }
-  }, [initialImages, setImages]);
+  }, [initialImages]);
 
   return (
-    <View style={styles.entryContainer}>
+    <View >
       <TextInput
-        style={styles.input}
+        style={formStyles.input}
         placeholder="Add notes"
         value={notes}
         onChangeText={setNotes}
       />
-      <AppIconButton icon='add' label="Pick Images" onPress={pickImages} />
+      <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
 
-      <ScrollView horizontal>
-        {/* Show all images: both picked and initial (for editing) */}
-        {(images ?? []).map((imageUri, index) => (
-          <Image key={index} source={{ uri: imageUri }} style={styles.image} />
+      <ScrollView horizontal style={formStyles.scrollContainer}>
+        {images.map((uri, index) => (
+          <Image key={index} source={{ uri }} style={formStyles.image} />
         ))}
       </ScrollView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  entryContainer: { marginTop: 20, width: '80%' },
-  input: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, paddingLeft: 10 },
-  image: { width: 100, height: 100, marginRight: 10 },
-});

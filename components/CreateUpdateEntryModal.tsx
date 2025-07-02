@@ -5,6 +5,7 @@ import { SelectEntryToUpdate } from './SelectEntryToUpdate';
 import { useNames } from '@/components/UseNames';
 import { useCurrentUser } from './CurrentUser';
 import { AppIconButton } from './AppIconButton';
+import { sharedEntryStyles } from '@/SharedEntryStyles';
 
 interface UpdateEntryProps {
   _id: string;
@@ -52,7 +53,6 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   const { currentUserId } = useCurrentUser();
   const { fetchNames } = useNames(currentUserId);
 
-  // When editing, skip select; when creating, start with select
   const [selectingEntry, setSelectingEntry] = useState(!isEditing);
 
   useEffect(() => {
@@ -101,51 +101,42 @@ const handleClose = () => {
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
-      <View style={styles.modalContent}>
-        {selectingEntry ? (
-          <SelectEntryToUpdate
-            allNames={allNames}
-            setParentObjectId={setParentObjectId}
-            setNotes={setNotes}
-            setImages={setImages}
-            setName={setName}
-            onEntrySelected={handleEntrySelected}
-          />
-        ) : (
-          <>
+     <View style={sharedEntryStyles.entryContainer}>
+    <SelectEntryToUpdate
+      allNames={allNames}
+      setParentObjectId={setParentObjectId}
+      setNotes={setNotes}
+      setImages={setImages}
+      setName={setName}
+      onEntrySelected={(id: string) => {
+        setParentObjectId(id);
+      }}
+    />
             <UpdateNotesAndImages
-              notes={notes}
-              setNotes={setNotes}
-              images={images}
-              setImages={setImages}
-              saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
-              initialImages={editingEntry?.images}
-            />
+      notes={notes}
+      setNotes={setNotes}
+      images={images}
+      setImages={setImages}
+      saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
+      initialImages={editingEntry?.images}
+    />
 
-        <AppIconButton
-  icon="save"
-  label={isEditing ? 'Save Changes' : 'Save Entry'}
-  onPress={handleSave}
-  variant="secondary"
-/>
+    <AppIconButton
+      icon="save"
+      label={isEditing ? 'Save Changes' : 'Save Entry'}
+      onPress={handleSave}
+      variant="secondary"
+    />
 
-            <AppIconButton
-              icon="close"
-              label="Close"
-              variant="close"
-              onPress={handleClose}
-            />
-          </>
-        )}
+    <AppIconButton
+      icon="close"
+      label="Close"
+      variant="close"
+      onPress={handleClose}
+    />
       </View>
     </Modal>
   );
 };
 
-const styles = StyleSheet.create({
-  modalContent: {
-    padding: 20,
-    flex: 1,
-    justifyContent: 'center',
-  },
-});
+

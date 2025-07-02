@@ -2,11 +2,20 @@
 import { StyleSheet } from 'react-native';
 
 export const commonStyles = StyleSheet.create({
+
+  appContainer: {
+    
+    width:'100%',
+    maxWidth:700,
+    alignSelf:'center',
+    top:75,
+
+  },
+  
   container: {
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 20,
-    backgroundColor: '#F0F4F8',
   },
   title: {
     fontSize: 28,
@@ -22,7 +31,6 @@ export const commonStyles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
-    width: '80%',
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
@@ -43,7 +51,7 @@ export const commonStyles = StyleSheet.create({
   backgroundColor: '#fff',
   borderRadius: 12,
   minHeight: 200,
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   alignItems: 'center',
 },
   cancelText: {
@@ -97,9 +105,10 @@ export const commonStyles = StyleSheet.create({
     color: '#4A5568',
   },
   image: {
-    width: 150,
-    height: 150,
+    width: '100%',
+    height:'100%',
     marginRight: 10,
     borderRadius: 8,
   },
+ 
 });

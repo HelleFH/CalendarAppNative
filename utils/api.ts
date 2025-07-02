@@ -8,7 +8,7 @@ interface ReminderData {
   parentObjectId:string;
 }
 
-const API_URL = 'https://calendarappnative.onrender.com';
+const API_URL = 'http://localhost:5000';
 
 export const fetchNames = (userId: string) =>
   axios.get(`${API_URL}/entries/names`, { params: { userId } });
@@ -20,6 +20,8 @@ export const fetchMarkedDates = async (userId: string) => {
         axios.get(`${API_URL}/entries/reminders/dates`, { params: { userId } }),
 
   ]);
+
+  
 
 const markedEntries: { [date: string]: { icons: string[] } } = {};
 
@@ -46,7 +48,6 @@ reminders.data.forEach((date: string) => {
 
 return markedEntries;
 };
-
 
 export const addReminder = async ({
   date,
@@ -171,4 +172,13 @@ export const addUpdateEntry = async (formData: FormData) => {
       'Content-Type': 'multipart/form-data',
     },
   });
+};
+export const fetchEntryById = async (id: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/entries/by-parent/${id}`);
+    return response.data.entry ?? null;  // return single entry or null if none
+  } catch (error) {
+    console.error('Failed to fetch entry by parentObjectId:', id, error);
+    return null;
+  }
 };

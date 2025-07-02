@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 import { AppIconButton } from './AppIconButton';
 import { sharedEntryStyles } from '@/SharedEntryStyles';
-import { UpdateEntryDetailModal } from './UpdateEntryDetailModal'; 
+import { UpdateEntryDetailModal } from './UpdateEntryDetailModal';
+import { Ionicons } from '@expo/vector-icons';
+import { fetchEntryById } from '@/utils/api';
+import { fetchAndSetParentEntry } from '@/utils/entryHandler';
 
 interface UpdateEntryProps {
   _id: string;
@@ -26,18 +29,44 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [parentEntry, setParentEntry] = useState<{ name?: string } | null>(null);
+
+  const images = entry.images ?? [];
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+useEffect(() => {
+  fetchAndSetParentEntry(entry, setParentEntry);
+}, [entry.parentObjectId]);
 
   return (
-    <View style={[sharedEntryStyles.container, sharedEntryStyles.updateContainer]}>
-        <Text style={sharedEntryStyles.title}>{`Update for ${entry.date}`}</Text>
-        <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
+    <View>
+      <Text style={sharedEntryStyles.title}>  {parentEntry?.name ? `Update for ${parentEntry.name}` : 'Loading...'}
+</Text>
+      <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
       <TouchableOpacity onPress={() => setShowDetailModal(true)} activeOpacity={0.7}>
 
-        <ScrollView horizontal>
-          {(entry.images ?? []).map((uri, idx) => (
-            <Image key={idx} source={{ uri }} style={sharedEntryStyles.image} />
-          ))}
-        </ScrollView>
+        {images.length > 0 && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+            {images.length > 1 && (
+              <TouchableOpacity onPress={handlePrevImage}>
+                <Ionicons name="chevron-back" size={24} color="black" />
+              </TouchableOpacity>
+            )}
+            <Image source={{ uri: images[currentImageIndex] }} style={sharedEntryStyles.image} />
+            {images.length > 1 && (
+              <TouchableOpacity onPress={handleNextImage}>
+                <Ionicons name="chevron-forward" size={24} color="black" />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </TouchableOpacity>
 
       <View style={sharedEntryStyles.buttonWrapper}>

@@ -16,18 +16,37 @@ cloudinary.config({
   api_secret: 'ppzQEDXFiCcFdicfNYCupeZaRu0',
 });
 
-
-
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const router = express.Router();
 
-router.post('/reminders/create', createReminder); 
+import mongoose from 'mongoose';
+
+router.get('/by-parent/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid ID' });
+  }
+
+  try {
+const entry = await Entry.findOne({ _id: mongoose.Types.ObjectId(id) });
+    if (!entry) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+    res.json({ entry });
+  } catch (err) {
+    console.error('Error fetching entry:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+router.post('/reminders/create', createReminder);
 
 router.get('/reminders/dates', async (req, res) => {
   const { userId } = req.query;
   try {
-    const reminders = await Reminder.find({ userId });  
+    const reminders = await Reminder.find({ userId });
     const dates = reminders.map(reminder => reminder.date);
     res.json(dates);
   } catch (err) {
@@ -35,7 +54,7 @@ router.get('/reminders/dates', async (req, res) => {
   }
 });
 
-router.delete('/reminders/:id', deleteReminder);                // DELETE: Remove a reminder
+router.delete('/reminders/:id', deleteReminder);
 
 router.delete('/delete-update-entry/:entryId', deleteUpdateEntry);
 router.delete('/delete-entry/:entryId', deleteEntry);
@@ -163,7 +182,9 @@ router.put('/edit-update-entry/:entryId', upload.array('images'), async (req, re
   }
 });
 
-// GET /entries/dates?userId=...
+
+
+
 router.get('/dates', async (req, res) => {
   const { userId } = req.query;
   try {
@@ -182,7 +203,7 @@ router.get('/dates', async (req, res) => {
 router.get('/update-entries/dates', async (req, res) => {
   const { userId } = req.query;
   try {
-    const entries = await UpdateEntry.find({ userId });  
+    const entries = await UpdateEntry.find({ userId });
     const dates = entries.map(entry => entry.date);
     res.json(dates);
   } catch (err) {
@@ -190,7 +211,6 @@ router.get('/update-entries/dates', async (req, res) => {
   }
 });
 
-// GET /entries?userId=...&date=...
 
 
 router.get('/', async (req, res) => {
@@ -284,22 +304,8 @@ router.get('/update-entries/by-parent', async (req, res) => {
 });
 
 
-router.get('/id', async (req, res) => {
-  const { id } = req.query;
+router.get('/names', getAllNames);
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({ message: 'Invalid ObjectId format' });
-  }
 
-  try {
-    const entry = await Entry.findById(id);
-    if (!entry) return res.status(404).send({ message: 'Entry not found' });
-    res.send(entry);
-  } catch (err) {
-    res.status(500).send({ message: 'Server error', error: err });
-  }
-});
-
-router.get('/names', getAllNames); // This will handle fetching the names
 
 export default router;

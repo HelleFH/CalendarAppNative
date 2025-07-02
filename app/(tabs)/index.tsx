@@ -10,7 +10,7 @@ export default function IndexScreen() {
     <View style={styles.container}>
       <Image source={Images.HomeScreenBG} style={styles.image} />
 
-      <Text style={styles.title}>Grow Better, Together 🌱</Text>
+      <Text style={styles.title}>the Plant Calendar 🌱</Text>
       <Text style={styles.subtitle}>
         Plant Calendar helps you care for your plants with ease. Set reminders, track growth, and never forget to water again.
       </Text>
@@ -18,7 +18,7 @@ export default function IndexScreen() {
       <Text style={styles.benefits}>
         ✔️ Smart reminders{'\n'}
         ✔️ Growth tracking & notes{'\n'}
-        ✔️ Personalized plant care
+
       </Text>
 
       <View style={styles.buttonContainer}>
@@ -26,7 +26,7 @@ export default function IndexScreen() {
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.button, styles.registerButton]} onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity style={[styles.button, styles.registerButton]} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
       </View>

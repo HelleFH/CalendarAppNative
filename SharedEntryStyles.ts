@@ -1,41 +1,51 @@
+// In SharedEntryStyles.ts
+
 import { StyleSheet } from 'react-native';
 
 export const sharedEntryStyles = StyleSheet.create({
-  container: {
+  entryContainer: {
     marginTop: 10,
-    padding: 12,
+    padding: 10,
+    backgroundColor: '#F0F8FF',
     borderRadius: 10,
-    backgroundColor: '#F0F8FF', // Base background for entries
-  },
-  updateContainer: {
-    backgroundColor: '#E8F7FD', // Slightly different for updates
+    alignItems:'flex-start',
   },
   title: {
     fontWeight: 'bold',
     fontSize: 16,
-    marginBottom: 6,
-    color: '#333',
+    marginBottom: 5,
   },
   name: {
     fontStyle: 'italic',
-    marginBottom: 6,
-    color: '#555',
+    marginBottom: 5,
+  },
+
+    picker: {
+    height: 50,
+    marginBottom: 20,
   },
   notes: {
-    fontSize: 14,
-    marginBottom: 12,
-    color: '#444',
+    marginBottom: 10,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 300,
+    height: 300,
     marginRight: 10,
     borderRadius: 8,
+  },
+  link: {
+    color: '#1E90FF',
+    textDecorationLine: 'underline',
+    fontSize: 14,
+  },
+  icon: {
+    marginRight: 4,
   },
   buttonWrapper: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginTop: 12,
-    gap: 12,
+    flexWrap:'wrap',
+    marginTop: 10,
+    gap:10,
   },
 });

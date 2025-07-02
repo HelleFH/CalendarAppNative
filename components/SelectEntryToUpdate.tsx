@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-
+import { commonStyles } from '@/SharedStyles';
+import { formStyles } from '@/FormStyles';
 interface Entry {
   _id: string;
   name: string;
@@ -41,45 +42,18 @@ export const SelectEntryToUpdate: React.FC<SelectEntryToUpdateProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Select an entry to update:</Text>
-      <View style={styles.pickerWrapper}>
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={handleSelect}
-          style={styles.picker}
-          dropdownIconColor="#319795"
-          mode="dropdown"
-        >
-          <Picker.Item label="Select an entry..." value="" />
-          {allNames.map((entry) => (
-            <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
-          ))}
-        </Picker>
-      </View>
-    </View>
+
+      <Picker
+        selectedValue={selectedValue}
+        onValueChange={handleSelect}
+        style={formStyles.input}
+        dropdownIconColor="#319795"
+        mode="dropdown"
+      >
+        <Picker.Item label="Select an entry..." value="" />
+        {allNames.map((entry) => (
+          <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
+        ))}
+      </Picker>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginVertical: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#2F855A',
-    marginBottom: 8,
-  },
-  pickerWrapper: {
-    borderWidth: 1,
-    borderColor: '#319795',
-    borderRadius: 10,
-    overflow: 'hidden',
-    backgroundColor: '#E6FFFA',
-  },
-  picker: {
-    height: 50,
-    color: '#2F855A',
-  },
-});

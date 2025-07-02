@@ -1,7 +1,8 @@
 // src/components/CalendarComponent.tsx
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+
 
 interface CalendarComponentProps {
   selectedDate: string;
@@ -35,29 +36,31 @@ export const CalendarComponent: React.FC<CalendarComponentProps> = ({
         const icons = markedDates[dateStr]?.icons || [];
 
         return (
-          <View style={{ alignItems: 'center', padding: 4 }}>
+    <TouchableOpacity onPress={() => onDayPress(date)}>
+      <View style={{ alignItems: 'center', padding: 4 }}>
+        <Text
+          style={{
+            fontWeight: isSelected ? 'bold' : 'normal',
+            color: isSelected ? '#00adf5' : '#000',
+          }}
+        >
+          {date.day}
+        </Text>
+        <View style={{ flexDirection: 'row', gap: 2 }}>
+          {icons.map((iconType, index) => (
             <Text
+              key={index}
               style={{
-                fontWeight: isSelected ? 'bold' : 'normal',
-                color: isSelected ? '#00adf5' : '#000',
+                fontSize: iconType === 'update' ? 10 : 12,
+                marginRight: 2,
               }}
             >
-              {date.day}
+              {iconMap[iconType]}
             </Text>
-            <View style={{ flexDirection: 'row', gap: 2 }}>
-              {icons.map((iconType, index) => (
-             <Text
-    key={index}
-    style={{
-      fontSize: iconType === 'update' ? 10 : 12, // smaller for update
-      marginRight: 2,
-    }}
-  >
-    {iconMap[iconType]}
-  </Text>
-              ))}
-            </View>
-          </View>
+          ))}
+        </View>
+      </View>
+    </TouchableOpacity>
         );
       }}
     />

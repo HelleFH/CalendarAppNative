@@ -6,6 +6,7 @@ import axios from 'axios';
 import { AppIconButton } from './AppIconButton';
 import { EntryDetailModal } from './EntryDetailModal';
 import { sharedEntryStyles } from '@/SharedEntryStyles';
+import { Ionicons } from '@expo/vector-icons';
 
 
 interface EntryProps {
@@ -49,7 +50,7 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   const [selectedEntry, setSelectedEntry] = useState<EntryProps | null>(null);
   const [showUpdatesInline, setshowUpdatesInline] = useState(false);
   const [showUpdateList, setShowUpdateList] = useState(false);
-
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
 
 
@@ -75,10 +76,18 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   }, [entry._id]);
 
 
+  const images = entry.images ?? [];
 
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
 
   return (
-    <View style={sharedEntryStyles.container}>
+    <View >
       <TouchableOpacity
         onPress={() => {
           setSelectedEntry(entry);
@@ -89,11 +98,21 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
         <Text style={sharedEntryStyles.title}>{`Entry for ${entry.date}`}</Text>
         <Text style={sharedEntryStyles.name}>{entry.name}</Text>
         <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
-        <ScrollView horizontal>
-          {(entry.images ?? []).map((uri, idx) => (
-            <Image key={idx} source={{ uri }} style={sharedEntryStyles.image} />
-          ))}
-        </ScrollView>
+        {images.length > 0 && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+            {images.length > 1 && (
+              <TouchableOpacity onPress={handlePrevImage}>
+                <Ionicons name="chevron-back" size={24} color="black" />
+              </TouchableOpacity>
+            )}
+            <Image source={{ uri: images[currentImageIndex] }} style={sharedEntryStyles.image} />
+            {images.length > 1 && (
+              <TouchableOpacity onPress={handleNextImage}>
+                <Ionicons name="chevron-forward" size={24} color="black" />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </TouchableOpacity>
 
       <View style={sharedEntryStyles.buttonWrapper}>
@@ -120,12 +139,14 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
       ) : (
         <>
           {updateEntries.length > 0 && (
-            <AppIconButton
-              icon="eye-outline"
-              label={showUpdateList ? 'Hide Updates' : 'View Updates'}
-              onPress={() => setShowUpdateList((prev) => !prev)}
-              variant="secondary"
-            />
+            <TouchableOpacity onPress={() => setShowUpdateList((prev) => !prev)}>
+
+              <Text style={styles.link}>
+
+                <Ionicons name="add" size={16} color="#1E90FF" style={styles.icon} />
+                {showUpdateList ? 'Hide Updates' : 'View Updates'}
+              </Text>
+            </TouchableOpacity>
           )}
           {showUpdateList &&
             updateEntries.map((u) => (
@@ -191,4 +212,14 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 8,
   },
+
+  icon: {
+
+  },
+  link: {
+    color: '#1E90FF',
+    textDecorationLine: 'underline',
+    fontSize: 14,
+  }
+
 });

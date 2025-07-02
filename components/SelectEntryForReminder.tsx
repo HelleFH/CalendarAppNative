@@ -1,67 +1,59 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-
-
-interface Reminder {
+import { commonStyles } from '@/SharedStyles';
+import { formStyles } from '@/FormStyles';
+interface Entry {
   _id: string;
   name: string;
+  notes?: string;
+  images?: string[];
 }
 
 interface SelectEntryForReminderProps {
-  creatingReminder: boolean;
-  allNames: Reminder[];
-  setSelectedOriginalEntry: (entry: Reminder) => void;
+  allNames: Entry[];
   setParentObjectId: (id: string) => void;
   setNotes: (notes: string) => void;
-  setIsReminderModalVisible: (visible: boolean) => void;
-  setReminderDate: (date: string) => void;
+  setImages: (images: string[]) => void;
+  setName: (name: string) => void;
+  onEntrySelected: (id: string) => void;
 }
 
 export const SelectEntryForReminder: React.FC<SelectEntryForReminderProps> = ({
-  creatingReminder,
   allNames,
-  setSelectedOriginalEntry,
-  setNotes,
-  setReminderDate,
   setParentObjectId,
-  setIsReminderModalVisible,
+  setNotes,
+  setImages,
+  setName,
+  onEntrySelected,
 }) => {
-  const [selectedEntryId, setSelectedEntry] = useState<string>('');
-  const [notes, setNotesInput] = useState<string>('');
-  const [reminderDate, setReminderDateInput] = useState<string>('');
+  const [selectedValue, setSelectedValue] = useState<string>('');
 
-  if (!creatingReminder) return null;
+  const handleSelect = (itemValue: string) => {
+    setSelectedValue(itemValue);
+    const selectedEntry = allNames.find((e) => e._id === itemValue);
+    if (selectedEntry) {
+      setParentObjectId(selectedEntry._id);
+      setNotes(selectedEntry.notes || '');
+      setImages(selectedEntry.images || []);
+      setName(selectedEntry.name);
+      onEntrySelected(selectedEntry._id);
+    }
+  };
 
   return (
-    <View>
-      <Text>Select an entry to update:</Text>
+
       <Picker
-        selectedValue={selectedEntryId}
-        onValueChange={(itemValue) => {
-          const selectedEntry = allNames.find(entry => entry._id === itemValue);
-          if (selectedEntry) {
-            setSelectedOriginalEntry(selectedEntry);
-            setParentObjectId(selectedEntry._id);
-            setNotes('');
-            setIsReminderModalVisible(true);
-          }
-        }}
+        selectedValue={selectedValue}
+        onValueChange={handleSelect}
+        style={formStyles.input}
+        dropdownIconColor="#319795"
+        mode="dropdown"
       >
-        {allNames.length === 0 ? (
-          <Picker.Item label="No entries available" value="" />
-        ) : (
-          allNames.map(entry => (
-            <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
-          ))
-        )}
+        <Picker.Item label="Select an entry..." value="" />
+        {allNames.map((entry) => (
+          <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
+        ))}
       </Picker>
-
-
-
-
-
-
-    </View>
   );
 };

@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-
+import { Types } from 'mongoose';
 
 import {
   addEntry,
@@ -12,6 +11,8 @@ import {
   fetchMarkedDates,
   deleteReminder,
   addReminder,
+  fetchEntryById,
+  
 } from '@/utils/api';
 import { createFormData } from '@/utils/createFormData';
 
@@ -46,7 +47,7 @@ export const saveReminderHandler = async (payload: any) => {
     });
 
     alert('Reminder saved!');
-    setEntryForSelectedDate(response.entry); 
+    setEntryForSelectedDate(response.entry);
 
     setMarkedDates((prev: any) => ({
       ...prev,
@@ -94,6 +95,30 @@ export const deleteReminderHandler = async ({
       ? error.response?.data?.message || error.message
       : 'Failed to delete reminder.';
     alert(message);
+  }
+};
+
+export const fetchAndSetParentEntry = async (
+  entry: { parentObjectId?: string | Types.ObjectId },
+  setParentEntry: React.Dispatch<React.SetStateAction<any>>
+) => {
+  if (entry.parentObjectId) {
+    const parentId = typeof entry.parentObjectId === 'string' 
+      ? entry.parentObjectId 
+      : entry.parentObjectId.toString();
+
+    console.log('Fetching entry with ID:', parentId);
+    try {
+      const data = await fetchEntryById(parentId);
+      console.log('Data received from fetchEntryById:', data);
+      setParentEntry(data ?? null);
+    } catch (err) {
+      console.error('Error in fetchAndSetParentEntry:', err);
+      setParentEntry(null);
+    }
+  } else {
+    console.log('No parentObjectId found in entry:', entry);
+    setParentEntry(null);
   }
 };
 

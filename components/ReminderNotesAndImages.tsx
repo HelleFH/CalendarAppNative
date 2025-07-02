@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, TextInput, Button, Image, ScrollView, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import { sharedEntryStyles } from '@/SharedEntryStyles'; 
+
 
 interface UpdateNotesAndImagesProps {
   notes: string;
@@ -16,15 +17,13 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
 }) => {
 
   return (
-    <View style={styles.entryContainer}>
+   <View style={sharedEntryStyles.entryContainer}>
       <TextInput
         style={styles.input}
         placeholder="Add notes"
         value={notes}
         onChangeText={setNotes}
       />
-
-
     </View>
   );
 };

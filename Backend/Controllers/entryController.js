@@ -181,4 +181,5 @@ const deleteEntry = async (req, res) => {
 };
 
 
+
 export { addEntry, getAllNames, deleteEntry, editEntry };

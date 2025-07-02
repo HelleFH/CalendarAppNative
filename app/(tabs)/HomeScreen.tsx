@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { AppIconButton } from '@/components/AppIconButton';
 import { CalendarComponent } from '../../components/CalendarComponent';
 import { EntryDisplay } from '../../components/EntryDisplay';
@@ -18,7 +18,7 @@ import {
   deleteUpdateEntryHandler,
   saveUpdateEntryHandler,
   saveReminderHandler,
-  deleteReminderHandler
+  deleteReminderHandler,
 } from '@/utils/entryHandler';
 import { ReminderDisplay } from '@/components/ReminderDisplay';
 import { AddOptionsModal } from '@/components/AddOptionsModal';
@@ -65,9 +65,8 @@ interface ReminderProps {
 const HomeScreen = () => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const today = new Date().toISOString().split('T')[0];
-
-const [selectedDate, setSelectedDate] = useState<string>(today);  
-const [notes, setNotes] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>(today);
+  const [notes, setNotes] = useState<string>('');
   const [images, setImages] = useState<string[]>([]);
   const [name, setName] = useState<string>('');
   const [markedDates, setMarkedDates] = useState<{ [date: string]: any }>({});
@@ -81,13 +80,12 @@ const [notes, setNotes] = useState<string>('');
   const [parentObjectId, setParentObjectId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
-  const { currentUserId, isLoading } = useCurrentUser();
+  const { currentUserId } = useCurrentUser();
   const { allNames, fetchNames } = useNames(currentUserId);
   const [isReminderModalVisible, setIsReminderModalVisible] = useState(false);
   const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined);
   const [isAddOptionsVisible, setIsAddOptionsVisible] = useState(false);
   const [editingUpdateEntry, setEditingUpdateEntry] = useState<UpdateEntryProps | null>(null);
-
 
   const handleDayPress = async (day: any) => {
     setSelectedDate(day.dateString);
@@ -100,7 +98,7 @@ const [notes, setNotes] = useState<string>('');
     if (!currentUserId) return;
 
     try {
-      const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(currentUserId, day.dateString);
+const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(currentUserId, day.dateString);
       setEntryForSelectedDate(originalEntries);
       setUpdateEntryForSelectedDate(updateEntries);
       setReminderForSelectedDate(reminders);
@@ -109,9 +107,6 @@ const [notes, setNotes] = useState<string>('');
       setMarkedDates(newMarked);
     } catch (err) {
       console.error('Error fetching entries:', err);
-      setEntryForSelectedDate([]);
-      setUpdateEntryForSelectedDate([]);
-      setReminderForSelectedDate([]);
     }
   };
 
@@ -178,24 +173,21 @@ const [notes, setNotes] = useState<string>('');
       handleDayPress,
     });
 
+  const handleDeleteReminder = (reminderId: string) => {
+    if (!currentUserId) {
+      alert('User ID not available.');
+      return;
+    }
 
-const handleDeleteReminder = (reminderId: string) => {
-  console.log('Deleting reminder with id:', reminderId);
-
-  if (!currentUserId) {
-    alert('User ID not available.');
-    return;
-  }
-
-  deleteReminderHandler({
-    reminderId,
-    onSuccess: async () => {
-      const newMarked = await fetchMarkedDates(currentUserId);
-      setMarkedDates(newMarked);
-      handleDayPress({ dateString: selectedDate });
-    },
-  });
-};
+    deleteReminderHandler({
+      reminderId,
+      onSuccess: async () => {
+        const newMarked = await fetchMarkedDates(currentUserId);
+        setMarkedDates(newMarked);
+        handleDayPress({ dateString: selectedDate });
+      },
+    });
+  };
 
   const handleUpdate = () =>
     saveUpdateEntryHandler({
@@ -219,17 +211,18 @@ const handleDeleteReminder = (reminderId: string) => {
     setIsCreateModalVisible(true);
     setIsEditing(true);
     setEditingEntryId(entry._id);
-    
   };
-const handleEditUpdate = (entry: UpdateEntryProps) => {
-  setNotes(entry.notes);
-  setImages(entry.images || []);
-  setSelectedDate(entry.date);
-  setIsEditing(true);
-  setEditingEntryId(entry._id);
-  setEditingUpdateEntry(entry);
-  setIsUpdateModalVisible(true);
-};
+
+  const handleEditUpdate = (entry: UpdateEntryProps) => {
+    setNotes(entry.notes);
+    setImages(entry.images || []);
+    setSelectedDate(entry.date);
+    setIsEditing(true);
+    setEditingEntryId(entry._id);
+    setEditingUpdateEntry(entry);
+    setIsUpdateModalVisible(true);
+  };
+
   const handleEditReminder = (entry: ReminderProps) => {
     setNotes(entry.notes);
     setSelectedDate(entry.date);
@@ -244,7 +237,7 @@ const handleEditUpdate = (entry: UpdateEntryProps) => {
       return;
     }
 
-    const payload = {
+    saveReminderHandler({
       date: reminderDate.toISOString().split('T')[0],
       notes,
       currentUserId,
@@ -255,246 +248,165 @@ const handleEditUpdate = (entry: UpdateEntryProps) => {
       setSelectedOriginalEntry,
       setParentObjectId,
       fetchNames,
-    };
-
-
-    saveReminderHandler(payload);
+    });
   };
 
-useEffect(() => {
-  handleDayPress({ dateString: today });
-}, [currentUserId]);
-   return (
-  <View style={styles.container}>
-    <Text style={commonStyles.title}>Plant Calendar</Text>
+  useEffect(() => {
+    handleDayPress({ dateString: today });
+  }, [currentUserId]);
 
-    <CalendarComponent
-      selectedDate={selectedDate}
-      markedDates={markedDates}
-      onDayPress={handleDayPress}
-    />
+  return (
+<ScrollView contentContainerStyle={commonStyles.appContainer}>
+      <Text style={commonStyles.title}>Plant Calendar</Text>
 
-    {Array.isArray(entryForSelectedDate) && entryForSelectedDate.length > 0 ? (
-      entryForSelectedDate.map((entry, index) => (
-<EntryDisplay
-  key={entry._id || index}
-  entry={entry}
-  onEditEntry={handleEdit}
-  onEditUpdate={handleEditUpdate}
-  onDeleteEntry={handleDeleteEntry}
-  onDeleteUpdate={handleDeleteUpdateEntry}
-  onPress={() => setIsViewModalVisible(true)}
-  showUpdatesInline={false}
-/>
-      ))
-    ) : (
-      <Text style={commonStyles.notes}>No entries for selected date</Text>
-    )}
-
-    {Array.isArray(updateEntryForSelectedDate) && updateEntryForSelectedDate.length > 0 ? (
-      updateEntryForSelectedDate.map((entry: UpdateEntry) => (
-        <UpdateEntryDisplay
-          key={entry._id}
-          entry={{ ...entry, images: entry.images ?? [] }}
-          onEditUpdate={handleEditUpdate}
-          onDeleteUpdate={handleDeleteUpdateEntry}
-        />
-      ))
-    ) : (
-      <Text style={commonStyles.notes}>No update entries for selected date</Text>
-    )}
-
-    {Array.isArray(reminderForSelectedDate) && reminderForSelectedDate.length > 0 ? (
-      reminderForSelectedDate.map((entry: Reminder) => (
-        <ReminderDisplay
-          key={entry._id}
-          onEditReminder={handleEditReminder}
-          onDeleteReminder={handleDeleteReminder}
-          entry={entry}
-        />
-      ))
-    ) : (
-      <Text style={commonStyles.notes}>No reminders for selected date</Text>
-    )}
-
-    <View style={styles.buttonWrapper}>
-      <AppIconButton
-        icon="add"
-        label="Add"
-        onPress={() => setIsAddOptionsVisible(true)}
-        disabled={false}
-        variant="secondary"
+      <CalendarComponent
+        selectedDate={selectedDate}
+        markedDates={markedDates}
+        onDayPress={handleDayPress}
       />
-    </View>
-
-    {selectedOriginalEntry && (
       <View style={styles.buttonWrapper}>
         <AppIconButton
-          label="View Entry"
-          icon="eye-outline"
-          onPress={() => setIsViewModalVisible(true)}
+          icon="add"
+          label="Add"
+          onPress={() => setIsAddOptionsVisible(true)}
+          disabled={false}
           variant="secondary"
         />
       </View>
-    )}
+      {Array.isArray(entryForSelectedDate) &&
+        entryForSelectedDate.map((entry, index) => (
+          <EntryDisplay
+            key={entry._id || index}
+            entry={entry}
+            onEditEntry={handleEdit}
+            onEditUpdate={handleEditUpdate}
+            onDeleteEntry={handleDeleteEntry}
+            onDeleteUpdate={handleDeleteUpdateEntry}
+            onPress={() => setIsViewModalVisible(true)}
+            showUpdatesInline={false}
+          />
+        ))}
 
-    {/* Modals */}
-    <CreateEntryModal
-      visible={isCreateModalVisible}
-      onClose={() => setIsCreateModalVisible(false)}
-      isEditing={isEditing}
-      saveEntry={saveEntry}
-      saveEditedEntry={saveEditedEntry}
-      notes={notes}
-      setNotes={setNotes}
-      images={images}
-      setImages={setImages}
-      name={name}
-      setName={setName}
-    />
+      {Array.isArray(updateEntryForSelectedDate) &&
+        updateEntryForSelectedDate.map((entry: UpdateEntry) => (
+          <UpdateEntryDisplay
+            key={entry._id}
+            entry={{ ...entry, images: entry.images ?? [] }}
+            onEditUpdate={handleEditUpdate}
+            onDeleteUpdate={handleDeleteUpdateEntry}
+          />
+        ))}
 
- <CreateUpdateEntryModal
-  visible={isUpdateModalVisible}
-  onClose={() => {
-    setIsUpdateModalVisible(false);
-    setIsEditing(false);
-    setEditingUpdateEntry(null);
-    setEditingEntryId(null);
-  }}
-  isEditing={isEditing}
-  saveEntry={handleUpdate}     
-  saveEditedUpdateEntry={saveEditedUpdateEntry} 
-  notes={notes}
-  setNotes={setNotes}
-  images={images}
-  setImages={setImages}
-  parentObjectId={parentObjectId}
-  setParentObjectId={setParentObjectId}
-  allNames={allNames}
-  name={name}
-  setName={setName}
-  editingEntry={editingUpdateEntry}     
-/>
-
-    <CreateReminderModal
-      visible={isReminderModalVisible}
-      onClose={() => setIsReminderModalVisible(false)}
-      saveReminder={handleSaveReminder}
-      notes={notes}
-      setNotes={setNotes}
-      parentObjectId={parentObjectId}
-      setParentObjectId={setParentObjectId}
-      allNames={allNames}
-      setReminderDate={setReminderDate}
-      reminderDate={reminderDate}
-    />
-
-    <Text style={commonStyles.label}>Reminders:</Text>
-    {reminders.map((reminder, index) => (
-      <Text key={index} style={commonStyles.notes}>
-        {`Reminder on ${reminder.date}: ${reminder.notes}`}
-      </Text>
-    ))}
-
-    <AddOptionsModal
-      visible={isAddOptionsVisible}
-      onClose={() => setIsAddOptionsVisible(false)}
-      onAddEntry={() => {
-        setIsAddOptionsVisible(false);
-        setParentObjectId(null);
-        setNotes('');
-        setImages([]);
-        setIsCreateModalVisible(true);
-      }}
-      onAddUpdate={() => {
-        setIsAddOptionsVisible(false);
-        setNotes('');
-        setImages([]);
-        setIsUpdateModalVisible(true);
-      }}
-      onAddReminder={() => {
-        setIsAddOptionsVisible(false);
-        setNotes('');
-        setParentObjectId(null);
-        setIsReminderModalVisible(true);
-      }}
-    />
-  </View>
+      {Array.isArray(reminderForSelectedDate) &&
+        reminderForSelectedDate.map((entry: Reminder) => (
+          <ReminderDisplay
+            key={entry._id}
+            onEditReminder={handleEditReminder}
+            onDeleteReminder={handleDeleteReminder}
+            entry={entry}
+          />
+        ))}
 
 
+
+      {selectedOriginalEntry && (
+        <View style={styles.buttonWrapper}>
+          <AppIconButton
+            label="View Entry"
+            icon="eye-outline"
+            onPress={() => setIsViewModalVisible(true)}
+            variant="secondary"
+          />
+        </View>
+      )}
+
+      <CreateEntryModal
+        visible={isCreateModalVisible}
+        onClose={() => setIsCreateModalVisible(false)}
+        isEditing={isEditing}
+        saveEntry={saveEntry}
+        saveEditedEntry={saveEditedEntry}
+        notes={notes}
+        setNotes={setNotes}
+        images={images}
+        setImages={setImages}
+        name={name}
+        setName={setName}
+      />
+
+      <CreateUpdateEntryModal
+        visible={isUpdateModalVisible}
+        onClose={() => {
+          setIsUpdateModalVisible(false);
+          setIsEditing(false);
+          setEditingUpdateEntry(null);
+          setEditingEntryId(null);
+        }}
+        isEditing={isEditing}
+        saveEntry={handleUpdate}
+        saveEditedUpdateEntry={saveEditedUpdateEntry}
+        notes={notes}
+        setNotes={setNotes}
+        images={images}
+        setImages={setImages}
+        parentObjectId={parentObjectId}
+        setParentObjectId={setParentObjectId}
+        allNames={allNames}
+        name={name}
+        setName={setName}
+        editingEntry={editingUpdateEntry}
+      />
+
+      <CreateReminderModal
+        visible={isReminderModalVisible}
+        onClose={() => setIsReminderModalVisible(false)}
+        saveReminder={handleSaveReminder}
+        notes={notes}
+        setNotes={setNotes}
+        parentObjectId={parentObjectId}
+        setParentObjectId={setParentObjectId}
+        allNames={allNames}
+        setReminderDate={setReminderDate}
+        reminderDate={reminderDate}
+      />
+
+      {reminders.map((reminder, index) => (
+        <Text key={index} style={commonStyles.notes}>
+          {`Reminder on ${reminder.date}: ${reminder.notes}`}
+        </Text>
+      ))}
+
+      <AddOptionsModal
+        visible={isAddOptionsVisible}
+        onClose={() => setIsAddOptionsVisible(false)}
+        onAddEntry={() => {
+          setIsAddOptionsVisible(false);
+          setParentObjectId(null);
+          setNotes('');
+          setImages([]);
+          setIsCreateModalVisible(true);
+        }}
+        onAddUpdate={() => {
+          setIsAddOptionsVisible(false);
+          setNotes('');
+          setImages([]);
+          setIsUpdateModalVisible(true);
+        }}
+        onAddReminder={() => {
+          setIsAddOptionsVisible(false);
+          setNotes('');
+          setParentObjectId(null);
+          setIsReminderModalVisible(true);
+        }}
+      />
+</ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    backgroundColor: '#F0F4F8',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#2D3748',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  appButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#2F855A',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginVertical: 6,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-    elevation: 3,
-    maxWidth: 250,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 12,
-  },
-  buttonDisabled: {
-    backgroundColor: '#A0AEC0',
-  },
-  icon: {
-    marginRight: 8,
-  },
   buttonWrapper: {
     marginTop: 12,
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    width: '80%',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  cancelButton: {
-    marginTop: 20,
-  },
-  cancelText: {
-    color: '#718096',
-    fontSize: 16,
-  },
-
 });
 
 export default HomeScreen;

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, View, Button, StyleSheet, TextInput, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Picker } from '@react-native-picker/picker';
 import { AppIconButton } from './AppIconButton';
+import { sharedEntryStyles } from '@/SharedEntryStyles';
+import { SelectEntryForReminder } from './SelectEntryForReminder';
+import { formStyles } from '@/FormStyles';
 
 interface CreateReminderModalProps {
   visible: boolean;
@@ -15,7 +17,10 @@ interface CreateReminderModalProps {
   allNames: { _id: string; name: string }[];
   setReminderDate: (date: Date | undefined) => void;
   reminderDate?: Date;
+  setName: (n: string) => void;
+  setImages: React.Dispatch<React.SetStateAction<string[]>>;
 }
+
 export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   visible,
   onClose,
@@ -25,17 +30,25 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   parentObjectId,
   setParentObjectId,
   allNames,
-  reminderDate,     
-  setReminderDate,  
+  reminderDate,
+  setReminderDate,
+  setName,
+  setImages,
 }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // Set today's date by default when modal opens and reminderDate not set
+  useEffect(() => {
+    if (visible && !reminderDate) {
+      setReminderDate(new Date());
+    }
+  }, [visible, reminderDate, setReminderDate]);
 
   const handleSaveReminder = () => {
     if (notes.trim() === '') {
       alert('Please enter reminder notes.');
       return;
     }
-
     if (!reminderDate) {
       alert('Please select a reminder date.');
       return;
@@ -48,44 +61,43 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   };
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
-    const currentDate = selectedDate || reminderDate;
     setShowDatePicker(false);
-    setReminderDate(currentDate);
+    if (selectedDate) {
+      setReminderDate(selectedDate);
+    }
   };
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View style={styles.modalContent}>
-        <Picker
-          selectedValue={parentObjectId}
-          onValueChange={(itemValue) => setParentObjectId(itemValue)}
-        >
-          <Picker.Item label="Select a plant" value="" />
-          {allNames.map((entry) => (
-            <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
-          ))}
-        </Picker>
+      <View style={sharedEntryStyles.entryContainer}>
+        <SelectEntryForReminder
+          allNames={allNames}
+          setParentObjectId={setParentObjectId}
+          setNotes={setNotes}
+          setImages={setImages}
+          setName={setName}
+          onEntrySelected={(id: string) => setParentObjectId(id)}
+        />
         <TextInput
-          style={styles.input}
+          style={formStyles.input}
           placeholder="Enter reminder notes"
           value={notes}
           onChangeText={setNotes}
         />
 
-        <View style={styles.dateContainer}>
-          <Text style={styles.dateText}>
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 16, marginBottom: 10 }}>
             {reminderDate ? reminderDate.toLocaleDateString() : 'Select reminder date'}
           </Text>
 
-          {/* Web fallback using native HTML input */}
           {Platform.OS === 'web' ? (
             <input
               type="date"
+              value={reminderDate ? reminderDate.toISOString().substring(0, 10) : ''}
               onChange={(e) => {
-                const selected = new Date(e.target.value + 'T00:00'); // Add time to ensure correct Date object
+                const selected = new Date(e.target.value + 'T00:00');
                 setReminderDate(selected);
               }}
-              style={{ marginBottom: 20, fontSize: 16, padding: 8 }}
             />
           ) : (
             <>
@@ -102,31 +114,9 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
           )}
         </View>
 
-        <AppIconButton icon='save' label="Save Reminder" onPress={handleSaveReminder} variant="edit"/>
-        <AppIconButton icon='close' label="Close" onPress={onClose} variant="close" />
+        <AppIconButton icon="save" label="Save Reminder" onPress={handleSaveReminder} variant="edit" />
+        <AppIconButton icon="close" label="Close" onPress={onClose} variant="close" />
       </View>
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modalContent: {
-    padding: 20,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingLeft: 10,
-  },
-  dateContainer: {
-    marginBottom: 20,
-  },
-  dateText: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-});
