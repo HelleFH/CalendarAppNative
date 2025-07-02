@@ -8,7 +8,7 @@ interface ReminderData {
   parentObjectId:string;
 }
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://calendarappnative.onrender.com';
 
 export const fetchNames = (userId: string) =>
   axios.get(`${API_URL}/entries/names`, { params: { userId } });
