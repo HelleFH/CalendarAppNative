@@ -20,6 +20,32 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const router = express.Router();
 
+router.get('/update-entries/by-parent', async (req, res) => {
+  const { parentObjectId } = req.query;
+
+  if (!parentObjectId) {
+    return res.status(400).json({ message: 'Missing parentObjectId' });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(parentObjectId)) {
+    return res.status(400).json({ message: 'Invalid parentObjectId format' });
+  }
+
+  try {
+    console.log('Fetching updates for:', parentObjectId);
+    const updates = await UpdateEntry.find({ parentObjectId });
+    console.log('Updates found:', updates.length);
+
+    if (updates.length === 0) {
+      return res.status(404).json({ message: 'No update entries found for this parentObjectId' });
+    }
+
+    res.json(updates);
+  } catch (err) {
+    console.error('Error fetching update entries:', err);
+    res.status(500).json({ message: 'Server error while fetching update entries', error: err.message });
+  }
+});
 
 router.get('/by-parent/:id', async (req, res) => {
   const { id } = req.params;
@@ -280,32 +306,6 @@ router.get('/reminders', async (req, res) => {
   } catch (err) {
     console.error('Error fetching update entries:', err);
     res.status(500).json({ message: 'Server error while fetching update entries' });
-  }
-});
-router.get('/update-entries/by-parent', async (req, res) => {
-  const { parentObjectId } = req.query;
-
-  if (!parentObjectId) {
-    return res.status(400).json({ message: 'Missing parentObjectId' });
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(parentObjectId)) {
-    return res.status(400).json({ message: 'Invalid parentObjectId format' });
-  }
-
-  try {
-    console.log('Fetching updates for:', parentObjectId);
-    const updates = await UpdateEntry.find({ parentObjectId });
-    console.log('Updates found:', updates.length);
-
-    if (updates.length === 0) {
-      return res.status(404).json({ message: 'No update entries found for this parentObjectId' });
-    }
-
-    res.json(updates);
-  } catch (err) {
-    console.error('Error fetching update entries:', err);
-    res.status(500).json({ message: 'Server error while fetching update entries', error: err.message });
   }
 });
 
