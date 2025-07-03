@@ -14,18 +14,22 @@ interface UpdateEntryProps {
   notes: string;
   images?: string[];
   parentObjectId?: string;
+  
 }
 
 interface UpdateEntryDisplayProps {
   entry: UpdateEntryProps;
   onEditUpdate: (entry: UpdateEntryProps) => void;
   onDeleteUpdate: (entryId: string) => void;
+    disableDetailModal?: boolean;
+
 }
 
 export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
   entry,
   onEditUpdate,
   onDeleteUpdate,
+  disableDetailModal,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -41,17 +45,21 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
-useEffect(() => {
-  fetchAndSetParentEntry(entry, setParentEntry);
-}, [entry.parentObjectId]);
+  useEffect(() => {
+    fetchAndSetParentEntry(entry, setParentEntry);
+  }, [entry.parentObjectId]);
 
   return (
     <View>
       <Text style={sharedEntryStyles.title}>  {parentEntry?.name ? `Update for ${parentEntry.name}` : 'Loading...'}
-</Text>
+      </Text>
       <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
-      <TouchableOpacity onPress={() => setShowDetailModal(true)} activeOpacity={0.7}>
-
+<TouchableOpacity
+  onPress={() => {
+    if (!disableDetailModal) setShowDetailModal(true);
+  }}
+  activeOpacity={0.7}
+>
         {images.length > 0 && (
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
             {images.length > 1 && (

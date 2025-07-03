@@ -7,9 +7,9 @@ import { formStyles } from '@/FormStyles';
 import { AppIconButton } from '@/components/AppIconButton';
 
 export default function LoginScreen() {
-  const [email, setEmail]       = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError]       = useState('');
+  const [error, setError] = useState('');
 
   const register = async () => {
     setError('');
@@ -49,8 +49,8 @@ export default function LoginScreen() {
         style={formStyles.input}
       />
 
-      <AppIconButton icon="add" label="Register" onPress={register} />
-      <AppIconButton icon="log-in" label="Login" onPress={login} />
+      <AppIconButton icon="add" label="Register" onPress={register} variant="primary" />
+      <AppIconButton icon="log-in" label="Login" onPress={login} variant="edit" />
 
       {error ? <Text style={formStyles.errorText}>{error}</Text> : null}
     </View>

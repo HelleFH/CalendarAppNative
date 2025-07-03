@@ -33,11 +33,12 @@ export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
       <View style={commonStyles.modalOverlay}>
         <View style={commonStyles.modalContainer}>
           <ScrollView contentContainerStyle={commonStyles.modalContent}>
-            <UpdateEntryDisplay
-              entry={entry}
-              onEditUpdate={onEdit}
-              onDeleteUpdate={onDelete}
-            />
+     <UpdateEntryDisplay
+  entry={entry}
+  onEditUpdate={onEdit}
+  onDeleteUpdate={onDelete}
+  disableDetailModal={true} 
+/>
             <AppIconButton icon="close" label="Close" onPress={onClose} variant="close" />
           </ScrollView>
         </View>

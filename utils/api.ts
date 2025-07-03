@@ -8,7 +8,7 @@ interface ReminderData {
   parentObjectId:string;
 }
 
-const API_URL = 'https://calendarappnative.onrender.com';
+const API_URL = 'http://localhost:5000';
 
 export const fetchNames = (userId: string) =>
   axios.get(`${API_URL}/entries/names`, { params: { userId } });
@@ -18,7 +18,6 @@ export const fetchMarkedDates = async (userId: string) => {
     axios.get(`${API_URL}/entries/dates`, { params: { userId } }),
     axios.get(`${API_URL}/entries/update-entries/dates`, { params: { userId } }),
         axios.get(`${API_URL}/entries/reminders/dates`, { params: { userId } }),
-
   ]);
 
   

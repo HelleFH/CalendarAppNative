@@ -90,10 +90,6 @@ const handleSave = () => {
 };
 
 
-  const handleEntrySelected = (id: string) => {
-    setParentObjectId(id);
-    setSelectingEntry(false);
-  };
 const handleClose = () => {
   onClose();
   setSelectingEntry(false);

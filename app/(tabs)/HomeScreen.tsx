@@ -98,7 +98,7 @@ const HomeScreen = () => {
     if (!currentUserId) return;
 
     try {
-const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(currentUserId, day.dateString);
+      const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(currentUserId, day.dateString);
       setEntryForSelectedDate(originalEntries);
       setUpdateEntryForSelectedDate(updateEntries);
       setReminderForSelectedDate(reminders);
@@ -123,6 +123,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       setSelectedOriginalEntry,
       setParentObjectId,
       fetchNames,
+
     });
 
   const saveEditedEntry = () =>
@@ -136,7 +137,6 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       setIsCreateModalVisible,
       setIsEditing,
       setEditingEntryId,
-      handleDayPress,
       fetchMarkedDates,
       fetchNames,
     });
@@ -151,7 +151,6 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       setIsCreateModalVisible,
       setIsEditing,
       setEditingEntryId,
-      handleDayPress,
       fetchMarkedDates,
     });
 
@@ -162,7 +161,6 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       setMarkedDates,
       setEntryForSelectedDate,
       setUpdateEntryForSelectedDate,
-      handleDayPress,
     });
 
   const handleDeleteUpdateEntry = (entryId: string) =>
@@ -170,7 +168,6 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       entryId,
       selectedDate,
       setMarkedDates,
-      handleDayPress,
     });
 
   const handleDeleteReminder = (reminderId: string) => {
@@ -184,7 +181,6 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       onSuccess: async () => {
         const newMarked = await fetchMarkedDates(currentUserId);
         setMarkedDates(newMarked);
-        handleDayPress({ dateString: selectedDate });
       },
     });
   };
@@ -201,6 +197,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       setSelectedOriginalEntry,
       setParentObjectId,
       setEntryForSelectedDate,
+
     });
 
   const handleEdit = (entry: EntryProps) => {
@@ -248,6 +245,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       setSelectedOriginalEntry,
       setParentObjectId,
       fetchNames,
+
     });
   };
 
@@ -256,7 +254,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
   }, [currentUserId]);
 
   return (
-<ScrollView contentContainerStyle={commonStyles.appContainer}>
+    <ScrollView contentContainerStyle={commonStyles.appContainer}>
       <Text style={commonStyles.title}>Plant Calendar</Text>
 
       <CalendarComponent
@@ -283,7 +281,6 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
             onDeleteEntry={handleDeleteEntry}
             onDeleteUpdate={handleDeleteUpdateEntry}
             onPress={() => setIsViewModalVisible(true)}
-            showUpdatesInline={false}
           />
         ))}
 
@@ -294,6 +291,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
             entry={{ ...entry, images: entry.images ?? [] }}
             onEditUpdate={handleEditUpdate}
             onDeleteUpdate={handleDeleteUpdateEntry}
+          
           />
         ))}
 
@@ -369,9 +367,9 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
         setReminderDate={setReminderDate}
         reminderDate={reminderDate} setName={function (n: string): void {
           throw new Error('Function not implemented.');
-        } } setImages={function (value: React.SetStateAction<string[]>): void {
+        }} setImages={function (value: React.SetStateAction<string[]>): void {
           throw new Error('Function not implemented.');
-        } }      />
+        }} />
 
       {reminders.map((reminder, index) => (
         <Text key={index} style={commonStyles.notes}>
@@ -402,7 +400,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
           setIsReminderModalVisible(true);
         }}
       />
-</ScrollView>
+    </ScrollView>
   );
 };
 

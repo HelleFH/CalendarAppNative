@@ -284,7 +284,7 @@ router.get('/reminders', async (req, res) => {
 });
 
 router.get('/update-entries/by-parent', async (req, res) => {
-    console.log('Received ID:', id);  // <-- add this
+    console.log('Received ID:', id); 
 
   const { parentObjectId } = req.query;
 

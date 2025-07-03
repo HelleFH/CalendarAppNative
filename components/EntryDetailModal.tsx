@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, ScrollView, Text, Image, View } from 'react-native';
 import { commonStyles } from '@/SharedStyles';
-import { sharedEntryStyles } from '@/SharedEntryStyles';
 import { AppIconButton } from './AppIconButton';
 import { EntryDisplay } from './EntryDisplay';
 
@@ -46,7 +45,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     const fetchUpdates = async () => {
       if (!entry?._id) return;
       try {
-        const response = await fetch(`https://calendarappnative.onrender.com/updates/${entry._id}`);
+        const response = await fetch(`http://localhost:5000/entries/update-entries/${entry._id}`);
         const data: UpdateEntryProps[] = await response.json();
         setUpdateEntries(data);
       } catch (err) {
@@ -63,18 +62,17 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       <View style={commonStyles.modalOverlay}>
         <View style={commonStyles.modalContainer}>
           <ScrollView contentContainerStyle={commonStyles.modalContent}>
-  <EntryDisplay
-    entry={entry}
-    onEditEntry={onEditEntry}
-    onDeleteEntry={onDeleteEntry}
-    onEditUpdate={onEditUpdate}
-    onDeleteUpdate={onDeleteUpdate}
-    showUpdatesInline={true} 
+            <EntryDisplay
+              entry={entry}
+              onEditEntry={onEditEntry}
+              onDeleteEntry={onDeleteEntry}
+              onEditUpdate={onEditUpdate}
+              onDeleteUpdate={onDeleteUpdate}
+              disableDetailModal={true}
 
-    
-  />        
-              <AppIconButton icon="close" label="Close" onPress={onClose} variant="close" />
-      </ScrollView>
+            />
+            <AppIconButton icon="close" label="Close" onPress={onClose} variant="close" />
+          </ScrollView>
         </View>
       </View>
     </Modal>

@@ -23,7 +23,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
       <View style={styles.overlay}>
         <View style={styles.modal}>
           <Text style={styles.text}>
-            Are you sure you want to delete this {itemType}?
+            Are you sure you want to delete?
           </Text>
           <View style={styles.buttonRow}>
             <Button title="Cancel" onPress={onCancel} />

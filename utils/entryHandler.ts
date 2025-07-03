@@ -12,7 +12,7 @@ import {
   deleteReminder,
   addReminder,
   fetchEntryById,
-  
+
 } from '@/utils/api';
 import { createFormData } from '@/utils/createFormData';
 
@@ -30,6 +30,7 @@ export const saveReminderHandler = async (payload: any) => {
     setSelectedOriginalEntry,
     setParentObjectId,
     fetchNames,
+    handleDayPress,
   } = payload;
 
   if (!date || !notes || !currentUserId || !parentObjectId) {
@@ -58,6 +59,8 @@ export const saveReminderHandler = async (payload: any) => {
     setSelectedOriginalEntry(null);
     setParentObjectId(null);
     fetchNames();
+    handleDayPress({ dateString: selectedDate });
+
   } catch (error: any) {
     const message = axios.isAxiosError(error)
       ? error.response?.data?.message || error.message
@@ -103,8 +106,8 @@ export const fetchAndSetParentEntry = async (
   setParentEntry: React.Dispatch<React.SetStateAction<any>>
 ) => {
   if (entry.parentObjectId) {
-    const parentId = typeof entry.parentObjectId === 'string' 
-      ? entry.parentObjectId 
+    const parentId = typeof entry.parentObjectId === 'string'
+      ? entry.parentObjectId
       : entry.parentObjectId.toString();
 
     console.log('Fetching entry with ID:', parentId);
@@ -134,6 +137,7 @@ export const saveEntryHandler = async ({
   setSelectedOriginalEntry,
   setParentObjectId,
   fetchNames,
+  handleDayPress,
 }: any) => {
   if (!selectedDate || !notes || images.length === 0 || !currentUserId || !name) {
     alert('Please provide all inputs (date, notes, images, name, and login).');
@@ -163,6 +167,8 @@ export const saveEntryHandler = async ({
     setSelectedOriginalEntry(null);
     setParentObjectId(null);
     fetchNames();
+    handleDayPress({ dateString: selectedDate });
+
   } catch (error: any) {
     const message = axios.isAxiosError(error)
       ? error.response?.data?.message || error.message
@@ -320,6 +326,9 @@ export const saveUpdateEntryHandler = async ({
   setSelectedOriginalEntry,
   setParentObjectId,
   setEntryForSelectedDate,
+  handleDayPress,
+
+
 }: any) => {
   if (!parentObjectId) {
     alert('No entry selected for updating.');
@@ -343,8 +352,11 @@ export const saveUpdateEntryHandler = async ({
   });
 
   try {
-    const response = await addUpdateEntry(formData);
-    alert('Update Entry Saved!');
+  const response = await addUpdateEntry(formData);
+  console.log('Update Entry response:', response);
+  alert('Update Entry Saved!');
+
+  try {
     setEntryForSelectedDate(response.data.entry);
     setMarkedDates((prev: any) => ({
       ...prev,
@@ -353,7 +365,13 @@ export const saveUpdateEntryHandler = async ({
     setIsUpdateModalVisible(false);
     setSelectedOriginalEntry(null);
     setParentObjectId(null);
-  } catch (error) {
-    alert('Failed to save update entry.');
+    handleDayPress({ dateString: selectedDate });
+  } catch (stateUpdateError) {
+    console.error('State update failed:', stateUpdateError);
+    alert('Saved, but failed to update UI.');
   }
+} catch (error) {
+  console.error('Save failed:', error);
+  alert('Failed to save update entry.');
+}
 };
