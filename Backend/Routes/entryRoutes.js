@@ -29,16 +29,18 @@ router.get('/by-parent/:id', async (req, res) => {
   }
 
   try {
-const entry = await Entry.findOne({ _id: mongoose.Types.ObjectId(id) });
+    const objectId = new mongoose.Types.ObjectId(id);  // use new keyword
+    const entry = await Entry.findOne({ _id: objectId });
     if (!entry) {
       return res.status(404).json({ error: 'Entry not found' });
     }
     res.json({ entry });
   } catch (err) {
     console.error('Error fetching entry:', err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: err.message || 'Server error' });
   }
 });
+
 
 router.post('/reminders/create', createReminder);
 

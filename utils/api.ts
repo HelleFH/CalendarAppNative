@@ -5,7 +5,7 @@ interface ReminderData {
   date: string;
   notes: string;
   userId: string;
-  parentObjectId:string;
+  parentObjectId: string;
 }
 
 const API_URL = 'https://calendarappnative.onrender.com';
@@ -17,55 +17,55 @@ export const fetchMarkedDates = async (userId: string) => {
   const [entries, updates, reminders] = await Promise.all([
     axios.get(`${API_URL}/entries/dates`, { params: { userId } }),
     axios.get(`${API_URL}/entries/update-entries/dates`, { params: { userId } }),
-        axios.get(`${API_URL}/entries/reminders/dates`, { params: { userId } }),
+    axios.get(`${API_URL}/entries/reminders/dates`, { params: { userId } }),
 
   ]);
 
-  
 
-const markedEntries: { [date: string]: { icons: string[] } } = {};
 
-entries.data.forEach((date: string) => {
-  if (!markedEntries[date]) markedEntries[date] = { icons: [] };
-  if (!markedEntries[date].icons.includes('entry')) {
-    markedEntries[date].icons.push('entry');
-  }
-});
+  const markedEntries: { [date: string]: { icons: string[] } } = {};
 
-updates.data.forEach((date: string) => {
-  if (!markedEntries[date]) markedEntries[date] = { icons: [] };
-  if (!markedEntries[date].icons.includes('update')) {
-    markedEntries[date].icons.push('update');
-  }
-});
+  entries.data.forEach((date: string) => {
+    if (!markedEntries[date]) markedEntries[date] = { icons: [] };
+    if (!markedEntries[date].icons.includes('entry')) {
+      markedEntries[date].icons.push('entry');
+    }
+  });
 
-reminders.data.forEach((date: string) => {
-  if (!markedEntries[date]) markedEntries[date] = { icons: [] };
-  if (!markedEntries[date].icons.includes('reminder')) {
-    markedEntries[date].icons.push('reminder');
-  }
-});
+  updates.data.forEach((date: string) => {
+    if (!markedEntries[date]) markedEntries[date] = { icons: [] };
+    if (!markedEntries[date].icons.includes('update')) {
+      markedEntries[date].icons.push('update');
+    }
+  });
 
-return markedEntries;
+  reminders.data.forEach((date: string) => {
+    if (!markedEntries[date]) markedEntries[date] = { icons: [] };
+    if (!markedEntries[date].icons.includes('reminder')) {
+      markedEntries[date].icons.push('reminder');
+    }
+  });
+
+  return markedEntries;
 };
 
 export const addReminder = async ({
   date,
   notes,
-  parentObjectId, 
+  parentObjectId,
   userId,
 }: ReminderData) => {
   const response = await axios.post(`${API_URL}/entries/reminders/create`, {
     date,
     notes,
-    parentObjectId, 
+    parentObjectId,
     userId,
   });
-  return response.data;  
+  return response.data;
 };
 
 export const deleteReminder = (id: string) => {
-  
+
   return axios.delete(`${API_URL}/entries/reminders/${id}`);
 };
 
@@ -174,10 +174,10 @@ export const addUpdateEntry = async (formData: FormData) => {
   });
 };
 export const fetchEntryById = async (id: string) => {
-    console.log('Received ID:', id); 
+  console.log('Received ID:', id);
   try {
     const response = await axios.get(`${API_URL}/entries/by-parent/${id}`);
-    return response.data.entry ?? null;  
+    return response.data.entry ?? null;
   } catch (error) {
     console.error('Failed to fetch entry by parentObjectId:', id, error);
     return null;
