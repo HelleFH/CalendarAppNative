@@ -282,20 +282,21 @@ router.get('/reminders', async (req, res) => {
     res.status(500).json({ message: 'Server error while fetching update entries' });
   }
 });
-
 router.get('/update-entries/by-parent', async (req, res) => {
-    console.log('Received ID:', id); 
-
   const { parentObjectId } = req.query;
 
   if (!parentObjectId) {
     return res.status(400).json({ message: 'Missing parentObjectId' });
   }
 
-  try {
-    const updates = await UpdateEntry.find({ parentObjectId });
-    console.log('Entry found:', Entry);
+  if (!mongoose.Types.ObjectId.isValid(parentObjectId)) {
+    return res.status(400).json({ message: 'Invalid parentObjectId format' });
+  }
 
+  try {
+    console.log('Fetching updates for:', parentObjectId);
+    const updates = await UpdateEntry.find({ parentObjectId });
+    console.log('Updates found:', updates.length);
 
     if (updates.length === 0) {
       return res.status(404).json({ message: 'No update entries found for this parentObjectId' });
@@ -303,10 +304,11 @@ router.get('/update-entries/by-parent', async (req, res) => {
 
     res.json(updates);
   } catch (err) {
-    console.error('Error fetching update entries by parentObjectId:', err);
-    res.status(500).json({ message: 'Server error while fetching update entries' });
+    console.error('Error fetching update entries:', err);
+    res.status(500).json({ message: 'Server error while fetching update entries', error: err.message });
   }
 });
+
 
 
 router.get('/names', getAllNames);
