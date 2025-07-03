@@ -6,8 +6,8 @@ import Images from '../../assets/images';
 // Define your navigation routes here
 type RootStackParamList = {
   Login: undefined;
-  Home: undefined;
-  // other routes if any
+  HomeScreen: undefined;
+  AllEntriesScreen:undefined;
 };
 
 export default function IndexScreen() {
