@@ -95,7 +95,7 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
         }}
         activeOpacity={0.7}
       >
-        <Text style={sharedEntryStyles.title}>{`Entry for ${entry.date}`}</Text>
+        <Text style={sharedEntryStyles.title}>{`${entry.name + entry.date}`}</Text>
         <Text style={sharedEntryStyles.name}>{entry.name}</Text>
         <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
         {images.length > 0 && (

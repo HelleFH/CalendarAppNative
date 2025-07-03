@@ -32,14 +32,14 @@ export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
           <AppIconButton
             icon="document-text-outline"
             variant="secondary"
-            label="Entry"
+            label="New Plant"
             onPress={onAddEntry}
           />
 
           <AppIconButton
-            icon="create-outline"
+            icon="document-text-outline"
             variant="primary"
-            label="Update Entry"
+            label="+ Plant Update"
             onPress={onAddUpdate}
           />
 

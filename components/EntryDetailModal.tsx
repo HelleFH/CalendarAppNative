@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, ScrollView, Text, Image, View } from 'react-native';
-import { EntryDisplay } from './EntryDisplay';
 import { commonStyles } from '@/SharedStyles';
 import { sharedEntryStyles } from '@/SharedEntryStyles';
 import { AppIconButton } from './AppIconButton';
+import { EntryDisplay } from './EntryDisplay';
 
 interface EntryProps {
   _id: string;
@@ -63,45 +63,18 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
       <View style={commonStyles.modalOverlay}>
         <View style={commonStyles.modalContainer}>
           <ScrollView contentContainerStyle={commonStyles.modalContent}>
-            <Text style={sharedEntryStyles.title}>{entry.name}</Text>
-            <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
+  <EntryDisplay
+    entry={entry}
+    onEditEntry={onEditEntry}
+    onDeleteEntry={onDeleteEntry}
+    onEditUpdate={onEditUpdate}
+    onDeleteUpdate={onDeleteUpdate}
+    showUpdatesInline={true} 
 
-            <ScrollView horizontal>
-              {(entry.images ?? []).map((uri, idx) => (
-                <Image key={idx} source={{ uri }} style={sharedEntryStyles.image} />
-              ))}
-            </ScrollView>
-
-            {/* Display updates if any */}
-            {updateEntries.length > 0 && (
-              <>
-                <Text style={[sharedEntryStyles.title, { marginTop: 20 }]}>Updates</Text>
-                {updateEntries.map((update) => (
-                  <View key={update._id} style={sharedEntryStyles.entryContainer}>
-                    <Text style={sharedEntryStyles.notes}>{update.notes}</Text>
-                    <ScrollView horizontal>
-                      {(update.images ?? []).map((uri, idx) => (
-                        <Image key={idx} source={{ uri }} style={sharedEntryStyles.image} />
-                      ))}
-                    </ScrollView>
-                    <View style={sharedEntryStyles.buttonWrapper}>
-                      <AppIconButton icon="pencil" label="Edit" onPress={() => onEditUpdate(update)} variant="edit" />
-                      <AppIconButton icon="remove" label="Delete" onPress={() => onDeleteUpdate(update._id)} variant="delete" />
-                    </View>
-                  </View>
-                ))}
-              </>
-            )}
-
-            <View style={[sharedEntryStyles.buttonWrapper, { marginTop: 20 }]}>
-              <AppIconButton icon="pencil" label="Edit Entry" onPress={() => {
-                onEditEntry(entry);
-                onClose();
-              }} variant="edit" />
-              <AppIconButton icon="remove" label="Delete Entry" onPress={() => onDeleteEntry(entry._id)} variant="delete" />
+    
+  />        
               <AppIconButton icon="close" label="Close" onPress={onClose} variant="close" />
-            </View>
-          </ScrollView>
+      </ScrollView>
         </View>
       </View>
     </Modal>

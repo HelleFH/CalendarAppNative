@@ -39,19 +39,19 @@ const getStyles = (variant: Variant, disabled: boolean) => {
 
   switch (variant) {
     case 'primary':
-      backgroundColor = disabled ? '#0E4732' : '#4CAF50'; // leafy
+      backgroundColor = disabled ? '#0E4732' : '#0E4732'; // leafy
       textColor = '#FFFFFF';
       break;
     case 'secondary':
-      backgroundColor = disabled ? '#2E7D32' : '#81C784'; // mint
+      backgroundColor = disabled ? '#2E7D32' : '#2E7D32'; // mint
       textColor = '#FFFFFF';
       break;
     case 'edit':
-      backgroundColor = disabled ? '#90CAF9' : '#1976D2'; // blue
+      backgroundColor = disabled ? '#1976D2' : '#1976D2'; // blue
       textColor = '#FFFFFF';
       break;
     case 'delete':
-      backgroundColor = disabled ? '#FFCDD2' : '#D32F2F'; // red
+      backgroundColor = disabled ? '#D32F2F' : '#D32F2F'; // red
       textColor = '#FFFFFF';
       break;
     case 'close':

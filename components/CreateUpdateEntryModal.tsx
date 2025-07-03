@@ -125,7 +125,7 @@ const handleClose = () => {
       icon="save"
       label={isEditing ? 'Save Changes' : 'Save Entry'}
       onPress={handleSave}
-      variant="secondary"
+      variant="edit"
     />
 
     <AppIconButton

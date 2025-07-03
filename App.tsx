@@ -6,7 +6,6 @@ import { auth } from './firebase';
 import { View } from 'react-native';
 import LoginScreen from './app/(tabs)/LoginScreen';
 import HomeScreen from './app/(tabs)/HomeScreen';
-import IndexScreen from './app/(tabs)';
 import AllEntriesScreen from './app/(tabs)/AllEntriesScreen';
 
 const Stack = createNativeStackNavigator();
@@ -41,7 +40,6 @@ export default function App() {
         ) : (
           <>
             <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Index" component={IndexScreen} />
             <Stack.Screen name="AllEntries" component={AllEntriesScreen} />
           </>
         )}

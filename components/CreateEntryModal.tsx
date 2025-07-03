@@ -48,7 +48,7 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
         icon='save'
           label={isEditing ? 'Save Changes' : 'Save Entry'}
           onPress={isEditing ? saveEditedEntry : saveEntry}
-                    variant='secondary'
+                    variant='edit'
 
         />
 

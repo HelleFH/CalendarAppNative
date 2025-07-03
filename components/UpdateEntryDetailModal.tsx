@@ -1,8 +1,9 @@
 import React from 'react';
-import { Modal, ScrollView, Text, Image, View } from 'react-native';
+import { Modal, ScrollView, View } from 'react-native';
 import { AppIconButton } from './AppIconButton';
 import { sharedEntryStyles } from '@/SharedEntryStyles';
-import { commonStyles } from '@/SharedStyles'; 
+import { commonStyles } from '@/SharedStyles';
+import { UpdateEntryDisplay } from './UpdateEntryDisplay';
 
 interface UpdateEntryProps {
   _id: string;
@@ -30,27 +31,17 @@ export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={commonStyles.modalOverlay}>
-                <View style={commonStyles.modalContainer}>
-        
-        <ScrollView contentContainerStyle={commonStyles.modalContent}>
-          <Text style={sharedEntryStyles.title}>{`Update Entry for ${entry.date}`}</Text>
-          <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
-
-          <ScrollView horizontal>
-            {(entry.images ?? []).map((uri, idx) => (
-              <Image key={idx} source={{ uri }} style={sharedEntryStyles.image} />
-            ))}
-          </ScrollView>
-
-          <View style={sharedEntryStyles.buttonWrapper}>
-            <AppIconButton icon="pencil" label="Edit" onPress={() => onEdit(entry)} variant="edit" />
-            <AppIconButton icon="remove" label="Delete" onPress={() => onDelete(entry._id)} variant="delete" />
+        <View style={commonStyles.modalContainer}>
+          <ScrollView contentContainerStyle={commonStyles.modalContent}>
+            <UpdateEntryDisplay
+              entry={entry}
+              onEditUpdate={onEdit}
+              onDeleteUpdate={onDelete}
+            />
             <AppIconButton icon="close" label="Close" onPress={onClose} variant="close" />
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       </View>
-            </View>
-      
     </Modal>
   );
 };

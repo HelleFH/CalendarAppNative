@@ -367,8 +367,11 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
         setParentObjectId={setParentObjectId}
         allNames={allNames}
         setReminderDate={setReminderDate}
-        reminderDate={reminderDate}
-      />
+        reminderDate={reminderDate} setName={function (n: string): void {
+          throw new Error('Function not implemented.');
+        } } setImages={function (value: React.SetStateAction<string[]>): void {
+          throw new Error('Function not implemented.');
+        } }      />
 
       {reminders.map((reminder, index) => (
         <Text key={index} style={commonStyles.notes}>
