@@ -1,10 +1,12 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { useRouter } from 'expo-router';
 
-export default function Home() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Hello from expo-router!</Text>
-    </View>
-  );
+export default function Index() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/HomeScreen');
+  }, []);
+
+  return null; // or a loading spinner if you want
 }
