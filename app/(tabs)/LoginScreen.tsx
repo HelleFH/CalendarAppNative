@@ -52,7 +52,6 @@ export default function LoginScreen() {
       <AppIconButton icon="add" label="Register" onPress={register} variant="primary" />
       <AppIconButton icon="log-in" label="Login" onPress={login} variant="edit" />
 
-      {error ? <Text style={formStyles.errorText}>{error}</Text> : null}
     </View>
   );
 }

@@ -53,7 +53,7 @@ const AllEntriesScreen = () => {
   const fetchAllEntries = async () => {
     if (!currentUserId) return;
     try {
-      const res = await axios.get('http://localhost:5000/entries/all', {
+      const res = await axios.get('https://calendarappnative.onrender.com/entries/all', {
         params: { userId: currentUserId },
       });
 
@@ -189,11 +189,10 @@ const AllEntriesScreen = () => {
           <EntryDisplay
             key={entry._id}
             entry={entry}
-            onEdit={handleEdit}
-            onDelete={handleDeleteEntry}
             onEditUpdate={handleEditUpdate}
-            onDeleteUpdate={handleDeleteUpdateEntry}
-          />
+            onDeleteUpdate={handleDeleteUpdateEntry} 
+            onEditEntry={handleEdit} 
+            onDeleteEntry={handleDeleteEntry}          />
         ))
       ) : (
         <Text>No entries available.</Text>

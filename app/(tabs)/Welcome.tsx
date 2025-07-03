@@ -1,10 +1,17 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Images from '../../assets/images';
 
+// Define your navigation routes here
+type RootStackParamList = {
+  Login: undefined;
+  Home: undefined;
+  // other routes if any
+};
+
 export default function IndexScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
     <View style={styles.container}>
@@ -18,7 +25,6 @@ export default function IndexScreen() {
       <Text style={styles.benefits}>
         ✔️ Smart reminders{'\n'}
         ✔️ Growth tracking & notes{'\n'}
-
       </Text>
 
       <View style={styles.buttonContainer}>
@@ -33,6 +39,8 @@ export default function IndexScreen() {
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
