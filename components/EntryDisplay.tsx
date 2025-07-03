@@ -57,7 +57,7 @@ useEffect(() => {
 
     try {
       const res = await axios.get<UpdateEntryProps[]>(
-        'http://localhost:5000/entries/update-entries/by-parent',
+        'https://calendarappnative.onrender.com/entries/update-entries/by-parent',
         {
           params: { parentObjectId: entry._id },
         }

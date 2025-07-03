@@ -53,7 +53,7 @@ const AllEntriesScreen = () => {
   const fetchAllEntries = async () => {
     if (!currentUserId) return;
     try {
-      const res = await axios.get('http://localhost:5000/entries/all', {
+      const res = await axios.get('https://calendarappnative.onrender.com/entries/all', {
         params: { userId: currentUserId },
       });
 
