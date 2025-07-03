@@ -42,7 +42,7 @@ export const NotesAndImages: React.FC<NotesAndImagesProps> = ({
     <View style={formStyles.container}>
       <TextInput
         style={[formStyles.input, formStyles.disabledInput]}
-        placeholder="Enter your name"
+        placeholder="Enter Plant name"
         value={name}
         onChangeText={setName}
         editable={true}

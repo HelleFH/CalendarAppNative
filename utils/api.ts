@@ -174,9 +174,10 @@ export const addUpdateEntry = async (formData: FormData) => {
   });
 };
 export const fetchEntryById = async (id: string) => {
+    console.log('Received ID:', id); 
   try {
     const response = await axios.get(`${API_URL}/entries/by-parent/${id}`);
-    return response.data.entry ?? null;  // return single entry or null if none
+    return response.data.entry ?? null;  
   } catch (error) {
     console.error('Failed to fetch entry by parentObjectId:', id, error);
     return null;

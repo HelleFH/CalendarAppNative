@@ -20,7 +20,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const router = express.Router();
 
-import mongoose from 'mongoose';
 
 router.get('/by-parent/:id', async (req, res) => {
   const { id } = req.params;
@@ -283,6 +282,8 @@ router.get('/reminders', async (req, res) => {
 });
 
 router.get('/update-entries/by-parent', async (req, res) => {
+    console.log('Received ID:', id);  // <-- add this
+
   const { parentObjectId } = req.query;
 
   if (!parentObjectId) {
@@ -291,6 +292,8 @@ router.get('/update-entries/by-parent', async (req, res) => {
 
   try {
     const updates = await UpdateEntry.find({ parentObjectId });
+    console.log('Entry found:', Entry);
+
 
     if (updates.length === 0) {
       return res.status(404).json({ message: 'No update entries found for this parentObjectId' });

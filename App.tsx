@@ -31,8 +31,8 @@ export default function App() {
   if (loading) return null;
 
   return (
-  <View style={{ flex: 1 }}>
-    <NavigationContainer>
+  <View style={{ flex: 1, }}>
+    <NavigationContainer >
       <Stack.Navigator>
         {!user ? (
           <>

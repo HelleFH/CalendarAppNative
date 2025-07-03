@@ -30,12 +30,22 @@ export const CalendarComponent: React.FC<CalendarComponentProps> = ({
       current={selectedDate}
       onDayPress={onDayPress}
       monthFormat={'yyyy MM'}
-      dayComponent={({ date }) => {
-        const dateStr = date.dateString;
-        const isSelected = selectedDate === dateStr;
-        const icons = markedDates[dateStr]?.icons || [];
+    dayComponent={({
+  date,
+}: {
+  date: {
+    dateString: string;
+    day: number;
+    month: number;
+    year: number;
+    timestamp: number;
+  };
+}) => {
+  const dateStr = date.dateString;
+  const isSelected = selectedDate === dateStr;
+  const icons = markedDates[dateStr]?.icons || [];
 
-        return (
+  return (
     <TouchableOpacity onPress={() => onDayPress(date)}>
       <View style={{ alignItems: 'center', padding: 4 }}>
         <Text
@@ -61,6 +71,7 @@ export const CalendarComponent: React.FC<CalendarComponentProps> = ({
         </View>
       </View>
     </TouchableOpacity>
+
         );
       }}
     />

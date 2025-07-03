@@ -14,6 +14,8 @@ export const sharedEntryStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 5,
+    display:'flex'
+  
   },
   name: {
     fontStyle: 'italic',
@@ -46,6 +48,6 @@ export const sharedEntryStyles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexWrap:'wrap',
     marginTop: 10,
-    gap:10,
+    gap:8,
   },
 });

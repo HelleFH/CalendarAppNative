@@ -9,6 +9,7 @@ export const commonStyles = StyleSheet.create({
     maxWidth:700,
     alignSelf:'center',
     top:75,
+    padding:16,
 
   },
   
