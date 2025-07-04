@@ -3,6 +3,7 @@ import { View, TextInput, Image, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AppIconButton } from './AppIconButton';
 import { formStyles } from '@/FormStyles';
+import { commonStyles } from '@/SharedStyles';
 
 interface NotesAndImagesProps {
   notes: string;
@@ -56,9 +57,12 @@ export const NotesAndImages: React.FC<NotesAndImagesProps> = ({
       <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
 
       <ScrollView horizontal style={formStyles.scrollContainer}>
+        <View style={commonStyles.imageWrapper}>
+
         {images.map((uri, index) => (
           <Image key={index} source={{ uri }} style={formStyles.image} />
         ))}
+        </View>
       </ScrollView>
     </View>
   );

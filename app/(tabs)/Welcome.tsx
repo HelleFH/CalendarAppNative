@@ -2,23 +2,25 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Images from '../../assets/images';
+import { commonStyles } from '@/SharedStyles';
+import { AppIconButton } from '@/components/AppIconButton';
 
 // Define your navigation routes here
 type RootStackParamList = {
   Login: undefined;
   HomeScreen: undefined;
-  AllEntriesScreen:undefined;
+  AllEntriesScreen: undefined;
 };
 
 export default function IndexScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <View style={styles.container}>
-      <Image source={Images.HomeScreenBG} style={styles.image} />
+    <View style={commonStyles.container}>
+      <Image source={Images.HomeScreenBG} style={commonStyles.image} />
 
-      <Text style={styles.title}>the Plant Calendar 🌱</Text>
-      <Text style={styles.subtitle}>
+      <Text style={commonStyles.title}>the Plant Calendar 🌱</Text>
+      <Text style={commonStyles.subtitle}>
         Plant Calendar helps you care for your plants with ease. Set reminders, track growth, and never forget to water again.
       </Text>
 
@@ -27,14 +29,26 @@ export default function IndexScreen() {
         ✔️ Growth tracking & notes{'\n'}
       </Text>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+      <View style={commonStyles.buttonWrapper}>
 
-        <TouchableOpacity style={[styles.button, styles.registerButton]} onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.buttonText}>Get Started</Text>
-        </TouchableOpacity>
+
+        <AppIconButton
+          icon="add"
+          label="Login"
+          onPress={() => navigation.navigate('Login')} 
+          disabled={false}
+          variant="primary"
+        />
+ 
+ 
+        <AppIconButton
+          icon="add"
+          label="Get Started"
+          onPress={() => navigation.navigate('Login')} 
+          disabled={false}
+          variant="secondary"
+        />
+
       </View>
     </View>
   );
@@ -43,33 +57,7 @@ export default function IndexScreen() {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0fdf4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  image: {
-    width: 160,
-    height: 160,
-    marginBottom: 24,
-    resizeMode: 'contain',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1b5e20',
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#4b4b4b',
-    textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 22,
-  },
+
   benefits: {
     fontSize: 14,
     color: '#2e7d32',
@@ -77,22 +65,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     lineHeight: 22,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 20,
-  },
-  button: {
-    backgroundColor: '#2e7d32',
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-  },
-  registerButton: {
-    backgroundColor: '#66bb6a',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
-  },
+
+
 });

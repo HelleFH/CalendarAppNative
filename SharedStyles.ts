@@ -1,29 +1,28 @@
-// commonStyles.ts
 import { StyleSheet } from 'react-native';
 
 export const commonStyles = StyleSheet.create({
-
+  // Layout Containers
   appContainer: {
-    
-    width:'100%',
-    maxWidth:700,
-    alignSelf:'center',
-    top:75,
-    padding:16,
-
+    width: '100%',
+    maxWidth: 700,
+    alignSelf: 'center',
+    top: 75,
+    padding: 16,
   },
-  
   container: {
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 20,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#2D3748',
-    textAlign: 'center',
-    marginBottom: 20,
+  entryContainer: {
+    display:'flex',
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: '#F0F8FF',
+    borderRadius: 10,
+    alignItems: 'flex-start',
+    maxWidth:400,
+    width:'100%',
   },
   modalOverlay: {
     flex: 1,
@@ -32,33 +31,89 @@ export const commonStyles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#F0F8FF',
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
   },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#2D3748',
-    textAlign: 'center',
+  modalContent: {
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    minHeight: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cancelButton: {
     marginTop: 20,
   },
-  modalContent: {
-  padding: 20,
-  backgroundColor: '#fff',
-  borderRadius: 12,
-  minHeight: 200,
-  justifyContent: 'center',
-  alignItems: 'center',
-},
+  buttonWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginTop: 10,
+    gap: 8,
+  },
+
+  // Typography
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#2D3748',
+    textAlign: 'left',
+    marginBottom: 12,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#4A5568',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2D3748',
+    marginBottom: 20,
+  },
+
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2F855A',
+    marginBottom: 8,
+  },
+  name: {
+    fontStyle: 'italic',
+    marginBottom: 5,
+  },
+  dateText: {
+    fontSize: 16,
+    color: '#2D3748',
+    marginBottom: 10,
+  },
+  date: {
+    fontSize: 16,
+    color: '#4A5568',
+    marginBottom: 10,
+  },
+  notes: {
+    fontSize: 16,
+    color: '#4A5568',
+    marginBottom: 16,
+  },
+  entryNotes: {
+    marginBottom: 10,
+  },
   cancelText: {
     color: '#718096',
     fontSize: 16,
   },
+  link: {
+    color: '#1E90FF',
+    textDecorationLine: 'underline',
+    fontSize: 14,
+  },
+
+  // Inputs
   input: {
     height: 40,
     borderColor: '#A0AEC0',
@@ -80,36 +135,49 @@ export const commonStyles = StyleSheet.create({
   picker: {
     height: 50,
     color: '#2F855A',
+    marginBottom: 20,
   },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#2F855A',
-    marginBottom: 8,
+
+imageWrapper: {
+  width:'100%',
+  height:'100%',
+  justifyContent: 'center',
+  alignItems: 'center',   
+  marginBottom: 16,
+},
+
+image: {
+  width: 325,
+  height: 325,
+  resizeMode: 'contain',
+  borderRadius: 12,
+},
+  imageLarge: {
+    width: '100%',
+    height: 300,
+    borderRadius: 16,
+    resizeMode: 'cover',
+    marginBottom: 16,
   },
+  imageSmall: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    resizeMode: 'cover',
+    marginBottom: 12,
+  },
+  fullWidthImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+    marginRight: 10,
+  },
+
+  // Misc
   dateContainer: {
     marginBottom: 20,
   },
-  dateText: {
-    fontSize: 16,
-    marginBottom: 10,
-    color: '#2D3748',
+  icon: {
+    marginRight: 4,
   },
-  date: {
-    fontSize: 16,
-    marginBottom: 10,
-    color: '#4A5568',
-  },
-  notes: {
-    fontSize: 16,
-    marginBottom: 20,
-    color: '#4A5568',
-  },
-  image: {
-    width: '100%',
-    height:'100%',
-    marginRight: 10,
-    borderRadius: 8,
-  },
- 
 });

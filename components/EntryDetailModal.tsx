@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ScrollView, Text, Image, View } from 'react-native';
-import { commonStyles } from '@/SharedStyles';
-import { AppIconButton } from './AppIconButton';
+import { Modal, TouchableOpacity, View } from 'react-native';
 import { EntryDisplay } from './EntryDisplay';
+import { commonStyles } from '@/SharedStyles';
+import { Ionicons } from '@expo/vector-icons';
 
 interface EntryProps {
   _id: string;
@@ -38,6 +38,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   onDeleteUpdate,
   onEditEntry,
   onDeleteEntry,
+
 }) => {
   const [updateEntries, setUpdateEntries] = useState<UpdateEntryProps[]>([]);
 
@@ -45,7 +46,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     const fetchUpdates = async () => {
       if (!entry?._id) return;
       try {
-        const response = await fetch(`https://calendarappnative.onrender.com/entries/update-entries/${entry._id}`);
+        const response = await fetch(`https://calendarappnative.onrender.com/updates/${entry._id}`);
         const data: UpdateEntryProps[] = await response.json();
         setUpdateEntries(data);
       } catch (err) {
@@ -61,18 +62,29 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={commonStyles.modalOverlay}>
         <View style={commonStyles.modalContainer}>
-          <ScrollView contentContainerStyle={commonStyles.modalContent}>
-            <EntryDisplay
-              entry={entry}
-              onEditEntry={onEditEntry}
-              onDeleteEntry={onDeleteEntry}
-              onEditUpdate={onEditUpdate}
-              onDeleteUpdate={onDeleteUpdate}
-              disableDetailModal={true}
-
-            />
-            <AppIconButton icon="close" label="Close" onPress={onClose} variant="close" />
-          </ScrollView>
+          <TouchableOpacity
+            onPress={onClose}
+            style={{
+              position: 'absolute',
+              top: 10,
+              right: 10,
+              zIndex: 1,
+              padding: 8,
+            }}
+          >
+            <Ionicons name="close" size={24} color="black" />
+          </TouchableOpacity>
+          <EntryDisplay
+            key={entry._id}
+            entry={entry}
+            onEditUpdate={onEditUpdate}
+            onDeleteUpdate={onDeleteUpdate}
+            onDeleteEntry={onDeleteEntry}
+            onEditEntry={onEditEntry}
+            showUpdatesInline={false}
+            disableDetailModal={true}
+            onRequestCloseModal={onClose}
+          />
         </View>
       </View>
     </Modal>

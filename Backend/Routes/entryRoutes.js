@@ -20,6 +20,8 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const router = express.Router();
 
+
+
 router.get('/update-entries/by-parent', async (req, res) => {
   const { parentObjectId } = req.query;
 
@@ -46,6 +48,7 @@ router.get('/update-entries/by-parent', async (req, res) => {
     res.status(500).json({ message: 'Server error while fetching update entries', error: err.message });
   }
 });
+
 
 router.get('/by-parent/:id', async (req, res) => {
   const { id } = req.params;
@@ -310,7 +313,31 @@ router.get('/reminders', async (req, res) => {
 });
 
 
+router.get('/reminders/by-parent', async (req, res) => {
+    console.log('>>> ROUTE HIT: /reminders/by-parent');
+  console.log('>>> Query:', req.query);
+  const { parentObjectId } = req.query;
 
+  if (!parentObjectId) {
+    return res.status(400).json({ message: 'Missing parentObjectId' });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(parentObjectId)) {
+    return res.status(400).json({ message: 'Invalid parentObjectId format' });
+  }
+
+  try {
+    console.log('Fetching reminders for:', parentObjectId);
+    const reminders = await Reminder.find({ parentObjectId });
+    console.log('Reminders found:', reminders.length);
+
+    // 🔁 This line fixes your 404 issue
+    return res.status(200).json(reminders);
+  } catch (err) {
+    console.error('Error fetching reminders:', err);
+    res.status(500).json({ message: 'Server error while fetching reminders', error: err.message });
+  }
+});
 router.get('/names', getAllNames);
 
 

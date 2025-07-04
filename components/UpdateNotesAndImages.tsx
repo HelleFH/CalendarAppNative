@@ -3,7 +3,7 @@ import { View, TextInput, Image, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AppIconButton } from './AppIconButton';
 import { formStyles } from '@/FormStyles';
-
+import { commonStyles } from '@/SharedStyles';
 interface UpdateNotesAndImagesProps {
   notes: string;
   setNotes: (notes: string) => void;
@@ -11,6 +11,7 @@ interface UpdateNotesAndImagesProps {
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   saveEntry: () => void;
   initialImages?: string[];
+  isNewEntry: boolean; // <-- added
 }
 
 export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
@@ -20,6 +21,7 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
   setImages,
   saveEntry,
   initialImages = [],
+  isNewEntry, // <-- added
 }) => {
   const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -43,19 +45,26 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
   }, [initialImages]);
 
   return (
-    <View >
+    <View>
       <TextInput
         style={formStyles.input}
         placeholder="Add notes"
         value={notes}
         onChangeText={setNotes}
       />
-      <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
+
+      {/* Only show the image picker if this is a new entry */}
+      {isNewEntry && (
+        <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
+      )}
 
       <ScrollView horizontal style={formStyles.scrollContainer}>
-        {images.map((uri, index) => (
-          <Image key={index} source={{ uri }} style={formStyles.image} />
-        ))}
+        <View style={commonStyles.imageWrapper}>
+
+          {images.map((uri, index) => (
+            <Image key={index} source={{ uri }} style={formStyles.image} />
+          ))}
+        </View>
       </ScrollView>
     </View>
   );

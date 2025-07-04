@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 import { AppIconButton } from './AppIconButton';
-import { sharedEntryStyles } from '@/SharedEntryStyles'; // Adjust path as needed
+import { commonStyles } from '@/SharedStyles';
 import { fetchAndSetParentEntry } from '@/utils/entryHandler';
+import { EntryDetailModal } from './EntryDetailModal'; // ✅ make sure this is imported
 
 interface ReminderProps {
   _id: string;
   date: string;
   notes: string;
   parentObjectId?: string;
+}
+
+interface EntryProps {
+  _id: string;
+  name: string;
+  date: string;
+  notes: string;
+  images?: string[];
 }
 
 interface ReminderDisplayProps {
@@ -24,19 +33,29 @@ export const ReminderDisplay: React.FC<ReminderDisplayProps> = ({
   onDeleteReminder,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [parentEntry, setParentEntry] = useState<{ name?: string } | null>(null);
+  const [parentEntry, setParentEntry] = useState<EntryProps | null>(null);
+  const [showParentModal, setShowParentModal] = useState(false); // ✅ new state
 
   useEffect(() => {
     fetchAndSetParentEntry(entry, setParentEntry);
   }, [entry.parentObjectId]);
 
   return (
-    <View style={sharedEntryStyles.entryContainer}>
-      <Text style={sharedEntryStyles.title}>  {parentEntry?.name ? `Reminder for ${parentEntry.name}` : 'Loading...'}</Text>
+    <View style={commonStyles.entryContainer}>
+      {/* ✅ Make the name clickable */}
+      {parentEntry?.name ? (
+        <TouchableOpacity onPress={() => setShowParentModal(true)}>
+          <Text style={[commonStyles.title, { color: 'blue' }]}>
+            Reminder for {parentEntry.name}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <Text style={commonStyles.title}>Loading...</Text>
+      )}
 
-      <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
+      <Text >{entry.notes}</Text>
 
-      <View style={sharedEntryStyles.buttonWrapper}>
+      <View style={commonStyles.buttonWrapper}>
         <AppIconButton
           icon="pencil"
           label="Edit"
@@ -50,6 +69,18 @@ export const ReminderDisplay: React.FC<ReminderDisplayProps> = ({
           variant="close"
         />
       </View>
+
+      {/* ✅ Show modal when parent name is clicked */}
+      {parentEntry && (
+        <EntryDetailModal
+          visible={showParentModal}
+          entry={parentEntry}
+          onClose={() => setShowParentModal(false)}
+          onEditUpdate={() => { }} 
+          onDeleteUpdate={() => { }}
+          onDeleteEntry={() => { }}
+          onEditEntry={() => { }} />
+      )}
 
       <DeleteConfirmationModal
         visible={showDeleteModal}

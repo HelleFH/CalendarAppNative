@@ -5,7 +5,7 @@ import { SelectEntryToUpdate } from './SelectEntryToUpdate';
 import { useNames } from '@/components/UseNames';
 import { useCurrentUser } from './CurrentUser';
 import { AppIconButton } from './AppIconButton';
-import { sharedEntryStyles } from '@/SharedEntryStyles';
+import { commonStyles } from '@/SharedStyles';
 
 interface UpdateEntryProps {
   _id: string;
@@ -75,46 +75,52 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
     }
   }, [visible, isEditing, editingEntry, setParentObjectId, setNotes, setImages, setName]);
 
-const handleSave = () => {
-  if (isEditing) {
-    saveEditedUpdateEntry();
-  } else {
-    saveEntry();
-  }
-  onClose();
-  setSelectingEntry(!isEditing);
-  setParentObjectId(null);
-  setNotes('');
-  setImages([]);
-  setName('');
-};
+  const handleSave = () => {
+    if (isEditing) {
+      saveEditedUpdateEntry();
+    } else {
+      saveEntry();
+    }
+    onClose();
+    setSelectingEntry(!isEditing);
+    setParentObjectId(null);
+    setNotes('');
+    setImages([]);
+    setName('');
+  };
 
 
-const handleClose = () => {
-  onClose();
-  setSelectingEntry(false);
-};
+  const handleClose = () => {
+    onClose();
+    setSelectingEntry(false);
+  };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
-     <View style={sharedEntryStyles.entryContainer}>
-    <SelectEntryToUpdate
-      allNames={allNames}
-      setParentObjectId={setParentObjectId}
-      setNotes={setNotes}
-      setImages={setImages}
-      setName={setName}
-      onEntrySelected={(id: string) => {
-        setParentObjectId(id);
-      }}
-    />
-            <UpdateNotesAndImages
+<Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
+  <View style={commonStyles.entryContainer}>
+    
+    {/* Show this ONLY when creating a new entry */}
+    {!isEditing && (
+      <SelectEntryToUpdate
+        allNames={allNames}
+        setParentObjectId={setParentObjectId}
+        setNotes={setNotes}
+        setImages={setImages}
+        setName={setName}
+        onEntrySelected={(id: string) => {
+          setParentObjectId(id);
+        }}
+      />
+    )}
+
+    <UpdateNotesAndImages
       notes={notes}
       setNotes={setNotes}
       images={images}
       setImages={setImages}
       saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
       initialImages={editingEntry?.images}
+      isNewEntry={!isEditing} // correct dynamic value
     />
 
     <AppIconButton
@@ -130,8 +136,9 @@ const handleClose = () => {
       variant="close"
       onPress={handleClose}
     />
-      </View>
-    </Modal>
+  </View>
+</Modal>
+
   );
 };
 

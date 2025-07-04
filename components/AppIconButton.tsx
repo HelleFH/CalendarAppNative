@@ -69,7 +69,7 @@ const getStyles = (variant: Variant, disabled: boolean) => {
       alignItems: 'center',
       backgroundColor,
       paddingVertical: 12,
-      maxWidth:200,
+      maxWidth:175,
       whiteSpace:'no-wrap',
       width:'100%',
       paddingHorizontal: 18,

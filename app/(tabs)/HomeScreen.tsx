@@ -98,7 +98,7 @@ const HomeScreen = () => {
     if (!currentUserId) return;
 
     try {
-      const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(currentUserId, day.dateString);
+const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(currentUserId, day.dateString);
       setEntryForSelectedDate(originalEntries);
       setUpdateEntryForSelectedDate(updateEntries);
       setReminderForSelectedDate(reminders);
@@ -123,7 +123,6 @@ const HomeScreen = () => {
       setSelectedOriginalEntry,
       setParentObjectId,
       fetchNames,
-
     });
 
   const saveEditedEntry = () =>
@@ -137,6 +136,7 @@ const HomeScreen = () => {
       setIsCreateModalVisible,
       setIsEditing,
       setEditingEntryId,
+      handleDayPress,
       fetchMarkedDates,
       fetchNames,
     });
@@ -151,6 +151,7 @@ const HomeScreen = () => {
       setIsCreateModalVisible,
       setIsEditing,
       setEditingEntryId,
+      handleDayPress,
       fetchMarkedDates,
     });
 
@@ -161,6 +162,7 @@ const HomeScreen = () => {
       setMarkedDates,
       setEntryForSelectedDate,
       setUpdateEntryForSelectedDate,
+      handleDayPress,
     });
 
   const handleDeleteUpdateEntry = (entryId: string) =>
@@ -168,6 +170,7 @@ const HomeScreen = () => {
       entryId,
       selectedDate,
       setMarkedDates,
+      handleDayPress,
     });
 
   const handleDeleteReminder = (reminderId: string) => {
@@ -181,6 +184,7 @@ const HomeScreen = () => {
       onSuccess: async () => {
         const newMarked = await fetchMarkedDates(currentUserId);
         setMarkedDates(newMarked);
+        handleDayPress({ dateString: selectedDate });
       },
     });
   };
@@ -197,7 +201,6 @@ const HomeScreen = () => {
       setSelectedOriginalEntry,
       setParentObjectId,
       setEntryForSelectedDate,
-
     });
 
   const handleEdit = (entry: EntryProps) => {
@@ -245,7 +248,6 @@ const HomeScreen = () => {
       setSelectedOriginalEntry,
       setParentObjectId,
       fetchNames,
-
     });
   };
 
@@ -254,7 +256,7 @@ const HomeScreen = () => {
   }, [currentUserId]);
 
   return (
-    <ScrollView contentContainerStyle={commonStyles.appContainer}>
+<ScrollView contentContainerStyle={commonStyles.appContainer}>
       <Text style={commonStyles.title}>Plant Calendar</Text>
 
       <CalendarComponent
@@ -262,7 +264,7 @@ const HomeScreen = () => {
         markedDates={markedDates}
         onDayPress={handleDayPress}
       />
-      <View style={styles.buttonWrapper}>
+      <View style={commonStyles.buttonWrapper}>
         <AppIconButton
           icon="add"
           label="Add"
@@ -281,6 +283,7 @@ const HomeScreen = () => {
             onDeleteEntry={handleDeleteEntry}
             onDeleteUpdate={handleDeleteUpdateEntry}
             onPress={() => setIsViewModalVisible(true)}
+            showUpdatesInline={false}
           />
         ))}
 
@@ -291,7 +294,6 @@ const HomeScreen = () => {
             entry={{ ...entry, images: entry.images ?? [] }}
             onEditUpdate={handleEditUpdate}
             onDeleteUpdate={handleDeleteUpdateEntry}
-          
           />
         ))}
 
@@ -308,7 +310,7 @@ const HomeScreen = () => {
 
 
       {selectedOriginalEntry && (
-        <View style={styles.buttonWrapper}>
+        <View style={commonStyles.buttonWrapper}>
           <AppIconButton
             label="View Entry"
             icon="eye-outline"
@@ -365,14 +367,11 @@ const HomeScreen = () => {
         setParentObjectId={setParentObjectId}
         allNames={allNames}
         setReminderDate={setReminderDate}
-        reminderDate={reminderDate} setName={function (n: string): void {
-          throw new Error('Function not implemented.');
-        }} setImages={function (value: React.SetStateAction<string[]>): void {
-          throw new Error('Function not implemented.');
-        }} />
+        reminderDate={reminderDate}
+      />
 
       {reminders.map((reminder, index) => (
-        <Text key={index} style={commonStyles.notes}>
+        <Text key={index}>
           {`Reminder on ${reminder.date}: ${reminder.notes}`}
         </Text>
       ))}
@@ -400,14 +399,9 @@ const HomeScreen = () => {
           setIsReminderModalVisible(true);
         }}
       />
-    </ScrollView>
+</ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  buttonWrapper: {
-    marginTop: 12,
-  },
-});
 
 export default HomeScreen;

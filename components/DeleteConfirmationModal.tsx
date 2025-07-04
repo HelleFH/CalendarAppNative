@@ -1,3 +1,4 @@
+import { commonStyles } from '@/SharedStyles';
 import React from 'react';
 import { Modal, View, Text, Button, StyleSheet } from 'react-native';
 
@@ -20,12 +21,12 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
       transparent
       animationType="fade"
     >
-      <View style={styles.overlay}>
-        <View style={styles.modal}>
-          <Text style={styles.text}>
+      <View style={commonStyles.modalOverlay}>
+        <View style={commonStyles.modalContainer}>
+          <Text>
             Are you sure you want to delete?
           </Text>
-          <View style={styles.buttonRow}>
+          <View style={commonStyles.buttonWrapper}>
             <Button title="Cancel" onPress={onCancel} />
             <Button title="Delete" onPress={onConfirm} color="red" />
           </View>
@@ -34,26 +35,3 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modal: {
-    backgroundColor: 'white',
-    padding: 25,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  text: {
-    marginBottom: 20,
-    fontSize: 16,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: 15,
-  },
-});

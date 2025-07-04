@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 import { AppIconButton } from './AppIconButton';
-import { sharedEntryStyles } from '@/SharedEntryStyles';
+import { commonStyles } from '@/SharedStyles';
 import { UpdateEntryDetailModal } from './UpdateEntryDetailModal';
 import { Ionicons } from '@expo/vector-icons';
-import { fetchEntryById } from '@/utils/api';
 import { fetchAndSetParentEntry } from '@/utils/entryHandler';
+import { EntryDetailModal } from './EntryDetailModal';
 
 interface UpdateEntryProps {
   _id: string;
@@ -14,52 +14,86 @@ interface UpdateEntryProps {
   notes: string;
   images?: string[];
   parentObjectId?: string;
-  
 }
-
+interface EntryProps {
+  _id: string;
+  name: string;
+  date: string;
+  notes: string;
+  images?: string[];
+}
 interface UpdateEntryDisplayProps {
   entry: UpdateEntryProps;
   onEditUpdate: (entry: UpdateEntryProps) => void;
   onDeleteUpdate: (entryId: string) => void;
-    disableDetailModal?: boolean;
-
+  disableDetailModal?: boolean;
+  fetchNames?: () => Promise<void>;
+  setEditingEntryId?: React.Dispatch<React.SetStateAction<string | null>>;
+  parentEntryName?: string;
+  setParentObjectId?: React.Dispatch<React.SetStateAction<string | null>>;
+  onRefreshEntries?: () => void;
+  onRequestCloseModal?: () => void;
 }
 
 export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
   entry,
   onEditUpdate,
   onDeleteUpdate,
-  disableDetailModal,
+  disableDetailModal = false,
+  setEditingEntryId,
+  parentEntryName,
+  onRequestCloseModal,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showEntryModal, setShowEntryModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [parentEntry, setParentEntry] = useState<{ name?: string } | null>(null);
+  const [parentEntry, setParentEntry] = useState<EntryProps | null>(null);
 
   const images = entry.images ?? [];
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
   };
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
+
   useEffect(() => {
-    fetchAndSetParentEntry(entry, setParentEntry);
-  }, [entry.parentObjectId]);
+    if (parentEntryName) {
+      setParentEntry({
+        _id: entry.parentObjectId || 'unknown',
+        name: parentEntryName,
+        date: '',
+        notes: '',
+        images: [],
+      });
+    } else {
+      fetchAndSetParentEntry(entry, setParentEntry);
+    }
+  }, [entry.parentObjectId, parentEntryName]);
 
   return (
-    <View>
-      <Text style={sharedEntryStyles.title}>  {parentEntry?.name ? `Update for ${parentEntry.name}` : 'Loading...'}
-      </Text>
-      <Text style={sharedEntryStyles.notes}>{entry.notes}</Text>
-<TouchableOpacity
-  onPress={() => {
-    if (!disableDetailModal) setShowDetailModal(true);
-  }}
-  activeOpacity={0.7}
->
+    <View >
+      {parentEntry?.name ? (
+        <TouchableOpacity onPress={() => setShowEntryModal(true)}>
+          <Text style={commonStyles.title}>
+            Update for {parentEntry.name} ({entry.date})
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <Text style={commonStyles.title}>Loading...</Text>
+      )}
+
+      <Text style={commonStyles.notes}>{entry.notes}</Text>
+
+      <TouchableOpacity
+        onPress={() => {
+          if (!disableDetailModal) setShowDetailModal(true);
+        }}
+        activeOpacity={0.7}
+      >
         {images.length > 0 && (
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
             {images.length > 1 && (
@@ -67,7 +101,7 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
                 <Ionicons name="chevron-back" size={24} color="black" />
               </TouchableOpacity>
             )}
-            <Image source={{ uri: images[currentImageIndex] }} style={sharedEntryStyles.image} />
+            <Image source={{ uri: images[currentImageIndex] }} style={commonStyles.image} />
             {images.length > 1 && (
               <TouchableOpacity onPress={handleNextImage}>
                 <Ionicons name="chevron-forward" size={24} color="black" />
@@ -77,10 +111,36 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
         )}
       </TouchableOpacity>
 
-      <View style={sharedEntryStyles.buttonWrapper}>
-        <AppIconButton icon="pencil" label="Edit" onPress={() => onEditUpdate(entry)} variant="edit" />
-        <AppIconButton icon="remove" label="Delete" onPress={() => setShowDeleteModal(true)} variant="delete" />
+      <View style={commonStyles.buttonWrapper}>
+        <AppIconButton
+          icon="pencil"
+          label="Edit"
+          onPress={() => {
+            onEditUpdate(entry);
+            setEditingEntryId?.(entry._id);
+            onRequestCloseModal?.();
+          }}
+          variant="edit"
+        />
+        <AppIconButton
+          icon="remove"
+          label="Delete"
+          onPress={() => setShowDeleteModal(true)}
+          variant="delete"
+        />
       </View>
+
+      {parentEntry && (
+        <EntryDetailModal
+          visible={showEntryModal}
+          entry={parentEntry}
+          onClose={() => setShowEntryModal(false)}
+          onEditUpdate={onEditUpdate}
+          onDeleteUpdate={onDeleteUpdate}
+          onDeleteEntry={() => { }}
+          onEditEntry={() => { }}
+        />
+      )}
 
       <DeleteConfirmationModal
         visible={showDeleteModal}
@@ -94,10 +154,13 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
 
       <UpdateEntryDetailModal
         visible={showDetailModal}
-        entry={entry}
+        entry={{
+          ...entry,
+          name: parentEntry?.name || 'Unknown',
+        }}
         onClose={() => setShowDetailModal(false)}
-        onEdit={onEditUpdate}
-        onDelete={onDeleteUpdate}
+        onEditUpdate={onEditUpdate}
+        onDeleteUpdate={onDeleteUpdate}
       />
     </View>
   );

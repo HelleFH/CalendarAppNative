@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, View, Button, StyleSheet, TextInput, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AppIconButton } from './AppIconButton';
-import { sharedEntryStyles } from '@/SharedEntryStyles';
+import { commonStyles } from '@/SharedStyles';
 import { SelectEntryForReminder } from './SelectEntryForReminder';
 import { formStyles } from '@/FormStyles';
 
@@ -69,7 +69,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View style={sharedEntryStyles.entryContainer}>
+      <View style={commonStyles.entryContainer}>
         <SelectEntryForReminder
           allNames={allNames}
           setParentObjectId={setParentObjectId}

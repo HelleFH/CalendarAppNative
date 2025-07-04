@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, View, Button, StyleSheet } from 'react-native';
 import { NotesAndImages } from './NotesAndImages';
 import { AppIconButton } from './AppIconButton';
-import { sharedEntryStyles } from '@/SharedEntryStyles';
+import { commonStyles } from '@/SharedStyles';
 
 interface CreateEntryModalProps {
   visible: boolean;
@@ -33,7 +33,7 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
 }) => {
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View style={sharedEntryStyles.entryContainer}>
+      <View style={commonStyles.entryContainer}>
         <NotesAndImages
           name={name}
           setName={setName}
