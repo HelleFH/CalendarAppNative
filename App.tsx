@@ -1,17 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { onAuthStateChanged, User } from 'firebase/auth';  
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
-import { View } from 'react-native';
+
+import IndexScreen from './app/(tabs)/Welcome';
 import LoginScreen from './app/(tabs)/LoginScreen';
 import HomeScreen from './app/(tabs)/HomeScreen';
 import AllEntriesScreen from './app/(tabs)/AllEntriesScreen';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  IndexScreen: undefined;
+  Login: undefined;
+  HomeScreen: undefined;
+  AllEntriesScreen: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  const [user, setUser] = useState<User | null>(null); 
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,33 +28,23 @@ export default function App() {
       setLoading(false);
     });
 
-    window.onbeforeunload = null;
-
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
   if (loading) return null;
 
   return (
-  <View style={{ flex: 1, }}>
-    <NavigationContainer >
-      <Stack.Navigator>
-        {!user ? (
-          <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="HomeScreen" component={HomeScreen} />
-            <Stack.Screen name="AllEntries" component={AllEntriesScreen} />
-          </>
-        )}
+    <NavigationContainer>
+  
+        <Stack.Screen name="IndexScreen" component={IndexScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />'
+            <Stack.Navigator
+        initialRouteName={user ? 'HomeScreen' : 'IndexScreen'}
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="AllEntriesScreen" component={AllEntriesScreen} />
       </Stack.Navigator>
-
     </NavigationContainer>
-
-  </View>
   );
 }

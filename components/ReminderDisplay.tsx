@@ -5,6 +5,7 @@ import { AppIconButton } from './AppIconButton';
 import { commonStyles } from '@/SharedStyles';
 import { fetchAndSetParentEntry } from '@/utils/entryHandler';
 import { EntryDetailModal } from './EntryDetailModal'; // ✅ make sure this is imported
+import { Ionicons } from '@expo/vector-icons';
 
 interface ReminderProps {
   _id: string;
@@ -22,13 +23,13 @@ interface EntryProps {
 }
 
 interface ReminderDisplayProps {
-  entry: ReminderProps;
+  reminder: ReminderProps;
   onEditReminder: (entry: ReminderProps) => void;
   onDeleteReminder: (entryId: string) => void;
 }
 
 export const ReminderDisplay: React.FC<ReminderDisplayProps> = ({
-  entry,
+  reminder,
   onEditReminder,
   onDeleteReminder,
 }) => {
@@ -36,30 +37,41 @@ export const ReminderDisplay: React.FC<ReminderDisplayProps> = ({
   const [parentEntry, setParentEntry] = useState<EntryProps | null>(null);
   const [showParentModal, setShowParentModal] = useState(false); // ✅ new state
 
-  useEffect(() => {
-    fetchAndSetParentEntry(entry, setParentEntry);
-  }, [entry.parentObjectId]);
+useEffect(() => {
+  if (reminder?.parentObjectId) {
+    fetchAndSetParentEntry(reminder, setParentEntry);
+  }
+}, [reminder?.parentObjectId]);
 
   return (
     <View style={commonStyles.entryContainer}>
       {/* ✅ Make the name clickable */}
       {parentEntry?.name ? (
-        <TouchableOpacity onPress={() => setShowParentModal(true)}>
-          <Text style={[commonStyles.title, { color: 'blue' }]}>
-            Reminder for {parentEntry.name}
-          </Text>
-        </TouchableOpacity>
+<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+  <Ionicons name="alarm-outline" size={20} />
+  <Text style={commonStyles.subtitle}>
+    Reminder for{' '}
+    <Text
+      style={[commonStyles.subtitle, { color: 'blue', textDecorationLine: 'underline' }]}
+      onPress={() => setShowParentModal(true)}
+    >
+      {parentEntry.name}
+    </Text>
+  </Text>
+</View>
+
+        
       ) : (
         <Text style={commonStyles.title}>Loading...</Text>
       )}
 
-      <Text >{entry.notes}</Text>
+      <Text   style={commonStyles.notes}>{reminder.notes}</Text>
 
       <View style={commonStyles.buttonWrapper}>
         <AppIconButton
           icon="pencil"
           label="Edit"
-          onPress={() => onEditReminder(entry)}
+          onPress={() => onEditReminder(reminder)}
           variant="edit"
         />
         <AppIconButton
@@ -86,7 +98,7 @@ export const ReminderDisplay: React.FC<ReminderDisplayProps> = ({
         visible={showDeleteModal}
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={() => {
-          onDeleteReminder(entry._id);
+          onDeleteReminder(reminder._id);
           setShowDeleteModal(false);
         }}
         itemType="entry"

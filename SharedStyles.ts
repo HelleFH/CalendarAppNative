@@ -13,16 +13,25 @@ export const commonStyles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign:'center',
+    width:'100%',
+    maxWidth:700,
+    display:'flex',
+        alignSelf: 'center',
+
+
   },
   entryContainer: {
-    display:'flex',
+    display: 'flex',
     marginTop: 10,
     padding: 10,
     backgroundColor: '#F0F8FF',
     borderRadius: 10,
     alignItems: 'flex-start',
-    maxWidth:400,
-    width:'100%',
+    maxWidth: 400,
+    width: '100%',
   },
   modalOverlay: {
     flex: 1,
@@ -33,7 +42,7 @@ export const commonStyles = StyleSheet.create({
   modalContainer: {
     backgroundColor: '#F0F8FF',
     borderRadius: 12,
-    padding: 20,
+    padding: 50,
     alignItems: 'center',
   },
   modalContent: {
@@ -54,7 +63,6 @@ export const commonStyles = StyleSheet.create({
     gap: 8,
   },
 
-  // Typography
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -66,7 +74,6 @@ export const commonStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     color: '#4A5568',
-    marginBottom: 20,
   },
   modalTitle: {
     fontSize: 20,
@@ -99,6 +106,7 @@ export const commonStyles = StyleSheet.create({
     fontSize: 16,
     color: '#4A5568',
     marginBottom: 16,
+    marginTop:16,
   },
   entryNotes: {
     marginBottom: 10,
@@ -110,7 +118,9 @@ export const commonStyles = StyleSheet.create({
   link: {
     color: '#1E90FF',
     textDecorationLine: 'underline',
-    fontSize: 14,
+    fontSize: 18,
+    fontWeight:500,
+    marginTop:20,
   },
 
   // Inputs
@@ -138,20 +148,20 @@ export const commonStyles = StyleSheet.create({
     marginBottom: 20,
   },
 
-imageWrapper: {
-  width:'100%',
-  height:'100%',
-  justifyContent: 'center',
-  alignItems: 'center',   
-  marginBottom: 16,
-},
+  imageWrapper: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
 
-image: {
-  width: 325,
-  height: 325,
-  resizeMode: 'contain',
-  borderRadius: 12,
-},
+  image: {
+    width: 325,
+    height: 325,
+    resizeMode: 'contain',
+    borderRadius: 12,
+  },
   imageLarge: {
     width: '100%',
     height: 300,

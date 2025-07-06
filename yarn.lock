@@ -2232,7 +2232,7 @@
     use-latest-callback "^0.2.4"
     use-sync-external-store "^1.5.0"
 
-"@react-navigation/native-stack@^7.2.0", "@react-navigation/native-stack@^7.3.10":
+"@react-navigation/native-stack@^7.2.0", "@react-navigation/native-stack@^7.3.21":
   version "7.3.21"
   resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-7.3.21.tgz#224ee559b8039c18901c1f7f95a7fd8861c1a398"
   integrity sha512-oNNZHzkxILEibesamRKLodfXAaDOUvMBITKXLLeblDxnTAyIB/Kf7CmV+8nwkdAgV04kURTxV0SQI+d8gLUm6g==
@@ -2240,7 +2240,7 @@
     "@react-navigation/elements" "^2.5.2"
     warn-once "^0.1.1"
 
-"@react-navigation/native@^7.0.14", "@react-navigation/native@^7.1.6":
+"@react-navigation/native@^7.0.14", "@react-navigation/native@^7.1.14":
   version "7.1.14"
   resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-7.1.14.tgz#6b5b57bba4c5f45bfc9961da2f921aba5215dfad"
   integrity sha512-X233/CNx41FpshlWe4uEAUN8CNem3ju4t5pnVKcdhDR0cTQT1rK6P0ZwjSylD9zXdnHvJttFjBhKTot6TcvSqA==
@@ -8326,15 +8326,14 @@ react-native-calendars@^1.1311.0:
   optionalDependencies:
     moment "^2.29.4"
 
-react-native-gesture-handler@~2.20.2:
-  version "2.20.2"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.20.2.tgz#73844c8e9c417459c2f2981bc4d8f66ba8a5ee66"
-  integrity sha512-HqzFpFczV4qCnwKlvSAvpzEXisL+Z9fsR08YV5LfJDkzuArMhBu2sOoSPUF/K62PCoAb+ObGlTC83TKHfUd0vg==
+react-native-gesture-handler@^2.27.1:
+  version "2.27.1"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.27.1.tgz#8865b2345f4c65536517f20cedc420481fc72d49"
+  integrity sha512-57TUWerhdz589OcDD21e/YlL923Ma4OIpyWsP0hy7gItBCPm5d7qIUW7Yo/cS2wo1qDdOhJaNlvlBD1lDou1fA==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
-    prop-types "^15.7.2"
 
 react-native-helmet-async@2.0.4:
   version "2.0.4"
@@ -8355,6 +8354,11 @@ react-native-is-edge-to-edge@^1.1.6:
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.7.tgz#28947688f9fafd584e73a4f935ea9603bd9b1939"
   integrity sha512-EH6i7E8epJGIcu7KpfXYXiV2JFIYITtq+rVS8uEb+92naMRBdxhTuS8Wn2Q7j9sqyO0B+Xbaaf9VdipIAmGW4w==
 
+react-native-is-edge-to-edge@^1.1.7:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.2.1.tgz#64e10851abd9d176cbf2b40562f751622bde3358"
+  integrity sha512-FLbPWl/MyYQWz+KwqOZsSyj2JmLKglHatd3xLZWskXOpRaio4LfEDEz8E/A6uD8QoTHW6Aobw1jbEwK7KMgR7Q==
+
 react-native-reanimated@~3.16.1:
   version "3.16.7"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.16.7.tgz#6c7fa516f62c6743c24d955dada00e3c5323d50d"
@@ -8372,22 +8376,23 @@ react-native-reanimated@~3.16.1:
     convert-source-map "^2.0.0"
     invariant "^2.2.4"
 
-react-native-safe-area-context@4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.12.0.tgz#17868522a55bbc6757418c94a1b4abdda6b045d9"
-  integrity sha512-ukk5PxcF4p3yu6qMZcmeiZgowhb5AsKRnil54YFUUAXVIS7PJcMHGGC+q44fCiBg44/1AJk5njGMez1m9H0BVQ==
-
 react-native-safe-area-context@4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.5.0.tgz#9208313236e8f49e1920ac1e2a2c975f03aed284"
   integrity sha512-0WORnk9SkREGUg2V7jHZbuN5x4vcxj/1B0QOcXJjdYWrzZHgLcUzYWWIUecUPJh747Mwjt/42RZDOaFn3L8kPQ==
 
-react-native-screens@~4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.4.0.tgz#3fcbcdf1bbb1be2736b10d43edc3d4e69c37b5aa"
-  integrity sha512-c7zc7Zwjty6/pGyuuvh9gK3YBYqHPOxrhXfG1lF4gHlojQSmIx2piNbNaV+Uykj+RDTmFXK0e/hA+fucw/Qozg==
+react-native-safe-area-context@^5.5.1:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.5.1.tgz#9fac8ae5da8b9ff6f77eb3f697e073f04a1f2f3f"
+  integrity sha512-WYxV+mm7SWuapVWxq2071lkQlDUXjSwcu7Cc2bUtNcF80/Bl0WnuWAZ8+tO46M38PclMrQIIgbv83BvDHJNQ5g==
+
+react-native-screens@^4.11.1:
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.11.1.tgz#7d0f3d313d8ddc1e55437c5e038f15f8805dc991"
+  integrity sha512-F0zOzRVa3ptZfLpD0J8ROdo+y1fEPw+VBFq1MTY/iyDu08al7qFUO5hLMd+EYMda5VXGaTFCa8q7bOppUszhJw==
   dependencies:
     react-freeze "^1.0.0"
+    react-native-is-edge-to-edge "^1.1.7"
     warn-once "^0.1.0"
 
 react-native-swipe-gestures@^1.0.5:

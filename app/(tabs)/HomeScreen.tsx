@@ -303,7 +303,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
             key={entry._id}
             onEditReminder={handleEditReminder}
             onDeleteReminder={handleDeleteReminder}
-            entry={entry}
+            reminder={entry}
           />
         ))}
 

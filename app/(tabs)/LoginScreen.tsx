@@ -1,10 +1,13 @@
 // src/screens/LoginScreen.tsx
 import React, { useState } from 'react';
-import { View, TextInput, Text } from 'react-native';
+import { View, TextInput, Text, Image } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { formStyles } from '@/FormStyles';
 import { AppIconButton } from '@/components/AppIconButton';
+import Images from '@/assets/images';
+import { commonStyles } from '@/SharedStyles';
+
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -16,7 +19,7 @@ export default function LoginScreen() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert('Registered!');
-    } catch (err) {
+    } catch (err) { 
       setError((err as any).message);
     }
   };
@@ -32,7 +35,9 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={formStyles.container}>
+    <View style={commonStyles.container}>
+            <Image source={Images.HomeScreenBG} style={commonStyles.image} />
+
       <TextInput
         placeholder="Email"
         value={email}

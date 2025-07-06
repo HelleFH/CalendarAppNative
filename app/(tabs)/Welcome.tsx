@@ -1,15 +1,17 @@
 import React from 'react';
+
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Images from '../../assets/images';
 import { commonStyles } from '@/SharedStyles';
 import { AppIconButton } from '@/components/AppIconButton';
 
-// Define your navigation routes here
+
 type RootStackParamList = {
-  Login: undefined;
+  LoginScreen: undefined;
   HomeScreen: undefined;
   AllEntriesScreen: undefined;
+  IndexScreen:undefined;
 };
 
 export default function IndexScreen() {
@@ -21,7 +23,7 @@ export default function IndexScreen() {
 
       <Text style={commonStyles.title}>the Plant Calendar 🌱</Text>
       <Text style={commonStyles.subtitle}>
-        Plant Calendar helps you care for your plants with ease. Set reminders, track growth, and never forget to water again.
+        Plant Calendar helps you care for your plants with ease. Upload images, track growth, and never forget to water again.
       </Text>
 
       <Text style={styles.benefits}>
@@ -29,13 +31,12 @@ export default function IndexScreen() {
         ✔️ Growth tracking & notes{'\n'}
       </Text>
 
-      <View style={commonStyles.buttonWrapper}>
 
 
         <AppIconButton
-          icon="add"
+          icon="log-in"
           label="Login"
-          onPress={() => navigation.navigate('Login')} 
+          onPress={() => navigation.navigate('LoginScreen')} 
           disabled={false}
           variant="primary"
         />
@@ -44,12 +45,11 @@ export default function IndexScreen() {
         <AppIconButton
           icon="add"
           label="Get Started"
-          onPress={() => navigation.navigate('Login')} 
+          onPress={() => navigation.navigate('LoginScreen')} 
           disabled={false}
           variant="secondary"
         />
 
-      </View>
     </View>
   );
 }

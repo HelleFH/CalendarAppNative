@@ -1,12 +1,17 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
 export default function Index() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/HomeScreen');
+    // Use a short timeout to ensure the router is ready
+    const timeout = setTimeout(() => {
+      router.replace('/Welcome');
+    }, 0);
+
+    return () => clearTimeout(timeout);
   }, []);
 
-  return null; // or a loading spinner if you want
+  return null;
 }

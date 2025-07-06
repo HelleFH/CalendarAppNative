@@ -77,11 +77,16 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
   return (
     <View >
       {parentEntry?.name ? (
-        <TouchableOpacity onPress={() => setShowEntryModal(true)}>
-          <Text style={commonStyles.title}>
-            Update for {parentEntry.name} ({entry.date})
-          </Text>
-        </TouchableOpacity>
+       <Text style={commonStyles.title}>
+  Update for{' '}
+  <Text
+    style={[commonStyles.title, { textDecorationLine: 'underline', color: 'blue' }]}
+    onPress={() => setShowEntryModal(true)}
+  >
+    {parentEntry.name}
+  </Text>{' '}
+  ({entry.date})
+</Text>
       ) : (
         <Text style={commonStyles.title}>Loading...</Text>
       )}

@@ -60,7 +60,6 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   const [showUpdateList, setShowUpdateList] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [reminders, setReminders] = useState<ReminderProps[]>([]);
-  const [showReminders, setShowReminders] = useState(false);
 
 
   useEffect(() => {
@@ -85,26 +84,26 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   }, [entry._id]);
 
   useEffect(() => {
-    const fetchReminders = async () => {
-      if (!entry._id) return;
+  const fetchReminders = async () => {
+    if (!entry._id) return;
 
-      try {
-        const res = await axios.get<ReminderProps[]>(
-          'https://calendarappnative.onrender.com/entries/reminders/by-parent',
-          {
-            params: { parentObjectId: entry._id },
-          }
-        );
+    try {
+      const res = await axios.get<ReminderProps[]>(
+        'https://calendarappnative.onrender.com/entries/reminders/by-parent',
+        {
+          params: { parentObjectId: entry._id },
+        }
+      );
 
-        setReminders(res.data);
-      } catch (err) {
-        console.error('Failed to fetch update entries:', err);
-      }
-    };
+      console.log('Fetched reminders:', res.data); // Add this line
+      setReminders(res.data);
+    } catch (err) {
+      console.error('Failed to fetch reminders:', err);
+    }
+  };
 
-    fetchReminders();
-  }, [entry._id]);
-
+  fetchReminders();
+}, [entry._id]);
 
   const images = entry.images ?? [];
 
@@ -115,6 +114,7 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
+
 
   return (
     <View style={commonStyles.entryContainer}>
@@ -188,20 +188,16 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
             ))}
         </>
       )}
-
-      {showReminders &&
-        reminders.map((reminder) => (
-          <ReminderDisplay
-            key={reminder._id}
-            entry={reminder}
-            onEditReminder={(updated) => {
-            }}
-            onDeleteReminder={(id) => {
-              setReminders((prev) => prev.filter((r) => r._id !== id));
-            }}
-          />
-        ))}
-        
+{reminders.length > 0 && (
+  reminders.map((reminder) => (
+    <ReminderDisplay
+      key={reminder._id}
+      reminder={reminder}
+      onEditReminder={() => {}}
+      onDeleteReminder={() => {}}
+    />
+  ))
+)}
       <DeleteConfirmationModal
         visible={showDeleteModal}
         onCancel={() => setShowDeleteModal(false)}
