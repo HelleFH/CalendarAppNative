@@ -1,5 +1,19 @@
 import express from 'express';
-import { upload } from '../utils/multerConfig.js';
+import multer from 'multer';
+import { addEntry, getAllNames, deleteEntry, editEntry } from '../Controllers/entryController.js';
+import cloudinary from 'cloudinary';
+
+// Cloudinary config
+cloudinary.config({
+  cloud_name: 'dvagswjsf',
+  api_key: '541989745898263',
+  api_secret: 'ppzQEDXFiCcFdicfNYCupeZaRu0',
+});
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+
 import {
   addEntry,
   getAllEntries,

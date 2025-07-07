@@ -1,4 +1,16 @@
 import express from 'express';
+import express from 'express';
+import multer from 'multer';
+import cloudinary from 'cloudinary';
+
+// Cloudinary config
+cloudinary.config({
+  cloud_name: 'dvagswjsf',
+  api_key: '541989745898263',
+  api_secret: 'ppzQEDXFiCcFdicfNYCupeZaRu0',
+});
+
+
 import {
   createReminder,
   getRemindersByDate,
