@@ -117,7 +117,7 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
 
 
   return (
-    <View style={commonStyles.entryContainer}>
+    <View style={commonStyles.container}>
       <TouchableOpacity
         onPress={() => {
           if (!disableDetailModal) setShowEntryModal(true);

@@ -71,8 +71,7 @@ const getStyles = (variant: Variant, disabled: boolean) => {
       paddingVertical: 12,
       maxWidth:175,
       whiteSpace:'no-wrap',
-      width:'100%',
-      paddingHorizontal: 18,
+      paddingHorizontal: 25,
       borderRadius: variant === 'close' ? 0 : 12,
       marginVertical: 6,
       ...(variant !== 'close' && {

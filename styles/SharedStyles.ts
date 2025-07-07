@@ -19,7 +19,6 @@ export const commonStyles = StyleSheet.create({
     width:'100%',
     maxWidth:700,
     display:'flex',
-        alignSelf: 'center',
 
 
   },
@@ -32,6 +31,8 @@ export const commonStyles = StyleSheet.create({
     alignItems: 'flex-start',
     maxWidth: 400,
     width: '100%',
+
+
   },
   modalOverlay: {
     flex: 1,
@@ -53,14 +54,13 @@ export const commonStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cancelButton: {
-    marginTop: 20,
-  },
+
   buttonWrapper: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     marginTop: 10,
     gap: 8,
+    width:'100%',
   },
 
   title: {
@@ -157,8 +157,9 @@ export const commonStyles = StyleSheet.create({
   },
 
   image: {
-    width: 325,
-    height: 325,
+    maxWidth: '97%',
+    minWidth:275,
+    minHeight:275,
     resizeMode: 'contain',
     borderRadius: 12,
   },
