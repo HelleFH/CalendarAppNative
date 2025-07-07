@@ -7,7 +7,7 @@ export const logoutUser = async (navigation: any) => {
     await signOut(auth);
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Login' }], // Ensure this matches your navigator route name
+      routes: [{ name: 'LoginScreen' }], 
     });
   } catch (error) {
     console.error('Logout failed:', error);

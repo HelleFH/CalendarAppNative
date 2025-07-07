@@ -4,7 +4,6 @@ import { StyleSheet } from 'react-native';
 export const formStyles = StyleSheet.create({
   container: {
     marginTop: 20,
-    width: '100%',
     alignSelf: 'center',
 
   },

@@ -10,6 +10,7 @@ interface Props {
   onPress: () => void;
   variant?: Variant;
   disabled?: boolean;
+  style?: ViewStyle;
 }
 
 export const AppIconButton: React.FC<Props> = ({
