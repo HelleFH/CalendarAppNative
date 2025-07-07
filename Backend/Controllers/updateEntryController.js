@@ -154,7 +154,8 @@ const updateEntry = async (req, res) => {
     res.status(500).json({ error: 'Something went wrong in updateEntry' });
   }
 };
-export const getUpdatesByParent = async (req, res) => {
+
+const getUpdatesByParent = async (req, res) => {
   const { parentObjectId } = req.query;
 
   if (!parentObjectId) {
@@ -176,7 +177,7 @@ export const getUpdatesByParent = async (req, res) => {
   }
 };
 
-export const getUpdateEntriesByUserAndDate = async (req, res) => {
+ const getUpdateEntriesByUserAndDate = async (req, res) => {
   const { userId, date } = req.query;
 
   if (!userId || !date) {
@@ -194,7 +195,7 @@ export const getUpdateEntriesByUserAndDate = async (req, res) => {
   }
 };
 
-export const getUpdateEntryDates = async (req, res) => {
+ const getUpdateEntryDates = async (req, res) => {
   const { userId } = req.query;
   try {
     const entries = await UpdateEntry.find({ userId });
@@ -205,7 +206,7 @@ export const getUpdateEntryDates = async (req, res) => {
   }
 };
 
-export const editUpdateEntryHandler = async (req, res) => {
+ const editUpdateEntryHandler = async (req, res) => {
   const { entryId } = req.params;
   const { date, notes, userId, originalImages } = req.body;
 
@@ -244,4 +245,12 @@ export const editUpdateEntryHandler = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-export { updateEntry, deleteUpdateEntry, editUpdateEntry,editUpdateEntryHandler, getUpdatesByParent, getUpdateEntryDates,getUpdateEntriesByUserAndDate };
+export {
+  updateEntry,
+  deleteUpdateEntry,
+  editUpdateEntry,
+  editUpdateEntryHandler,
+  getUpdatesByParent,
+  getUpdateEntryDates,
+  getUpdateEntriesByUserAndDate
+};

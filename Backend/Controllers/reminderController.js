@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 import Reminder from "../models/reminderModel.js";
 
-
-export const createReminder = async (req, res) => {
+const createReminder = async (req, res) => {
   const { userId, parentObjectId, date, notes } = req.body;
 
   console.log('Incoming reminder data:', { userId, parentObjectId, date, notes });
@@ -10,7 +9,7 @@ export const createReminder = async (req, res) => {
   if (!userId || !parentObjectId || !date) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
-console.log('Raw req.body:', req.body);
+  console.log('Raw req.body:', req.body);
 
   try {
     const newReminder = new Reminder({
@@ -28,7 +27,7 @@ console.log('Raw req.body:', req.body);
   }
 };
 
-export const getRemindersByDate = async (req, res) => {
+const getRemindersByDate = async (req, res) => {
   const { userId, date } = req.query;
 
   if (!userId || !date) {
@@ -44,7 +43,7 @@ export const getRemindersByDate = async (req, res) => {
   }
 };
 
-export const deleteReminder = async (req, res) => {
+const deleteReminder = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -59,7 +58,7 @@ export const deleteReminder = async (req, res) => {
   }
 };
 
-export const getRemindersByUserAndDate = async (req, res) => {
+const getRemindersByUserAndDate = async (req, res) => {
   const { userId, date } = req.query;
 
   if (!userId || !date) {
@@ -77,7 +76,7 @@ export const getRemindersByUserAndDate = async (req, res) => {
   }
 };
 
-export const getReminderDates = async (req, res) => {
+const getReminderDates = async (req, res) => {
   const { userId } = req.query;
   try {
     const reminders = await Reminder.find({ userId });
@@ -88,7 +87,7 @@ export const getReminderDates = async (req, res) => {
   }
 };
 
-export const getRemindersByParent = async (req, res) => {
+const getRemindersByParent = async (req, res) => {
   const { parentObjectId } = req.query;
 
   if (!parentObjectId) {
@@ -105,4 +104,13 @@ export const getRemindersByParent = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Server error while fetching reminders', error: err.message });
   }
+};
+
+export {
+  createReminder,
+  getRemindersByDate,
+  deleteReminder,
+  getRemindersByUserAndDate,
+  getReminderDates,
+  getRemindersByParent
 };

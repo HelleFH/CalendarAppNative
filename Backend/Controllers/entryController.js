@@ -180,7 +180,7 @@ const deleteEntry = async (req, res) => {
 
 
 
-export const getEntryByParentId = async (req, res) => {
+ const getEntryByParentId = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -199,7 +199,7 @@ export const getEntryByParentId = async (req, res) => {
   }
 };
 
-export const getEntryByUserAndDate = async (req, res) => {
+ const getEntryByUserAndDate = async (req, res) => {
   const { userId, date } = req.query;
 
   if (!userId || !date) {
@@ -219,7 +219,7 @@ export const getEntryByUserAndDate = async (req, res) => {
   }
 };
 
-export const getAllEntryDates = async (req, res) => {
+ const getAllEntryDates = async (req, res) => {
   const { userId } = req.query;
   try {
     const entries = await Entry.find({ userId });
@@ -230,7 +230,7 @@ export const getAllEntryDates = async (req, res) => {
   }
 };
 
-export const editEntryHandler = async (req, res) => {
+const editEntryHandler = async (req, res) => {
   const { entryId } = req.params;
   const { date, name, notes, userId, originalImages } = req.body;
 
@@ -270,4 +270,4 @@ export const editEntryHandler = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-export { addEntry, getAllNames, deleteEntry, editEntry,editEntryHandler,getEntryByUserAndDate,getEntryByParentId };
+export {  addEntry, getAllNames, deleteEntry, editEntry,editEntryHandler,getEntryByUserAndDate,getAllEntryDates,getEntryByParentId };
