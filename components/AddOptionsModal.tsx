@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import { AppIconButton } from '@/components/AppIconButton';
-import { commonStyles } from '@/SharedStyles';
+import { commonStyles } from '@/styles/SharedStyles';
 
 interface AddOptionsModalProps {
   visible: boolean;

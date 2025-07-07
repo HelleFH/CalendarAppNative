@@ -1,4 +1,4 @@
-import { commonStyles } from '@/SharedStyles';
+import { commonStyles } from '@/styles/SharedStyles';
 import React from 'react';
 import { Modal, View, Text, Button, StyleSheet } from 'react-native';
 

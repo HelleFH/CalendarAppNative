@@ -1,28 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, TextInput, Image, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { AppIconButton } from './AppIconButton';
-import { formStyles } from '@/FormStyles';
-import { commonStyles } from '@/SharedStyles';
-
-interface NotesAndImagesProps {
+import { AppIconButton } from '../AppIconButton';
+import { formStyles } from '@/styles/FormStyles';
+import { commonStyles } from '@/styles/SharedStyles';
+interface UpdateNotesAndImagesProps {
   notes: string;
   setNotes: (notes: string) => void;
   images: string[];
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
-  name: string;
-  setName: (name: string) => void;
   saveEntry: () => void;
+  initialImages?: string[];
+  isNewEntry: boolean; // <-- added
 }
 
-export const NotesAndImages: React.FC<NotesAndImagesProps> = ({
+export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
   notes,
   setNotes,
   images,
   setImages,
-  name,
-  setName,
   saveEntry,
+  initialImages = [],
+  isNewEntry, // <-- added
 }) => {
   const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -35,33 +34,36 @@ export const NotesAndImages: React.FC<NotesAndImagesProps> = ({
 
     if (!result.canceled && result.assets) {
       const uris = result.assets.map((asset) => asset.uri);
-      setImages((prevImages) => [...prevImages, ...uris]);
+      setImages((prev: string[]) => [...new Set([...prev, ...uris])]);
     }
   };
 
+  useEffect(() => {
+    if (initialImages.length > 0) {
+      setImages(initialImages);
+    }
+  }, [initialImages]);
+
   return (
-    <View style={formStyles.container}>
-      <TextInput
-        style={[formStyles.input, formStyles.disabledInput]}
-        placeholder="Enter Plant name"
-        value={name}
-        onChangeText={setName}
-        editable={true}
-      />
+    <View>
       <TextInput
         style={formStyles.input}
         placeholder="Add notes"
         value={notes}
         onChangeText={setNotes}
       />
-      <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
+
+      {/* Only show the image picker if this is a new entry */}
+      {isNewEntry && (
+        <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
+      )}
 
       <ScrollView horizontal style={formStyles.scrollContainer}>
         <View style={commonStyles.imageWrapper}>
 
-        {images.map((uri, index) => (
-          <Image key={index} source={{ uri }} style={formStyles.image} />
-        ))}
+          {images.map((uri, index) => (
+            <Image key={index} source={{ uri }} style={formStyles.image} />
+          ))}
         </View>
       </ScrollView>
     </View>

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, Button, TouchableOpacity } from 'react-native';
-import { UpdateEntryDisplay } from './UpdateEntryDisplay';
-import { DeleteConfirmationModal } from './DeleteConfirmationModal';
+import { UpdateEntryDisplay } from '../updateEntry/UpdateEntryDisplay';
+import { DeleteConfirmationModal } from '../DeleteConfirmationModal';
 import axios from 'axios';
-import { AppIconButton } from './AppIconButton';
+import { AppIconButton } from '../AppIconButton';
 import { EntryDetailModal } from './EntryDetailModal';
-import { commonStyles } from '@/SharedStyles';
+import { commonStyles } from '@/styles/SharedStyles';
 import { Ionicons } from '@expo/vector-icons';
-import { ReminderDisplay } from './ReminderDisplay';
+import { ReminderDisplay } from '../reminder/ReminderDisplay';
 
 interface EntryProps {
   _id: string;

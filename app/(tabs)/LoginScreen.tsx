@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { View, TextInput, Text, Image } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
-import { formStyles } from '@/FormStyles';
+import { formStyles } from '@/styles/FormStyles';
 import { AppIconButton } from '@/components/AppIconButton';
 import Images from '@/assets/images';
-import { commonStyles } from '@/SharedStyles';
+import { commonStyles } from '@/styles/SharedStyles';
 
 
 export default function LoginScreen() {

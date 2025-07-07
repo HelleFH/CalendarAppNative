@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Button, StyleSheet, TextInput, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { AppIconButton } from './AppIconButton';
-import { commonStyles } from '@/SharedStyles';
+import { AppIconButton } from '../AppIconButton';
+import { commonStyles } from '@/styles/SharedStyles';
 import { SelectEntryForReminder } from './SelectEntryForReminder';
-import { formStyles } from '@/FormStyles';
+import { formStyles } from '@/styles/FormStyles';
 
 interface CreateReminderModalProps {
   visible: boolean;

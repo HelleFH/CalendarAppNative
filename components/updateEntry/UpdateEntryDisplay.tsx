@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { DeleteConfirmationModal } from './DeleteConfirmationModal';
-import { AppIconButton } from './AppIconButton';
-import { commonStyles } from '@/SharedStyles';
+import { DeleteConfirmationModal } from '../DeleteConfirmationModal';
+import { AppIconButton } from '../AppIconButton';
+import { commonStyles } from '@/styles/SharedStyles';
 import { UpdateEntryDetailModal } from './UpdateEntryDetailModal';
 import { Ionicons } from '@expo/vector-icons';
 import { fetchAndSetParentEntry } from '@/utils/entryHandler';
-import { EntryDetailModal } from './EntryDetailModal';
+import { EntryDetailModal } from '../entry/EntryDetailModal';
 
 interface UpdateEntryProps {
   _id: string;

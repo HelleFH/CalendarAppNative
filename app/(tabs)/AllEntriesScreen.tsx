@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, RefreshControl, Modal, Button } from 'react-native';
 import axios from 'axios';
-import { EntryDisplay } from '@/components/EntryDisplay';
-import { NotesAndImages } from '@/components/NotesAndImages';
+import { EntryDisplay } from '@/components/entry/EntryDisplay';
+import { NotesAndImages } from '@/components/entry/NotesAndImages';
 
 import {
   saveEntryHandler,
@@ -72,11 +72,9 @@ const AllEntriesScreen = () => {
   };
 
   const handleDayPress = () => {
-    // Placeholder: define this function or replace with appropriate logic
   };
 
   const fetchMarkedDates = () => {
-    // Placeholder: define this function if needed
   };
 
   const saveEntry = () =>

@@ -3,9 +3,9 @@ import { Modal, View, StyleSheet } from 'react-native';
 import { UpdateNotesAndImages } from './UpdateNotesAndImages';
 import { SelectEntryToUpdate } from './SelectEntryToUpdate';
 import { useNames } from '@/components/UseNames';
-import { useCurrentUser } from './CurrentUser';
-import { AppIconButton } from './AppIconButton';
-import { commonStyles } from '@/SharedStyles';
+import { useCurrentUser } from '../CurrentUser';
+import { AppIconButton } from '../AppIconButton';
+import { commonStyles } from '@/styles/SharedStyles';
 
 interface UpdateEntryProps {
   _id: string;
@@ -58,14 +58,12 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   useEffect(() => {
     if (visible) {
       if (isEditing && editingEntry) {
-        // Preload form fields for editing
         setParentObjectId(editingEntry.parentObjectId ?? null);
         setNotes(editingEntry.notes);
         setImages(editingEntry.images ?? []);
-        setName(''); // or editingEntry.name if you track name
+        setName('');
         setSelectingEntry(false);
       } else {
-        // Creating new update
         setParentObjectId(null);
         setNotes('');
         setImages([]);

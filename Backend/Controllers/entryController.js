@@ -159,7 +159,6 @@ const deleteEntry = async (req, res) => {
       console.log(`✅ Deleted update entry with ID: ${updateEntry._id}`);
     }));
 
-    // 🔔 Delete related reminders
     const reminders = await Reminder.find({ parentObjectId: entryId });
     console.log(`🔎 Found ${reminders.length} reminders for parentObjectId: ${entryId}`);
 
@@ -168,7 +167,6 @@ const deleteEntry = async (req, res) => {
       console.log(`✅ Deleted reminder with ID: ${reminder._id}`);
     }));
 
-    // 🗑️ Delete the main entry
     await Entry.findByIdAndDelete(entryId);
     console.log('✅ Entry deleted from database.');
 
@@ -182,4 +180,94 @@ const deleteEntry = async (req, res) => {
 
 
 
-export { addEntry, getAllNames, deleteEntry, editEntry };
+export const getEntryByParentId = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid ID' });
+  }
+
+  try {
+    const objectId = new mongoose.Types.ObjectId(id);
+    const entry = await Entry.findOne({ _id: objectId });
+    if (!entry) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+    res.json({ entry });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getEntryByUserAndDate = async (req, res) => {
+  const { userId, date } = req.query;
+
+  if (!userId || !date) {
+    return res.status(400).json({ message: 'Missing userId or date' });
+  }
+
+  try {
+    const entry = await Entry.findOne({ userId, date });
+
+    if (!entry) {
+      return res.status(404).json({ message: 'No entry found for this user and date' });
+    }
+
+    res.json(entry);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error while fetching entry' });
+  }
+};
+
+export const getAllEntryDates = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const entries = await Entry.find({ userId });
+    const dates = entries.map(entry => entry.date);
+    res.json(dates);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const editEntryHandler = async (req, res) => {
+  const { entryId } = req.params;
+  const { date, name, notes, userId, originalImages } = req.body;
+
+  try {
+    const existingEntry = await Entry.findById(entryId);
+    if (!existingEntry) {
+      return res.status(404).json({ message: 'Entry not found' });
+    }
+
+    if (existingEntry.userId.toString() !== userId) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    existingEntry.date = date;
+    existingEntry.name = name;
+    existingEntry.notes = notes;
+
+    let mergedImages = [];
+    if (originalImages) {
+      const parsed = JSON.parse(originalImages);
+      if (Array.isArray(parsed)) mergedImages = parsed;
+    }
+
+    const newImageUrls = [];
+    for (const file of req.files || []) {
+      const base64 = file.buffer.toString('base64');
+      const dataUrl = `data:${file.mimetype};base64,${base64}`;
+      const result = await cloudinary.uploader.upload(dataUrl, { resource_type: 'image' });
+      newImageUrls.push(result.secure_url);
+    }
+
+    existingEntry.images = [...mergedImages, ...newImageUrls];
+    await existingEntry.save();
+
+    res.status(200).json({ message: 'Entry updated successfully', entry: existingEntry });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+export { addEntry, getAllNames, deleteEntry, editEntry,editEntryHandler,getEntryByUserAndDate,getEntryByParentId };

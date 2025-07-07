@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal, View, Button, StyleSheet } from 'react-native';
 import { NotesAndImages } from './NotesAndImages';
-import { AppIconButton } from './AppIconButton';
-import { commonStyles } from '@/SharedStyles';
+import { AppIconButton } from '../AppIconButton';
+import { commonStyles } from '@/styles/SharedStyles';
 
 interface CreateEntryModalProps {
   visible: boolean;
@@ -45,15 +45,15 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
         />
 
         <AppIconButton
-        icon='save'
+          icon='save'
           label={isEditing ? 'Save Changes' : 'Save Entry'}
           onPress={isEditing ? saveEditedEntry : saveEntry}
-                    variant='edit'
+          variant='edit'
 
         />
 
         <AppIconButton
-        icon='close'
+          icon='close'
           label="Close"
           variant='close'
           onPress={() => {

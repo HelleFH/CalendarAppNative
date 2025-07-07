@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Images from '../../assets/images';
-import { commonStyles } from '@/SharedStyles';
+import { commonStyles } from '@/styles/SharedStyles';
 import { AppIconButton } from '@/components/AppIconButton';
 
 

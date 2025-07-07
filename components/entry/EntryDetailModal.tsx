@@ -1,0 +1,94 @@
+import React, { useEffect, useState } from 'react';
+import { Modal, TouchableOpacity, View } from 'react-native';
+import { EntryDisplay } from './EntryDisplay';
+import { commonStyles } from '@/styles/SharedStyles';
+import { Ionicons } from '@expo/vector-icons';
+import { ScrollView } from 'react-native';
+
+interface EntryProps {
+  _id: string;
+  name: string;
+  date: string;
+  notes: string;
+  images?: string[];
+}
+
+interface UpdateEntryProps {
+  _id: string;
+  date: string;
+  notes: string;
+  images?: string[];
+  parentObjectId?: string;
+}
+
+interface EntryDetailModalProps {
+  visible: boolean;
+  entry: EntryProps | null;
+  onClose: () => void;
+  onEditUpdate: (entry: UpdateEntryProps) => void;
+  onDeleteUpdate: (entryId: string) => void;
+  onEditEntry: (entry: EntryProps) => void;
+  onDeleteEntry: (entryId: string) => void;
+}
+
+export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
+  visible,
+  entry,
+  onClose,
+  onEditUpdate,
+  onDeleteUpdate,
+  onEditEntry,
+  onDeleteEntry,
+
+}) => {
+  const [updateEntries, setUpdateEntries] = useState<UpdateEntryProps[]>([]);
+
+  useEffect(() => {
+    const fetchUpdates = async () => {
+      if (!entry?._id) return;
+      try {
+        const response = await fetch(`https://calendarappnative.onrender.com/updates/${entry._id}`);
+        const data: UpdateEntryProps[] = await response.json();
+        setUpdateEntries(data);
+      } catch (err) {
+        console.error('Failed to fetch updates:', err);
+      }
+    };
+    fetchUpdates();
+  }, [entry]);
+
+  if (!entry) return null;
+
+  return (
+<Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+  <View style={commonStyles.modalOverlay}>
+    <ScrollView contentContainerStyle={commonStyles.modalContainer}>
+      <TouchableOpacity
+        onPress={onClose}
+        style={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          zIndex: 1,
+          padding: 8,
+        }}
+      >
+        <Ionicons name="close" size={24} color="black" />
+      </TouchableOpacity>
+
+      <EntryDisplay
+        key={entry._id}
+        entry={entry}
+        onEditUpdate={onEditUpdate}
+        onDeleteUpdate={onDeleteUpdate}
+        onDeleteEntry={onDeleteEntry}
+        onEditEntry={onEditEntry}
+        showUpdatesInline={false}
+        disableDetailModal={true}
+        onRequestCloseModal={onClose}
+      />
+    </ScrollView>
+  </View>
+</Modal>
+  );
+};

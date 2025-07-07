@@ -58,3 +58,51 @@ export const deleteReminder = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const getRemindersByUserAndDate = async (req, res) => {
+  const { userId, date } = req.query;
+
+  if (!userId || !date) {
+    return res.status(400).json({ message: 'Missing userId or date' });
+  }
+
+  try {
+    const reminders = await Reminder.find({ userId, date });
+    if (reminders.length === 0) {
+      return res.status(404).json({ message: 'No reminders found for this user and date' });
+    }
+    res.json(reminders);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+export const getReminderDates = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const reminders = await Reminder.find({ userId });
+    const dates = reminders.map(reminder => reminder.date);
+    res.json(dates);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getRemindersByParent = async (req, res) => {
+  const { parentObjectId } = req.query;
+
+  if (!parentObjectId) {
+    return res.status(400).json({ message: 'Missing parentObjectId' });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(parentObjectId)) {
+    return res.status(400).json({ message: 'Invalid parentObjectId format' });
+  }
+
+  try {
+    const reminders = await Reminder.find({ parentObjectId });
+    return res.status(200).json(reminders);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error while fetching reminders', error: err.message });
+  }
+};

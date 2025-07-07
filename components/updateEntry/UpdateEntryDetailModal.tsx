@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, TouchableOpacity, View } from 'react-native';
-import { EntryDisplay } from './EntryDisplay';
-import { commonStyles } from '@/SharedStyles';
+import { UpdateEntryDisplay } from './UpdateEntryDisplay';
+import { commonStyles } from '@/styles/SharedStyles';
 import { Ionicons } from '@expo/vector-icons';
 
 interface EntryProps {
@@ -20,25 +20,20 @@ interface UpdateEntryProps {
   parentObjectId?: string;
 }
 
-interface EntryDetailModalProps {
+interface UpdateEntryDetailModalProps {
   visible: boolean;
   entry: EntryProps | null;
   onClose: () => void;
   onEditUpdate: (entry: UpdateEntryProps) => void;
   onDeleteUpdate: (entryId: string) => void;
-  onEditEntry: (entry: EntryProps) => void;
-  onDeleteEntry: (entryId: string) => void;
 }
 
-export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
+export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
   visible,
   entry,
   onClose,
   onEditUpdate,
   onDeleteUpdate,
-  onEditEntry,
-  onDeleteEntry,
-
 }) => {
   const [updateEntries, setUpdateEntries] = useState<UpdateEntryProps[]>([]);
 
@@ -74,16 +69,15 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           >
             <Ionicons name="close" size={24} color="black" />
           </TouchableOpacity>
-          <EntryDisplay
+
+          <UpdateEntryDisplay
             key={entry._id}
             entry={entry}
             onEditUpdate={onEditUpdate}
             onDeleteUpdate={onDeleteUpdate}
-            onDeleteEntry={onDeleteEntry}
-            onEditEntry={onEditEntry}
-            showUpdatesInline={false}
             disableDetailModal={true}
             onRequestCloseModal={onClose}
+            parentEntryName={entry.name}
           />
         </View>
       </View>

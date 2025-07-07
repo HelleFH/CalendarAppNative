@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, TextInput, Button, Image, ScrollView, StyleSheet } from 'react-native';
-import { commonStyles } from '@/SharedStyles';
+import { commonStyles } from '@/styles/SharedStyles';
 
 
 interface UpdateNotesAndImagesProps {

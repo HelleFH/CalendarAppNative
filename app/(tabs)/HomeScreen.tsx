@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { AppIconButton } from '@/components/AppIconButton';
 import { CalendarComponent } from '../../components/CalendarComponent';
-import { EntryDisplay } from '../../components/EntryDisplay';
-import { UpdateEntryDisplay } from '../../components/UpdateEntryDisplay';
+import { EntryDisplay } from '@/components/entry/EntryDisplay';
+import { UpdateEntryDisplay } from '@/components/updateEntry/UpdateEntryDisplay';
 import { fetchMarkedDates, fetchEntriesForDate } from '@/utils/api';
-import { CreateEntryModal } from '@/components/CreateEntryModal';
-import { CreateUpdateEntryModal } from '@/components/CreateUpdateEntryModal';
+import { CreateEntryModal } from '@/components/entry/CreateEntryModal';
+import { CreateUpdateEntryModal } from '@/components/updateEntry/CreateUpdateEntryModal';
 import { useCurrentUser } from '@/components/CurrentUser';
 import { useNames } from '@/components/UseNames';
-import { CreateReminderModal } from '@/components/CreateReminderModal';
+import { CreateReminderModal } from '@/components/reminder/CreateReminderModal';
 import {
   saveEntryHandler,
   saveEditedEntryHandler,
@@ -20,10 +20,11 @@ import {
   saveReminderHandler,
   deleteReminderHandler,
 } from '@/utils/entryHandler';
-import { ReminderDisplay } from '@/components/ReminderDisplay';
+import { ReminderDisplay } from '@/components/reminder/ReminderDisplay';
 import { AddOptionsModal } from '@/components/AddOptionsModal';
-import { commonStyles } from '@/SharedStyles';
-
+import { commonStyles } from '@/styles/SharedStyles';
+import { logoutUser } from '@/utils/auth';
+import { useNavigation } from '@react-navigation/native';
 interface Reminder {
   _id: string;
   date: string;
@@ -109,6 +110,8 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       console.error('Error fetching entries:', err);
     }
   };
+  const navigation = useNavigation();
+
 
   const saveEntry = () =>
     saveEntryHandler({
@@ -256,7 +259,19 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
   }, [currentUserId]);
 
   return (
+
+    <ScrollView>
+      <AppIconButton
+    icon="log-out-outline"
+    label="Logout"
+    onPress={() => logoutUser(navigation)}
+    variant="danger"
+  />
 <ScrollView contentContainerStyle={commonStyles.appContainer}>
+  
+  <View style={commonStyles.buttonWrapper}>
+
+</View>
       <Text style={commonStyles.title}>Plant Calendar</Text>
 
       <CalendarComponent
@@ -265,6 +280,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
         onDayPress={handleDayPress}
       />
       <View style={commonStyles.buttonWrapper}>
+
         <AppIconButton
           icon="add"
           label="Add"
@@ -399,6 +415,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
           setIsReminderModalVisible(true);
         }}
       />
+</ScrollView>
 </ScrollView>
   );
 };
