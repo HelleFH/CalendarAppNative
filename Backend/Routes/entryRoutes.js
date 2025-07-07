@@ -1,6 +1,5 @@
 import express from 'express';
 import multer from 'multer';
-import { addEntry, getAllNames, deleteEntry, editEntry } from '../Controllers/entryController.js';
 import cloudinary from 'cloudinary';
 
 // Cloudinary config
