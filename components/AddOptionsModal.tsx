@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import { AppIconButton } from '@/components/AppIconButton';
 import { commonStyles } from '@/styles/SharedStyles';
+import { formStyles } from '@/styles/FormStyles';
 
 interface AddOptionsModalProps {
   visible: boolean;
@@ -27,7 +28,7 @@ export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
     >
       <View style={commonStyles.modalOverlay}>
         <View style={commonStyles.modalContainer}>
-          <Text style={commonStyles.modalTitle}>What would you like to add?</Text>
+          <Text style={formStyles.title}>What would you like to add?</Text>
 
           <AppIconButton
             icon="document-text-outline"
@@ -51,7 +52,7 @@ export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
           />
 
           <TouchableOpacity onPress={onClose} style={commonStyles.cancelButton}>
-            <Text style={commonStyles.cancelText}>Cancel</Text>
+            <Text>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>

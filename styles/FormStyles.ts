@@ -24,7 +24,11 @@ export const formStyles = StyleSheet.create({
     backgroundColor: '#fff',
     fontSize: 16,
   },
-
+  title: {
+    fontSize: 22,
+    padding:20,
+    fontWeight:500,
+  },
   image: {
     width: 100,
     height: 100,

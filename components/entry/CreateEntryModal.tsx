@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, View, Button, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, View, Text } from 'react-native';
 import { NotesAndImages } from './NotesAndImages';
 import { AppIconButton } from '../AppIconButton';
 import { commonStyles } from '@/styles/SharedStyles';
@@ -17,6 +17,8 @@ interface CreateEntryModalProps {
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   name: string;
   setName: (name: string) => void;
+  selectedDate: string;
+
 }
 
 export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
@@ -31,10 +33,15 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
   setImages,
   name,
   setName,
+  selectedDate
 }) => {
+
+
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View  style={formStyles.container}>
+      <View style={formStyles.container}>
+        <Text style={formStyles.title}>Add a plant for {selectedDate} </Text>
+
         <NotesAndImages
           name={name}
           setName={setName}

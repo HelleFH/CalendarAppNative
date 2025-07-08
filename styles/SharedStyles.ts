@@ -16,7 +16,7 @@ export const commonStyles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingBottom: 50,
-    paddingHorizontal: 10,
+    paddingHorizontal: 30,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'left',
@@ -49,9 +49,11 @@ export const commonStyles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 50,
+    padding: 40,
     alignItems: 'center',
-    maxWidth: '100%',
+    maxWidth: '90%',
+    alignSelf:'center',
+  
   },
   modalContent: {
     padding: 20,
@@ -68,6 +70,7 @@ export const commonStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems:'center',
+    flexWrap:'wrap',
     marginTop: 10,
     gap: 8,
   },
@@ -80,12 +83,11 @@ export const commonStyles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#2D3748',
-    marginBottom: 20,
     width: '100%',
-
+    textAlign:'left',
   },
 
   label: {

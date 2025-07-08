@@ -60,35 +60,40 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   if (!entry) return null;
 
   return (
-<Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-  <View style={commonStyles.modalOverlay}>
-    <ScrollView contentContainerStyle={commonStyles.modalContainer}>
-      <TouchableOpacity
-        onPress={onClose}
-        style={{
-          position: 'absolute',
-          top: 10,
-          right: 10,
-          zIndex: 1,
-          padding: 8,
-        }}
-      >
-        <Ionicons name="close" size={24} color="black" />
-      </TouchableOpacity>
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View style={commonStyles.modalOverlay}>
+        <ScrollView contentContainerStyle={[
+          commonStyles.modalContainer,
+          { top: 50,
+           }
+        ]}>
+          <TouchableOpacity
+            onPress={onClose}
+            style={{
+              position: 'absolute',
+              top: 10,
+              right: 10,
+              zIndex: 1,
+              padding: 8,
+            }}
+          >
+            <Ionicons name="close" size={24} color="black" />
+          </TouchableOpacity>
 
-      <EntryDisplay
-        key={entry._id}
-        entry={entry}
-        onEditUpdate={onEditUpdate}
-        onDeleteUpdate={onDeleteUpdate}
-        onDeleteEntry={onDeleteEntry}
-        onEditEntry={onEditEntry}
-        showUpdatesInline={false}
-        disableDetailModal={true}
-        onRequestCloseModal={onClose}
-      />
-    </ScrollView>
-  </View>
-</Modal>
+
+          <EntryDisplay
+            key={entry._id}
+            entry={entry}
+            onEditUpdate={onEditUpdate}
+            onDeleteUpdate={onDeleteUpdate}
+            onDeleteEntry={onDeleteEntry}
+            onEditEntry={onEditEntry}
+            showUpdatesInline={false}
+            disableDetailModal={true}
+            onRequestCloseModal={onClose}
+          />
+        </ScrollView>
+      </View>
+    </Modal>
   );
 };

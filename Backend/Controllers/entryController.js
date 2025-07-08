@@ -59,6 +59,62 @@ const addEntry = async (req, res) => {
   }
 };
 
+const editEntry = async (req, res) => {
+  const { entryId } = req.params;
+  const { date, name, notes, userId, originalImages } = req.body;
+
+  try {
+    const existingEntry = await Entry.findById(entryId);
+    if (!existingEntry) {
+      return res.status(404).json({ message: 'Entry not found' });
+    }
+
+    if (existingEntry.userId.toString() !== userId) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    existingEntry.date = date;
+    existingEntry.name = name;
+    existingEntry.notes = notes;
+
+    // Parse original images
+    let mergedImages = [];
+    if (originalImages) {
+      try {
+        const parsed = JSON.parse(originalImages);
+        if (Array.isArray(parsed)) {
+          mergedImages = parsed;
+        }
+      } catch {
+        // ignore parse errors, mergedImages remains []
+      }
+    }
+
+    // Upload new images
+    const newImageUrls = [];
+    for (const file of req.files || []) {
+      const base64 = file.buffer.toString('base64');
+      const dataUrl = `data:${file.mimetype};base64,${base64}`;
+
+      const result = await cloudinary.uploader.upload(dataUrl, {
+        resource_type: 'image',
+      });
+
+      newImageUrls.push(result.secure_url);
+    }
+
+    // Merge images
+    existingEntry.images = [...mergedImages, ...newImageUrls];
+
+    await existingEntry.save();
+
+    res.status(200).json({ message: 'Entry updated successfully', entry: existingEntry });
+  } catch (error) {
+    console.error('Error editing entry:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 
 const getAllNames = async (req, res) => {
   try {
@@ -71,43 +127,6 @@ const getAllNames = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch names' });
   }
 };
-
-
-const editEntry = async (req, res) => {
-  try {
-    const { entryId } = req.params;
-    const { date, name, notes, userId } = req.body;
-
-    const existingEntry = await Entry.findById(entryId);
-    if (!existingEntry) {
-      return res.status(404).json({ message: 'Entry not found' });
-    }
-
-    // Optional: check userId matches for security
-    if (existingEntry.userId.toString() !== userId) {
-      return res.status(403).json({ message: 'Unauthorized' });
-    }
-
-    // Update fields
-    existingEntry.date = date;
-    existingEntry.name = name;
-    existingEntry.notes = notes;
-
-    // Handle new images if any were uploaded
-    if (req.files && req.files.length > 0) {
-      const imagePaths = req.files.map(file => file.path); // or `file.filename` depending on setup
-      existingEntry.images = imagePaths;
-    }
-
-    await existingEntry.save();
-
-    res.status(200).json({ message: 'Entry updated successfully', entry: existingEntry });
-  } catch (error) {
-    console.error('Error editing entry:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
 
 const deleteEntry = async (req, res) => {
   console.log('🚀 deleteEntry route HIT');
@@ -181,5 +200,130 @@ const deleteEntry = async (req, res) => {
 };
 
 
+const getEntryById = async (req, res) => {
+  const { id } = req.params;
 
-export { addEntry, getAllNames, deleteEntry, editEntry };
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid ID' });
+  }
+
+  try {
+    const objectId = new mongoose.Types.ObjectId(id);
+    const entry = await Entry.findOne({ _id: objectId });
+
+    if (!entry) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+
+    res.json({ entry });
+  } catch (err) {
+    console.error('Error fetching entry:', err);
+    res.status(500).json({ error: err.message || 'Server error' });
+  }
+};
+const getAllEntriesByUser = async (req, res) => {
+  const { userId } = req.query;
+
+  if (!userId) {
+    return res.status(400).json({ message: 'Missing userId' });
+  }
+
+  try {
+    const entries = await Entry.find({ userId });
+    res.json(entries);
+  } catch (err) {
+    console.error('Error fetching all entries:', err);
+    res.status(500).json({ message: 'Server error while fetching entries' });
+  }
+};
+
+const editUpdateEntry = async (req, res) => {
+  const { entryId } = req.params;
+  const { date, notes, userId, originalImages } = req.body;
+
+  try {
+    const existingUpdateEntry = await UpdateEntry.findById(entryId);
+    if (!existingUpdateEntry) {
+      return res.status(404).json({ message: 'Entry not found' });
+    }
+
+    if (existingUpdateEntry.userId.toString() !== userId) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    existingUpdateEntry.date = date;
+    existingUpdateEntry.notes = notes;
+
+    let mergedImages = [];
+    if (originalImages) {
+      try {
+        const parsed = JSON.parse(originalImages);
+        if (Array.isArray(parsed)) {
+          mergedImages = parsed;
+        }
+      } catch {
+        // Ignore JSON parse error
+      }
+    }
+
+    const newImageUrls = [];
+    for (const file of req.files || []) {
+      const base64 = file.buffer.toString('base64');
+      const dataUrl = `data:${file.mimetype};base64,${base64}`;
+
+      const result = await cloudinary.uploader.upload(dataUrl, {
+        resource_type: 'image',
+      });
+
+      newImageUrls.push(result.secure_url);
+    }
+
+    existingUpdateEntry.images = [...mergedImages, ...newImageUrls];
+
+    await existingUpdateEntry.save();
+
+    res.status(200).json({ message: 'Update entry updated!', entry: existingUpdateEntry });
+  } catch (error) {
+    console.error('Error editing update entry:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const getEntryDatesByUser = async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    const entries = await Entry.find({ userId });
+    console.log('Entries found:', entries);
+
+    const dates = entries.map(entry => entry.date);
+    res.json(dates);
+  } catch (err) {
+    console.error('Error fetching entry dates:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+const getEntryByUserAndDate = async (req, res) => {
+  const { userId, date } = req.query;
+  console.log('Received GET /entries with:', req.query);
+
+  if (!userId || !date) {
+    return res.status(400).json({ message: 'Missing userId or date' });
+  }
+
+  try {
+    const entry = await Entry.findOne({ userId, date });
+
+    if (!entry) {
+      return res.status(404).json({ message: 'No entry found for this user and date' });
+    }
+
+    res.json(entry);
+  } catch (err) {
+    console.error('Error fetching entry:', err);
+    res.status(500).json({ message: 'Server error while fetching entry' });
+  }
+};
+export { addEntry, getAllNames, deleteEntry, getEntryById, editEntry,getAllEntriesByUser,editUpdateEntry,getEntryDatesByUser, getEntryByUserAndDate };

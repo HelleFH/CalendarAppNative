@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, TextInput, Image, ScrollView } from 'react-native';
+import { View, TextInput, Image, ScrollView, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AppIconButton } from '../AppIconButton';
 import { formStyles } from '@/styles/FormStyles';
@@ -11,7 +11,9 @@ interface UpdateNotesAndImagesProps {
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   saveEntry: () => void;
   initialImages?: string[];
-  isNewEntry: boolean; // <-- added
+  isNewEntry: boolean; 
+    isEditing: boolean;  
+  name?: string;    
 }
 
 export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
@@ -21,7 +23,10 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
   setImages,
   saveEntry,
   initialImages = [],
-  isNewEntry, // <-- added
+  isNewEntry,
+  isEditing,
+  name
+  
 }) => {
   const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -44,8 +49,10 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
     }
   }, [initialImages]);
 
+
   return (
-    <View  style={formStyles.container}>
+    <View style={formStyles.container}>
+
       <TextInput
         style={formStyles.input}
         placeholder="Add notes"
@@ -53,14 +60,10 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
         onChangeText={setNotes}
       />
 
-      {/* Only show the image picker if this is a new entry */}
-      {isNewEntry && (
-        <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
-      )}
+      <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
 
       <ScrollView horizontal style={formStyles.scrollContainer}>
         <View style={commonStyles.imageWrapper}>
-
           {images.map((uri, index) => (
             <Image key={index} source={{ uri }} style={formStyles.image} />
           ))}

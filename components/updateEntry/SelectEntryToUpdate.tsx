@@ -43,17 +43,17 @@ export const SelectEntryToUpdate: React.FC<SelectEntryToUpdateProps> = ({
 
   return (
 
-      <Picker
-        selectedValue={selectedValue}
-        onValueChange={handleSelect}
-        style={formStyles.input}
-        dropdownIconColor="#319795"
-        mode="dropdown"
-      >
-        <Picker.Item label="Select an entry..." value="" />
-        {allNames.map((entry) => (
-          <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
-        ))}
-      </Picker>
+    <Picker
+      selectedValue={selectedValue}
+      onValueChange={handleSelect}
+      style={{ ...formStyles.input, marginTop: 30 }}
+      dropdownIconColor="#319795"
+      mode="dropdown"
+    >
+      <Picker.Item label="Select an entry..." value="" />
+      {allNames.map((entry) => (
+        <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
+      ))}
+    </Picker>
   );
 };

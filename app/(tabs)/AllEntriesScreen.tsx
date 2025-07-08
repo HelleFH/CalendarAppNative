@@ -77,9 +77,9 @@ const AllEntriesScreen = () => {
   const fetchMarkedDates = () => {
   };
 
-  const saveEntry = () =>
+  const saveEntry = (dateString: string) =>
     saveEntryHandler({
-      selectedDate,
+      selectedDate: dateString,
       notes,
       images,
       currentUserId,
@@ -90,8 +90,10 @@ const AllEntriesScreen = () => {
       setSelectedOriginalEntry,
       setParentObjectId,
       fetchNames,
+      handleDayPress,
     });
 
+    
   const saveEditedEntry = () =>
     saveEditedEntryHandler({
       editingEntryId,
@@ -188,9 +190,9 @@ const AllEntriesScreen = () => {
             key={entry._id}
             entry={entry}
             onEditUpdate={handleEditUpdate}
-            onDeleteUpdate={handleDeleteUpdateEntry} 
-            onEditEntry={handleEdit} 
-            onDeleteEntry={handleDeleteEntry}          />
+            onDeleteUpdate={handleDeleteUpdateEntry}
+            onEditEntry={handleEdit}
+            onDeleteEntry={handleDeleteEntry} />
         ))
       ) : (
         <Text>No entries available.</Text>

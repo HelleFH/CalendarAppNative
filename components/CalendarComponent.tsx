@@ -63,6 +63,7 @@ export const CalendarComponent: React.FC<CalendarComponentProps> = ({
               style={{
                 fontSize: iconType === 'update' ? 10 : 12,
                 marginRight: 2,
+                position:'absolute'
               }}
             >
               {iconMap[iconType]}

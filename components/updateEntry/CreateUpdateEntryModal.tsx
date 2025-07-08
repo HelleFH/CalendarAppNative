@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, StyleSheet } from 'react-native';
+import { Modal, View, Text } from 'react-native';
 import { UpdateNotesAndImages } from './UpdateNotesAndImages';
 import { SelectEntryToUpdate } from './SelectEntryToUpdate';
 import { useNames } from '@/components/UseNames';
@@ -55,24 +55,27 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   const { fetchNames } = useNames(currentUserId);
 
   const [selectingEntry, setSelectingEntry] = useState(!isEditing);
+useEffect(() => {
+  if (visible) {
+    if (isEditing && editingEntry) {
+      setParentObjectId(editingEntry.parentObjectId ?? null);
+      setNotes(editingEntry.notes);
+      setImages(editingEntry.images ?? []);
+      
+      // Find the name from allNames that matches parentObjectId (or editingEntry info)
+      const matchingName = allNames.find(n => n._id === editingEntry.parentObjectId)?.name ?? '';
+      setName(matchingName);
 
-  useEffect(() => {
-    if (visible) {
-      if (isEditing && editingEntry) {
-        setParentObjectId(editingEntry.parentObjectId ?? null);
-        setNotes(editingEntry.notes);
-        setImages(editingEntry.images ?? []);
-        setName('');
-        setSelectingEntry(false);
-      } else {
-        setParentObjectId(null);
-        setNotes('');
-        setImages([]);
-        setName('');
-        setSelectingEntry(true);
-      }
+      setSelectingEntry(false);
+    } else {
+      setParentObjectId(null);
+      setNotes('');
+      setImages([]);
+      setName('');
+      setSelectingEntry(true);
     }
-  }, [visible, isEditing, editingEntry, setParentObjectId, setNotes, setImages, setName]);
+  }
+}, [visible, isEditing, editingEntry, setParentObjectId, setNotes, setImages, setName, allNames]);
 
   const handleSave = () => {
     if (isEditing) {
@@ -95,47 +98,54 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   };
 
   return (
-<Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
-  <View style={formStyles.container}>
-    
-    {!isEditing && (
-      <SelectEntryToUpdate
-        allNames={allNames}
-        setParentObjectId={setParentObjectId}
-        setNotes={setNotes}
-        setImages={setImages}
-        setName={setName}
-        onEntrySelected={(id: string) => {
-          setParentObjectId(id);
-        }}
-      />
-    )}
+    <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
+      <View style={formStyles.container}>
+      <Text style={commonStyles.title}>
+        {isEditing
+          ? `Edit your update for ${name}`
+          : 'Create an update for one of your plants'}
+      </Text>
+        {!isEditing && (
+          <SelectEntryToUpdate
+            allNames={allNames}
+            setParentObjectId={setParentObjectId}
+            setNotes={setNotes}
+            setImages={setImages}
+            setName={setName}
+            onEntrySelected={(id: string) => {
+              setParentObjectId(id);
+            }}
+          />
+        )}
 
-    <UpdateNotesAndImages
-      notes={notes}
-      setNotes={setNotes}
-      images={images}
-      setImages={setImages}
-      saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
-      initialImages={editingEntry?.images}
-      isNewEntry={!isEditing}
-    />
+        <UpdateNotesAndImages
+          notes={notes}
+          setNotes={setNotes}
+          images={images}
+          setImages={setImages}
+          saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
+          initialImages={editingEntry?.images}
+          isNewEntry={!isEditing}
+          isEditing={isEditing}
+          name={name}
+        />
 
-    <AppIconButton
-      icon="save"
-      label={isEditing ? 'Save Changes' : 'Save Entry'}
-      onPress={handleSave}
-      variant="edit"
-    />
+        <AppIconButton
+          icon="save"
+          label={isEditing ? 'Save Changes' : 'Save Entry'}
+          onPress={handleSave}
+          variant="edit"
+        />
 
-    <AppIconButton
-      icon="close"
-      label="Close"
-      variant="close"
-      onPress={handleClose}
-    />
-  </View>
-</Modal>
+        <AppIconButton
+          icon="close"
+          label="Close"
+          variant="close"
+          onPress={handleClose}
+        />
+      </View>
+    </Modal>
+
 
   );
 };

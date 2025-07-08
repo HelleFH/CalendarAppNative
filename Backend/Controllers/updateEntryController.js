@@ -53,44 +53,32 @@ const deleteUpdateEntry = async (req, res) => {
   }
 };
 
+const getUpdatesByParent = async (req, res) => {
+  const { parentObjectId } = req.query;
 
+  if (!parentObjectId) {
+    return res.status(400).json({ message: 'Missing parentObjectId' });
+  }
 
-const editUpdateEntry = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(parentObjectId)) {
+    return res.status(400).json({ message: 'Invalid parentObjectId format' });
+  }
+
   try {
-    const { entryId } = req.params;
-    const { date, notes, userId } = req.body;
+    console.log('Fetching updates for:', parentObjectId);
+    const updates = await UpdateEntry.find({ parentObjectId });
+    console.log('Updates found:', updates.length);
 
-    const existingUpdateEntry = await UpdateEntry.findById(entryId);
-    if (!existingUpdateEntry) {
-      return res.status(404).json({ message: 'Entry not found' });
+    if (updates.length === 0) {
+      return res.status(404).json({ message: 'No update entries found for this parentObjectId' });
     }
 
-    // Optional: check userId matches for security
-    if (existingUpdateEntry.userId.toString() !== userId) {
-      return res.status(403).json({ message: 'Unauthorized' });
-    }
-
-    // Update fields
-    existingUpdateEntry.date = date;
-    existingUpdateEntry.notes = notes;
-
-    // Handle new images if any were uploaded
-    if (req.files && req.files.length > 0) {
-      const imagePaths = req.files.map(file => file.path); // or `file.filename` depending on setup
-      existingUpdateEntry.images = imagePaths;
-    }
-
-    await existingUpdateEntry.save();
-
-    res.status(200).json({ message: 'Entry updated successfully', entry: existingUpdateEntry });
-  } catch (error) {
-    console.error('Error editing entry:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.json(updates);
+  } catch (err) {
+    console.error('Error fetching update entries:', err);
+    res.status(500).json({ message: 'Server error while fetching update entries', error: err.message });
   }
 };
-
-
-
 
 const updateEntry = async (req, res) => {
   try {
@@ -154,5 +142,38 @@ const updateEntry = async (req, res) => {
     res.status(500).json({ error: 'Something went wrong in updateEntry' });
   }
 };
+const getUpdateEntryDatesByUser = async (req, res) => {
+  const { userId } = req.query;
 
-export { updateEntry, deleteUpdateEntry, editUpdateEntry };
+  try {
+    const entries = await UpdateEntry.find({ userId });
+    const dates = entries.map(entry => entry.date);
+    res.json(dates);
+  } catch (err) {
+    console.error('Error fetching update entry dates:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+const getUpdateEntriesByUserAndDate = async (req, res) => {
+  const { userId, date } = req.query;
+
+  if (!userId || !date) {
+    return res.status(400).json({ message: 'Missing userId or date' });
+  }
+
+  try {
+    const updates = await UpdateEntry.find({ userId, date });
+
+    if (updates.length === 0) {
+      return res.status(404).json({ message: 'No update entries found for this user and date' });
+    }
+
+    res.json(updates);
+  } catch (err) {
+    console.error('Error fetching update entries:', err);
+    res.status(500).json({ message: 'Server error while fetching update entries' });
+  }
+};
+export { updateEntry, deleteUpdateEntry, getUpdatesByParent,getUpdateEntryDatesByUser,getUpdateEntriesByUserAndDate };

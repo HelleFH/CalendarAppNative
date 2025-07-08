@@ -349,6 +349,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
         setImages={setImages}
         name={name}
         setName={setName}
+        selectedDate={selectedDate}
       />
 
       <CreateUpdateEntryModal
