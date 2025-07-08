@@ -5,8 +5,13 @@ export const formStyles = StyleSheet.create({
   container: {
     marginTop: 20,
     alignSelf: 'center',
-    alignItems:'center',
-    marginBottom:-20, 
+    alignItems: 'center',
+    marginBottom: -20,
+    width: '100%',
+    maxWidth: 800,
+    backgroundColor: '#F0F8FF',
+    paddingHorizontal: 20,
+    paddingBottom: 0,
 
   },
   input: {
@@ -19,10 +24,7 @@ export const formStyles = StyleSheet.create({
     backgroundColor: '#fff',
     fontSize: 16,
   },
-  disabledInput: {
-    backgroundColor: '#f0f0f0',
-    color: '#999',
-  },
+
   image: {
     width: 100,
     height: 100,
@@ -33,5 +35,5 @@ export const formStyles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 10,
   },
-  
+
 });

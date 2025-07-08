@@ -6,6 +6,7 @@ import { useNames } from '@/components/UseNames';
 import { useCurrentUser } from '../CurrentUser';
 import { AppIconButton } from '../AppIconButton';
 import { commonStyles } from '@/styles/SharedStyles';
+import { formStyles } from '@/styles/FormStyles';
 
 interface UpdateEntryProps {
   _id: string;
@@ -95,7 +96,7 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
 
   return (
 <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
-  <View style={commonStyles.entryContainer}>
+  <View style={formStyles.container}>
     
     {!isEditing && (
       <SelectEntryToUpdate
