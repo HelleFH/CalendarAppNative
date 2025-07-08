@@ -176,4 +176,58 @@ const getUpdateEntriesByUserAndDate = async (req, res) => {
     res.status(500).json({ message: 'Server error while fetching update entries' });
   }
 };
-export { updateEntry, deleteUpdateEntry, getUpdatesByParent,getUpdateEntryDatesByUser,getUpdateEntriesByUserAndDate };
+
+
+const editUpdateEntry = async (req, res) => {
+  const { entryId } = req.params;
+  const { date, notes, userId, originalImages } = req.body;
+
+  try {
+    const existingUpdateEntry = await UpdateEntry.findById(entryId);
+    if (!existingUpdateEntry) {
+      return res.status(404).json({ message: 'Entry not found' });
+    }
+
+    if (existingUpdateEntry.userId.toString() !== userId) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    existingUpdateEntry.date = date;
+    existingUpdateEntry.notes = notes;
+
+    let mergedImages = [];
+    if (originalImages) {
+      try {
+        const parsed = JSON.parse(originalImages);
+        if (Array.isArray(parsed)) {
+          mergedImages = parsed;
+        }
+      } catch {
+        // Ignore JSON parse error
+      }
+    }
+
+    const newImageUrls = [];
+    for (const file of req.files || []) {
+      const base64 = file.buffer.toString('base64');
+      const dataUrl = `data:${file.mimetype};base64,${base64}`;
+
+      const result = await cloudinary.uploader.upload(dataUrl, {
+        resource_type: 'image',
+      });
+
+      newImageUrls.push(result.secure_url);
+    }
+
+    existingUpdateEntry.images = [...mergedImages, ...newImageUrls];
+
+    await existingUpdateEntry.save();
+
+    res.status(200).json({ message: 'Update entry updated!', entry: existingUpdateEntry });
+  } catch (error) {
+    console.error('Error editing update entry:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export { updateEntry, deleteUpdateEntry, editUpdateEntry,getUpdatesByParent,getUpdateEntryDatesByUser,getUpdateEntriesByUserAndDate };
