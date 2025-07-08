@@ -1,16 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Modal, TouchableOpacity, View } from 'react-native';
 import { UpdateEntryDisplay } from './UpdateEntryDisplay';
 import { commonStyles } from '@/styles/SharedStyles';
 import { Ionicons } from '@expo/vector-icons';
-
-interface EntryProps {
-  _id: string;
-  name: string;
-  date: string;
-  notes: string;
-  images?: string[];
-}
 
 interface UpdateEntryProps {
   _id: string;
@@ -22,7 +14,7 @@ interface UpdateEntryProps {
 
 interface UpdateEntryDetailModalProps {
   visible: boolean;
-  entry: EntryProps | null;
+  entry: UpdateEntryProps | null;
   onClose: () => void;
   onEditUpdate: (entry: UpdateEntryProps) => void;
   onDeleteUpdate: (entryId: string) => void;
@@ -35,22 +27,6 @@ export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
   onEditUpdate,
   onDeleteUpdate,
 }) => {
-  const [updateEntries, setUpdateEntries] = useState<UpdateEntryProps[]>([]);
-
-  useEffect(() => {
-    const fetchUpdates = async () => {
-      if (!entry?._id) return;
-      try {
-        const response = await fetch(`https://calendarappnative.onrender.com/updates/${entry._id}`);
-        const data: UpdateEntryProps[] = await response.json();
-        setUpdateEntries(data);
-      } catch (err) {
-        console.error('Failed to fetch updates:', err);
-      }
-    };
-    fetchUpdates();
-  }, [entry]);
-
   if (!entry) return null;
 
   return (
@@ -77,7 +53,6 @@ export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
             onDeleteUpdate={onDeleteUpdate}
             disableDetailModal={true}
             onRequestCloseModal={onClose}
-            parentEntryName={entry.name}
           />
         </View>
       </View>

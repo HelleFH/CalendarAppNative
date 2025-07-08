@@ -45,7 +45,7 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
   }, [initialImages]);
 
   return (
-    <View>
+    <View  style={formStyles.container}>
       <TextInput
         style={formStyles.input}
         placeholder="Add notes"

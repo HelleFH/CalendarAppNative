@@ -117,8 +117,8 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
 
 
   return (
-    <View >
-      <TouchableOpacity  style={commonStyles.container}
+    <View style={commonStyles.container}>
+      <TouchableOpacity  
         onPress={() => {
           if (!disableDetailModal) setShowEntryModal(true);
         }}
@@ -155,6 +155,16 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
           variant="edit"
         />
         <AppIconButton icon="remove" label="Delete" onPress={() => onDeleteEntry(entry._id)} variant="delete" />
+                    {updateEntries.length > 0 && (
+            <TouchableOpacity onPress={() => setShowUpdateList((prev) => !prev)}>
+
+              <Text style={commonStyles.link}>
+
+                <Ionicons name="eye" size={16} color="#1E90FF" style={commonStyles.icon} />
+                {showUpdateList ? 'Hide Updates' : 'View Updates'}
+              </Text>
+            </TouchableOpacity>
+          )}
       </View>
       {showUpdatesInline ? (
         updateEntries.map((u) => (
@@ -167,16 +177,7 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
         ))
       ) : (
         <>
-          {updateEntries.length > 0 && (
-            <TouchableOpacity onPress={() => setShowUpdateList((prev) => !prev)}>
 
-              <Text style={commonStyles.link}>
-
-                <Ionicons name="add" size={16} color="#1E90FF" style={commonStyles.icon} />
-                {showUpdateList ? 'Hide Updates' : 'View Updates'}
-              </Text>
-            </TouchableOpacity>
-          )}
           {showUpdateList &&
             updateEntries.map((u) => (
               <UpdateEntryDisplay

@@ -1,36 +1,44 @@
 import { StyleSheet } from 'react-native';
 
 export const commonStyles = StyleSheet.create({
-  // Layout Containers
+
+
   appContainer: {
     width: '100%',
     maxWidth: 700,
     alignSelf: 'center',
     top: 75,
     padding: 16,
+    textAlign: 'left',
+
   },
   container: {
     flex: 1,
     paddingTop: 50,
-    paddingHorizontal: 20,
+    paddingBottom: 50,
+    paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    textAlign:'center',
-    width:'100%',
-    display:'flex',
+    textAlign: 'left',
+    width: '100%',
+    maxWidth: 500,
+    display: 'flex',
     alignSelf: 'center',
-
-
+    backgroundColor: 'white',
+    gap: 20,
   },
   entryContainer: {
     display: 'flex',
     marginTop: 10,
-    padding: 10,
+    padding: 40,
     backgroundColor: '#F0F8FF',
     borderRadius: 10,
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    justifyContent:'center',
     maxWidth: 400,
     width: '100%',
+    textAlign: 'left',
+
   },
   modalOverlay: {
     flex: 1,
@@ -39,11 +47,11 @@ export const commonStyles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
-    backgroundColor: '#F0F8FF',
-    borderRadius: 12,
+    backgroundColor: 'white',
+    borderRadius: 10,
     padding: 50,
     alignItems: 'center',
-    maxWidth:'100%',
+    maxWidth: '100%',
   },
   modalContent: {
     padding: 20,
@@ -59,27 +67,25 @@ export const commonStyles = StyleSheet.create({
   buttonWrapper: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignItems:'center',
     marginTop: 10,
     gap: 8,
   },
 
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#2D3748',
-    textAlign: 'left',
-    marginBottom: 12,
-  },
+
   subtitle: {
     fontSize: 18,
     fontWeight: '500',
     color: '#4A5568',
+    width: '100%',
   },
-  modalTitle: {
-    fontSize: 20,
+  title: {
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#2D3748',
     marginBottom: 20,
+    width: '100%',
+
   },
 
   label: {
@@ -105,22 +111,16 @@ export const commonStyles = StyleSheet.create({
   notes: {
     fontSize: 16,
     color: '#4A5568',
-    marginBottom: 16,
-    marginTop:16,
+    width: '100%',
+
   },
-  entryNotes: {
-    marginBottom: 10,
-  },
-  cancelText: {
-    color: '#718096',
-    fontSize: 16,
-  },
+
   link: {
     color: '#1E90FF',
     textDecorationLine: 'underline',
     fontSize: 18,
-    fontWeight:500,
-    marginTop:20,
+    fontWeight: 600,
+    marginTop: 20,
   },
 
   // Inputs
@@ -157,15 +157,15 @@ export const commonStyles = StyleSheet.create({
   },
 
   image: {
-    width: 325,
-    height: 325,
+    width: 300,
+    height: 300,
     resizeMode: 'contain',
-    borderRadius: 12,
+    borderRadius: 10,
   },
   imageLarge: {
     width: '100%',
     height: 300,
-    borderRadius: 16,
+    borderRadius: 10,
     resizeMode: 'cover',
     marginBottom: 16,
   },
@@ -179,7 +179,7 @@ export const commonStyles = StyleSheet.create({
   fullWidthImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 8,
+    borderRadius: 10,
     marginRight: 10,
   },
 

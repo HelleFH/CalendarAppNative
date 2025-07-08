@@ -97,7 +97,6 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
 <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
   <View style={commonStyles.entryContainer}>
     
-    {/* Show this ONLY when creating a new entry */}
     {!isEditing && (
       <SelectEntryToUpdate
         allNames={allNames}
@@ -118,7 +117,7 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
       setImages={setImages}
       saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
       initialImages={editingEntry?.images}
-      isNewEntry={!isEditing} // correct dynamic value
+      isNewEntry={!isEditing}
     />
 
     <AppIconButton

@@ -5,6 +5,8 @@ export const formStyles = StyleSheet.create({
   container: {
     marginTop: 20,
     alignSelf: 'center',
+    alignItems:'center',
+    marginBottom:-20, 
 
   },
   input: {

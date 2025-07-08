@@ -260,7 +260,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
 
   return (
 
-    <ScrollView>
+    <ScrollView contentContainerStyle={commonStyles.appContainer} >
 <AppIconButton
   icon="log-out-outline"
   label="Logout"
@@ -268,7 +268,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
   variant="primary"
   style={{ marginTop:50 }}
 />
-<ScrollView contentContainerStyle={commonStyles.appContainer}>
+<ScrollView >
   
   <View style={commonStyles.buttonWrapper}>
 

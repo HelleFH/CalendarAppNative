@@ -74,8 +74,13 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
     }
   }, [entry.parentObjectId, parentEntryName]);
 
+useEffect(() => {
+  if (entry?.parentObjectId) {
+    fetchAndSetParentEntry(entry, setParentEntry);
+  }
+}, [entry?.parentObjectId]);
   return (
-    <View >
+    <View style={commonStyles.container}>
       {parentEntry?.name ? (
        <Text style={commonStyles.title}>
   Update for{' '}
@@ -161,7 +166,6 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
         visible={showDetailModal}
         entry={{
           ...entry,
-          name: parentEntry?.name || 'Unknown',
         }}
         onClose={() => setShowDetailModal(false)}
         onEditUpdate={onEditUpdate}
