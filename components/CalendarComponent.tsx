@@ -3,7 +3,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
-
 interface CalendarComponentProps {
   selectedDate: string;
   markedDates: {
@@ -30,17 +29,21 @@ export const CalendarComponent: React.FC<CalendarComponentProps> = ({
       current={selectedDate}
       onDayPress={onDayPress}
       monthFormat={'yyyy MM'}
-    dayComponent={({
+      
+dayComponent={({
   date,
+  state,
 }: {
-  date: {
+  date?: {
     dateString: string;
     day: number;
     month: number;
     year: number;
     timestamp: number;
   };
+  state?: string;
 }) => {
+  if (!date) return null; // handle undefined date
   const dateStr = date.dateString;
   const isSelected = selectedDate === dateStr;
   const icons = markedDates[dateStr]?.icons || [];

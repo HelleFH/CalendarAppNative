@@ -273,7 +273,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
   <View style={commonStyles.buttonWrapper}>
 
 </View>
-      <Text style={commonStyles.title}>Plant Calendar</Text>
+      <Text style={commonStyles.header}>Plant Calendar</Text>
 
       <CalendarComponent
         selectedDate={selectedDate}

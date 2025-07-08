@@ -26,6 +26,7 @@ export const commonStyles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'white',
     gap: 20,
+    marginTop:20,
   },
   entryContainer: {
     display: 'flex',
@@ -49,7 +50,7 @@ export const commonStyles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 40,
+    padding:20,
     alignItems: 'center',
     maxWidth: '90%',
     alignSelf:'center',
@@ -81,6 +82,12 @@ export const commonStyles = StyleSheet.create({
     fontWeight: '500',
     color: '#4A5568',
     width: '100%',
+  },
+    header: {
+     fontSize: 24,
+     paddingVertical:20,
+     fontWeight:600,
+
   },
   title: {
     fontSize: 20,
