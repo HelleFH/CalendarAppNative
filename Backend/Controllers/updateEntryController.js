@@ -1,4 +1,4 @@
-import streamifier from 'streamifier';
+import mongoose from 'mongoose';
 import cloudinary from 'cloudinary';
 import UpdateEntry from '../models/updateEntryModel.js';
 import Entry from '../models/entryModel.js'; // ✅ Fix incorrect import
