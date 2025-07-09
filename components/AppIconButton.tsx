@@ -11,6 +11,7 @@ interface Props {
   variant?: Variant;
   disabled?: boolean;
   style?: ViewStyle;
+
 }
 
 export const AppIconButton: React.FC<Props> = ({
@@ -19,12 +20,14 @@ export const AppIconButton: React.FC<Props> = ({
   onPress,
   variant = 'primary',
   disabled = false,
+  style
 }) => {
   const styles = getStyles(variant, disabled);
 
+
   return (
     <TouchableOpacity
-      style={[styles.button, disabled && styles.disabledButton]}
+      style={[styles.button, style, disabled && styles.disabledButton]}
       onPress={onPress}
       disabled={disabled}
     >
@@ -70,9 +73,9 @@ const getStyles = (variant: Variant, disabled: boolean) => {
       alignItems: 'center',
       backgroundColor,
       paddingVertical: 12,
-      maxWidth:200,
-      whiteSpace:'nowrap',
+      whiteSpace: 'nowrap',
       paddingHorizontal: 25,
+      alignSelf: 'center',
       borderRadius: variant === 'close' ? 0 : 12,
       marginVertical: 6,
       ...(variant !== 'close' && {

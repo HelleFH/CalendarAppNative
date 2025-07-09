@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { UpdateEntryDisplay } from '../updateEntry/UpdateEntryDisplay';
 import { DeleteConfirmationModal } from '../DeleteConfirmationModal';
-import axios from 'axios';
 import { AppIconButton } from '../AppIconButton';
 import { EntryDetailModal } from './EntryDetailModal';
 import { commonStyles } from '@/styles/SharedStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { ReminderDisplay } from '../reminder/ReminderDisplay';
+import { fetchUpdateEntriesByParent, fetchRemindersByParent } from '@/utils/api';
 
 interface EntryProps {
   _id: string;
@@ -61,48 +61,34 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [reminders, setReminders] = useState<ReminderProps[]>([]);
 
-
-  useEffect(() => {
-    const fetchUpdateEntries = async () => {
-      if (!entry._id) return;
-
-      try {
-        const res = await axios.get<UpdateEntryProps[]>(
-          'https://calendarappnative.onrender.com/entries/update-entries/by-parent',
-          {
-            params: { parentObjectId: entry._id },
-          }
-        );
-
-        setUpdateEntries(res.data);
-      } catch (err) {
-        console.error('Failed to fetch update entries:', err);
-      }
-    };
-
-    fetchUpdateEntries();
-  }, [entry._id]);
-
-  useEffect(() => {
-  const fetchReminders = async () => {
+useEffect(() => {
+  const loadUpdateEntries = async () => {
     if (!entry._id) return;
 
     try {
-      const res = await axios.get<ReminderProps[]>(
-        'https://calendarappnative.onrender.com/entries/reminders/by-parent',
-        {
-          params: { parentObjectId: entry._id },
-        }
-      );
-
-      console.log('Fetched reminders:', res.data); // Add this line
-      setReminders(res.data);
+      const updates = await fetchUpdateEntriesByParent(entry._id);
+      setUpdateEntries(updates);
     } catch (err) {
-      console.error('Failed to fetch reminders:', err);
+      console.error('Error loading update entries:', err);
     }
   };
 
-  fetchReminders();
+  loadUpdateEntries();
+}, [entry._id]);
+
+useEffect(() => {
+  const loadReminders = async () => {
+    if (!entry._id) return;
+
+    try {
+      const fetchedReminders = await fetchRemindersByParent(entry._id);
+      setReminders(fetchedReminders);
+    } catch (err) {
+      console.error('Error loading reminders:', err);
+    }
+  };
+
+  loadReminders();
 }, [entry._id]);
 
   const images = entry.images ?? [];

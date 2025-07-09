@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, RefreshControl, Modal, Button } from 'react-native';
-import axios from 'axios';
+import {  Text, ScrollView, RefreshControl } from 'react-native';
 import { EntryDisplay } from '@/components/entry/EntryDisplay';
-import { NotesAndImages } from '@/components/entry/NotesAndImages';
 
 import {
   saveEntryHandler,
@@ -10,9 +8,10 @@ import {
   saveEditedUpdateEntryHandler,
   deleteEntryHandler,
   deleteUpdateEntryHandler,
-  saveUpdateEntryHandler
+  saveUpdateEntryHandler,
+  fetchAllEntriesHandler
 } from '@/utils/entryHandler';
-import { useNames } from '@/components/UseNames';
+import { useNames } from '@/utils/api';
 import { useCurrentUser } from '@/components/CurrentUser';
 
 interface EntryProps {
@@ -50,25 +49,14 @@ const AllEntriesScreen = () => {
   const { currentUserId, isLoading } = useCurrentUser();
   const { allNames, fetchNames } = useNames(currentUserId);
 
-  const fetchAllEntries = async () => {
-    if (!currentUserId) return;
-    try {
-      const res = await axios.get('https://calendarappnative.onrender.com/entries/all', {
-        params: { userId: currentUserId },
-      });
-
-      const data = Array.isArray(res.data) ? res.data : [res.data];
-      setEntries(data);
-    } catch (error) {
-      console.error('Error fetching all entries:', error);
-      setEntries([]);
-    }
-  };
+const fetchAllEntries = async () => {
+  if (currentUserId) {
+    await fetchAllEntriesHandler({ userId: currentUserId, setEntries });
+  }
+};
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchAllEntries();
-    setRefreshing(false);
   };
 
   const handleDayPress = () => {
@@ -198,35 +186,7 @@ const AllEntriesScreen = () => {
         <Text>No entries available.</Text>
       )}
 
-      <Modal
-        visible={isCreateModalVisible}
-        animationType="slide"
-        onRequestClose={() => setIsCreateModalVisible(false)}
-      >
-        <View style={{ padding: 20 }}>
-          <NotesAndImages
-            name={name}
-            setName={setName}
-            notes={notes}
-            setNotes={setNotes}
-            images={images}
-            setImages={setImages}
-            saveEntry={saveEntry}
-          />
-          <Button
-            title={isEditing ? 'Save Changes' : 'Save Entry'}
-            onPress={isEditing ? saveEditedEntry : saveEntry}
-          />
-          <Button
-            title="Close"
-            onPress={() => {
-              setIsCreateModalVisible(false);
-              setIsEditing(false);
-              setEditingEntryId(null);
-            }}
-          />
-        </View>
-      </Modal>
+   
     </ScrollView>
   );
 };

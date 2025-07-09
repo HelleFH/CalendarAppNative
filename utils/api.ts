@@ -1,5 +1,6 @@
 // utils/api.ts
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 interface ReminderData {
   date: string;
@@ -181,4 +182,61 @@ export const fetchEntryById = async (id: string) => {
     console.error('Failed to fetch entry by parentObjectId:', id, error);
     return null;
   }
+};
+
+export const fetchUpdateEntriesByParent = async (parentObjectId: string) => {
+  try {
+    const res = await axios.get(`${API_URL}/entries/update-entries/by-parent`, {
+      params: { parentObjectId },
+    });
+    return res.data;
+  } catch (err) {
+    console.error('Error fetching update entries by parent:', err);
+    return [];
+  }
+};
+
+export const fetchRemindersByParent = async (parentObjectId: string) => {
+  try {
+    const res = await axios.get(`${API_URL}/entries/reminders/by-parent`, {
+      params: { parentObjectId },
+    });
+    return res.data;
+  } catch (err) {
+    console.error('Error fetching reminders by parent:', err);
+    return [];
+  }
+};
+
+export const fetchAllEntries = async (userId: string) => {
+  try {
+    const res = await axios.get(`${API_URL}/entries/all`, {
+      params: { userId },
+    });
+    return Array.isArray(res.data) ? res.data : [res.data];
+  } catch (error) {
+    console.error('Error fetching all entries:', error);
+    return [];
+  }
+};
+export const useNames = (currentUserId: string | null) => {
+  const [allNames, setAllNames] = useState([]);
+
+  const fetchNames = async () => {
+    if (!currentUserId) return;
+    try {
+      const res = await axios.get('https://calendarappnative.onrender.com/entries/names', {
+        params: { userId: currentUserId },
+      });
+      setAllNames(res.data);
+    } catch (err) {
+      console.error('Error fetching names:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchNames();
+  }, [currentUserId]);
+
+  return { allNames, fetchNames };
 };

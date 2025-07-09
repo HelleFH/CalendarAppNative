@@ -8,10 +8,10 @@ import {
   updateUpdateEntry,
   deleteEntry,
   deleteUpdateEntry,
-  fetchMarkedDates,
   deleteReminder,
   addReminder,
   fetchEntryById,
+  fetchAllEntries,
 
 } from '@/utils/api';
 import { createFormData } from '@/utils/createFormData';
@@ -32,6 +32,7 @@ export const saveReminderHandler = async (payload: any) => {
     fetchNames,
     handleDayPress,
     selectedDate,
+
   } = payload;
 
   if (!date || !notes || !currentUserId || !parentObjectId) {
@@ -375,4 +376,16 @@ export const saveUpdateEntryHandler = async ({
     console.error('Save failed:', error);
     alert('Failed to save update entry.');
   }
+};
+export const fetchAllEntriesHandler = async ({
+  userId,
+  setEntries,
+}: {
+  userId: string;
+  setEntries: (entries: any[]) => void;
+}) => {
+  if (!userId) return;
+
+  const entries = await fetchAllEntries(userId);
+  setEntries(entries);
 };

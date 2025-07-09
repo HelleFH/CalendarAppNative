@@ -126,7 +126,6 @@ export const commonStyles = StyleSheet.create({
 
   link: {
     color: '#1E90FF',
-    textDecorationLine: 'underline',
     fontSize: 18,
     fontWeight: 600,
     marginTop: 20,

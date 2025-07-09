@@ -8,7 +8,6 @@ import { fetchMarkedDates, fetchEntriesForDate } from '@/utils/api';
 import { CreateEntryModal } from '@/components/entry/CreateEntryModal';
 import { CreateUpdateEntryModal } from '@/components/updateEntry/CreateUpdateEntryModal';
 import { useCurrentUser } from '@/components/CurrentUser';
-import { useNames } from '@/components/UseNames';
 import { CreateReminderModal } from '@/components/reminder/CreateReminderModal';
 import {
   saveEntryHandler,
@@ -25,6 +24,7 @@ import { AddOptionsModal } from '@/components/AddOptionsModal';
 import { commonStyles } from '@/styles/SharedStyles';
 import { logoutUser } from '@/utils/auth';
 import { useNavigation } from '@react-navigation/native';
+import { useNames } from '@/utils/api';
 interface Reminder {
   _id: string;
   date: string;
@@ -263,10 +263,12 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
     <ScrollView contentContainerStyle={commonStyles.appContainer} >
 <AppIconButton
   icon="log-out-outline"
-  label="Logout"
+  label="Log out"
   onPress={() => logoutUser(navigation)}
   variant="primary"
-  style={{ marginTop:50 }}
+  style={{alignSelf:'flex-end',     paddingVertical: 8,  paddingHorizontal: 18,}}
+
+     
 />
 <ScrollView >
   

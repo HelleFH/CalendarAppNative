@@ -47,7 +47,7 @@ useEffect(() => {
     <View style={commonStyles.entryContainer}>
       {/* ✅ Make the name clickable */}
       {parentEntry?.name ? (
-<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+<View style={{ flexDirection: 'row', alignItems: 'center',width:'100%', marginBottom:10,gap:5, }}>
   <Ionicons name="alarm-outline" size={20} />
   <Text style={commonStyles.subtitle}>
     Reminder for{' '}
