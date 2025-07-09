@@ -88,29 +88,34 @@ const HomeScreen = () => {
   const [isAddOptionsVisible, setIsAddOptionsVisible] = useState(false);
   const [editingUpdateEntry, setEditingUpdateEntry] = useState<UpdateEntryProps | null>(null);
 
-  const handleDayPress = async (day: any) => {
-    setSelectedDate(day.dateString);
-    setEntryForSelectedDate([]);
-    setUpdateEntryForSelectedDate([]);
-    setReminderForSelectedDate([]);
-    setNotes('');
-    setImages([]);
 
-    if (!currentUserId) return;
+const handleDayPress = async (day: any) => {
+  setSelectedDate(day.dateString);
+  setEntryForSelectedDate([]);
+  setUpdateEntryForSelectedDate([]);
+  setReminderForSelectedDate([]);
+  setNotes('');
+  setImages([]);
 
-    try {
-const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(currentUserId, day.dateString);
-      setEntryForSelectedDate(originalEntries);
-      setUpdateEntryForSelectedDate(updateEntries);
-      setReminderForSelectedDate(reminders);
+  if (!currentUserId) return;
 
-      const newMarked = await fetchMarkedDates(currentUserId);
-      setMarkedDates(newMarked);
-    } catch (err) {
-      console.error('Error fetching entries:', err);
-    }
-  };
-  const navigation = useNavigation();
+  try {
+    const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(currentUserId, day.dateString);
+    console.log('Fetched entries for date:', { originalEntries, updateEntries, reminders });
+    setEntryForSelectedDate(originalEntries || []);
+    setUpdateEntryForSelectedDate(updateEntries || []);
+    setReminderForSelectedDate(reminders || []);
+
+    const newMarked = await fetchMarkedDates(currentUserId);
+    console.log('Fetched marked dates:', newMarked);
+    setMarkedDates(newMarked);
+  } catch (err) {
+    console.error('Error fetching entries:', err);
+  }
+};
+
+
+const navigation = useNavigation();
 
 
   const saveEntry = () =>
@@ -204,6 +209,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       setSelectedOriginalEntry,
       setParentObjectId,
       setEntryForSelectedDate,
+      handleDayPress
     });
 
   const handleEdit = (entry: EntryProps) => {
@@ -251,6 +257,7 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       setSelectedOriginalEntry,
       setParentObjectId,
       fetchNames,
+      handleDayPress,
     });
   };
 
@@ -378,17 +385,18 @@ const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(
       />
 
       <CreateReminderModal
-        visible={isReminderModalVisible}
-        onClose={() => setIsReminderModalVisible(false)}
-        saveReminder={handleSaveReminder}
-        notes={notes}
-        setNotes={setNotes}
-        parentObjectId={parentObjectId}
-        setParentObjectId={setParentObjectId}
-        allNames={allNames}
-        setReminderDate={setReminderDate}
-        reminderDate={reminderDate}
-      />
+          visible={isReminderModalVisible}
+          onClose={() => setIsReminderModalVisible(false)}
+          saveReminder={handleSaveReminder}
+          notes={notes}
+          setNotes={setNotes}
+          parentObjectId={parentObjectId}
+          setParentObjectId={setParentObjectId}
+          allNames={allNames}
+          setReminderDate={setReminderDate}
+          reminderDate={reminderDate} 
+          setName={setName} 
+          setImages={setImages }      />
 
       {reminders.map((reminder, index) => (
         <Text key={index}>

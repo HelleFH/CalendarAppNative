@@ -132,7 +132,7 @@ useEffect(() => {
 
         <AppIconButton
           icon="save"
-          label={isEditing ? 'Save Changes' : 'Save Entry'}
+          label={isEditing ? 'Save Changes' : 'Save'}
           onPress={handleSave}
           variant="edit"
         />

@@ -142,6 +142,7 @@ const fetchAllEntries = async () => {
       setSelectedOriginalEntry,
       setParentObjectId,
       setEntryForSelectedDate,
+      handleDayPress
     });
 
   const handleEdit = (entry: EntryProps) => {

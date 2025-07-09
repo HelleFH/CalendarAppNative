@@ -50,8 +50,9 @@ export const saveReminderHandler = async (payload: any) => {
     });
 
     alert('Reminder saved!');
-    setEntryForSelectedDate(response.entry);
+        handleDayPress({ dateString: selectedDate });
 
+    setEntryForSelectedDate(response.entry);
     setMarkedDates((prev: any) => ({
       ...prev,
       [date]: { marked: true, dotColor: '#4CAF50' },
@@ -61,7 +62,6 @@ export const saveReminderHandler = async (payload: any) => {
     setSelectedOriginalEntry(null);
     setParentObjectId(null);
     fetchNames();
-    handleDayPress({ dateString: selectedDate });
 
   } catch (error: any) {
     const message = axios.isAxiosError(error)
@@ -316,7 +316,6 @@ export const deleteUpdateEntryHandler = async ({
     alert('Failed to delete update entry');
   }
 };
-
 export const saveUpdateEntryHandler = async ({
   parentObjectId,
   selectedDate,
@@ -329,8 +328,6 @@ export const saveUpdateEntryHandler = async ({
   setParentObjectId,
   setEntryForSelectedDate,
   handleDayPress,
-
-
 }: any) => {
   if (!parentObjectId) {
     alert('No entry selected for updating.');
@@ -352,31 +349,42 @@ export const saveUpdateEntryHandler = async ({
     },
     images,
   });
+try {
+  const response = await addUpdateEntry(formData);
+  console.log('Update Entry response:', response);
+
+  const entry = response?.data?.updateEntry;
+
+  if (!entry) {
+    console.error('No entry returned in response:', response);
+    alert('Update saved, but no entry was returned. UI update skipped.');
+    return;
+  }
+
+  alert('Update Entry Saved!');
 
   try {
-    const response = await addUpdateEntry(formData);
-    console.log('Update Entry response:', response);
-    alert('Update Entry Saved!');
-
-    try {
-      setEntryForSelectedDate(response.data.entry);
-      setMarkedDates((prev: any) => ({
-        ...prev,
-        [selectedDate]: { marked: true, dotColor: '#4CAF50' },
-      }));
-      setIsUpdateModalVisible(false);
-      setSelectedOriginalEntry(null);
-      setParentObjectId(null);
-      handleDayPress({ dateString: selectedDate });
-    } catch (stateUpdateError) {
-      console.error('State update failed:', stateUpdateError);
-      alert('Saved, but failed to update UI.');
-    }
-  } catch (error) {
-    console.error('Save failed:', error);
-    alert('Failed to save update entry.');
+    setEntryForSelectedDate(entry);
+    setMarkedDates((prev: any) => ({
+      ...prev,
+      [selectedDate]: { marked: true, dotColor: '#4CAF50' },
+    }));
+    setIsUpdateModalVisible(false);
+    setSelectedOriginalEntry(null);
+    setParentObjectId(null);
+    handleDayPress({ dateString: selectedDate });
+  } catch (stateUpdateError) {
+    console.error('State update failed:', stateUpdateError);
+    alert('Saved, but failed to update UI.');
   }
+} catch (error) {
+  console.error('Save failed:', error);
+  alert('Failed to save update entry.');
+}
+
 };
+
+
 export const fetchAllEntriesHandler = async ({
   userId,
   setEntries,
