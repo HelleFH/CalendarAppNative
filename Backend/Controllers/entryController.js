@@ -4,6 +4,7 @@ import UpdateEntry from '../models/updateEntryModel.js';
 import multer from 'multer';
 import streamifier from 'streamifier';
 import Reminder from '../models/reminderModel.js';
+import mongoose from 'mongoose';
 
 // Cloudinary config
 cloudinary.config({
