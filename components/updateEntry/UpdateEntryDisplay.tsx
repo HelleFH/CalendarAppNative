@@ -80,7 +80,7 @@ useEffect(() => {
   }
 }, [entry?.parentObjectId]);
   return (
-    <View style={commonStyles.container}>
+<View style={[commonStyles.container, { backgroundColor: '#F0F8FF' }]}>
       {parentEntry?.name ? (
        <Text style={commonStyles.title}>
   Update for{' '}

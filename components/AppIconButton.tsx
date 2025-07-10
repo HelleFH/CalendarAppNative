@@ -94,7 +94,7 @@ const getStyles = (variant: Variant, disabled: boolean) => {
       color: textColor,
       fontSize: 16,
       fontWeight: '600',
-      textDecorationLine: variant === 'close' ? 'underline' : 'none',
+      textDecorationLine: 'none',
     } as TextStyle,
     disabledButton: {
       opacity: 0.6,

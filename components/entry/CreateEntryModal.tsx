@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text } from 'react-native';
+import { Modal, View, Text, Button, TouchableOpacity } from 'react-native';
 import { NotesAndImages } from './NotesAndImages';
 import { AppIconButton } from '../AppIconButton';
 import { commonStyles } from '@/styles/SharedStyles';
@@ -60,14 +60,15 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
 
         />
 
-        <AppIconButton
-          icon='close'
-          label="Close"
-          variant='close'
-          onPress={() => {
-            onClose();
-          }}
-        />
+        <TouchableOpacity onPress={() => {
+          onClose();
+        }} 
+        >
+          <Text style={commonStyles.cancelButton}>Cancel</Text>
+        </TouchableOpacity>
+
+
+
       </View>
     </Modal>
   );

@@ -10,8 +10,7 @@ export const formStyles = StyleSheet.create({
     width: '100%',
     maxWidth: 800,
     backgroundColor: '#F0F8FF',
-    paddingHorizontal: 20,
-    paddingBottom: 0,
+    padding:30,
 
   },
   input: {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text } from 'react-native';
+import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import { UpdateNotesAndImages } from './UpdateNotesAndImages';
 import { SelectEntryToUpdate } from './SelectEntryToUpdate';
 import { useNames } from '@/utils/api';
@@ -55,27 +55,27 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   const { fetchNames } = useNames(currentUserId);
 
   const [selectingEntry, setSelectingEntry] = useState(!isEditing);
-useEffect(() => {
-  if (visible) {
-    if (isEditing && editingEntry) {
-      setParentObjectId(editingEntry.parentObjectId ?? null);
-      setNotes(editingEntry.notes);
-      setImages(editingEntry.images ?? []);
-      
-      // Find the name from allNames that matches parentObjectId (or editingEntry info)
-      const matchingName = allNames.find(n => n._id === editingEntry.parentObjectId)?.name ?? '';
-      setName(matchingName);
+  useEffect(() => {
+    if (visible) {
+      if (isEditing && editingEntry) {
+        setParentObjectId(editingEntry.parentObjectId ?? null);
+        setNotes(editingEntry.notes);
+        setImages(editingEntry.images ?? []);
 
-      setSelectingEntry(false);
-    } else {
-      setParentObjectId(null);
-      setNotes('');
-      setImages([]);
-      setName('');
-      setSelectingEntry(true);
+        // Find the name from allNames that matches parentObjectId (or editingEntry info)
+        const matchingName = allNames.find(n => n._id === editingEntry.parentObjectId)?.name ?? '';
+        setName(matchingName);
+
+        setSelectingEntry(false);
+      } else {
+        setParentObjectId(null);
+        setNotes('');
+        setImages([]);
+        setName('');
+        setSelectingEntry(true);
+      }
     }
-  }
-}, [visible, isEditing, editingEntry, setParentObjectId, setNotes, setImages, setName, allNames]);
+  }, [visible, isEditing, editingEntry, setParentObjectId, setNotes, setImages, setName, allNames]);
 
   const handleSave = () => {
     if (isEditing) {
@@ -100,11 +100,11 @@ useEffect(() => {
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
       <View style={formStyles.container}>
-      <Text style={commonStyles.title}>
-        {isEditing
-          ? `Edit your update for ${name}`
-          : 'Create an update for one of your plants'}
-      </Text>
+        <Text style={commonStyles.title}>
+          {isEditing
+            ? `Edit your update for ${name}`
+            : 'Create an update for one of your plants'}
+        </Text>
         {!isEditing && (
           <SelectEntryToUpdate
             allNames={allNames}
@@ -136,13 +136,11 @@ useEffect(() => {
           onPress={handleSave}
           variant="edit"
         />
-
-        <AppIconButton
-          icon="close"
-          label="Close"
-          variant="close"
-          onPress={handleClose}
-        />
+        <TouchableOpacity onPress={
+          handleClose}
+        >
+          <Text style={commonStyles.cancelButton}>Cancel</Text>
+        </TouchableOpacity>
       </View>
     </Modal>
 

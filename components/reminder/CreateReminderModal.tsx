@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Button, TextInput, Text, Platform } from 'react-native';
+import { Modal, View, Button, TextInput, Text, Platform, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AppIconButton } from '../AppIconButton';
 import { commonStyles } from '@/styles/SharedStyles';
@@ -69,7 +69,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View style={commonStyles.entryContainer}>
+      <View style={formStyles.container}>
         <Text style={formStyles.title}>Create a reminder for one of your plants</Text>
 
         <SelectEntryForReminder
@@ -117,8 +117,12 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
         </View>
 
         <AppIconButton icon="save" label="Save Reminder" onPress={handleSaveReminder} variant="edit" />
-        <AppIconButton icon="close" label="Close" onPress={onClose} variant="close" />
-      </View>
+        <TouchableOpacity onPress={
+          onClose}
+        >
+          <Text style={commonStyles.cancelButton}>Cancel</Text>
+        </TouchableOpacity>      
+        </View>
     </Modal>
   );
 };

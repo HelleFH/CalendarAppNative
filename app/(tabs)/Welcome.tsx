@@ -21,7 +21,7 @@ export default function IndexScreen() {
     <View style={commonStyles.container}>
       <Image source={Images.HomeScreenBG} style={commonStyles.image} />
 
-      <Text style={commonStyles.title}>the Plant Calendar 🌱</Text>
+      <Text style={commonStyles.title}>The Plant Calendar 🌱</Text>
       <Text style={commonStyles.subtitle}>
         Plant Calendar helps you care for your plants with ease. Upload images, track growth, and never forget to water again.
       </Text>

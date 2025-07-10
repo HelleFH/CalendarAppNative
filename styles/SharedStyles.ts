@@ -16,7 +16,7 @@ export const commonStyles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingBottom: 50,
-    paddingHorizontal: 30,
+    paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'left',
@@ -51,8 +51,7 @@ export const commonStyles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding:20,
-    alignItems: 'center',
-    maxWidth: '90%',
+    maxWidth: '100%',
     alignSelf:'center',
   
   },
@@ -66,6 +65,8 @@ export const commonStyles = StyleSheet.create({
   },
   cancelButton: {
     marginTop: 20,
+    alignSelf:'center',
+    textDecorationLine:'underline',
   },
   buttonWrapper: {
     flexDirection: 'row',
@@ -95,6 +96,7 @@ export const commonStyles = StyleSheet.create({
     color: '#2D3748',
     width: '100%',
     textAlign:'left',
+    letterSpacing:-0.2,
   },
 
   label: {
