@@ -7,7 +7,7 @@ export const commonStyles = StyleSheet.create({
     width: '100%',
     maxWidth: 700,
     alignSelf: 'center',
-    top: 75,
+    top: 20,
     padding: 16,
     textAlign: 'left',
 

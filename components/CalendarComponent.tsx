@@ -50,7 +50,7 @@ dayComponent={({
 
   return (
     <TouchableOpacity onPress={() => onDayPress(date)}>
-      <View style={{ alignItems: 'center', padding: 20 }}>
+      <View style={{ alignItems: 'center', padding: 10 }}>
         <Text
           style={{
             fontWeight: isSelected ? 'bold' : 'normal',
