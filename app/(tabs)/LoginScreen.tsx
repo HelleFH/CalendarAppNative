@@ -1,4 +1,3 @@
-// src/screens/LoginScreen.tsx
 import React, { useState } from 'react';
 import { ScrollView, TextInput, Text, Image } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
@@ -7,9 +6,12 @@ import { formStyles } from '@/styles/FormStyles';
 import { AppIconButton } from '@/components/AppIconButton';
 import Images from '@/assets/images';
 import { commonStyles } from '@/styles/SharedStyles';
-
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../../App'; 
+import { RouteProp, useRoute } from '@react-navigation/native';
 
 export default function LoginScreen() {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,6 +21,8 @@ export default function LoginScreen() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert('Registered!');
+    
+      navigation.navigate('HomeScreen');
     } catch (err) { 
       setError((err as any).message);
     }
@@ -29,14 +33,15 @@ export default function LoginScreen() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert('Logged in!');
+      navigation.navigate('HomeScreen'); 
     } catch (err) {
       setError((err as any).message);
     }
   };
 
   return (
-<ScrollView style={commonStyles.scroll} contentContainerStyle={commonStyles.container}>
-            <Image source={Images.HomeScreenBG} style={commonStyles.image} />
+    <ScrollView style={commonStyles.scroll} contentContainerStyle={commonStyles.container}>
+      <Image source={Images.HomeScreenBG} style={commonStyles.image} />
 
       <TextInput
         placeholder="Email"
@@ -57,6 +62,7 @@ export default function LoginScreen() {
       <AppIconButton icon="add" label="Register" onPress={register} variant="primary" />
       <AppIconButton icon="log-in" label="Login" onPress={login} variant="edit" />
 
+      {error ? <Text style={{ color: 'red', marginTop: 10 }}>{error}</Text> : null}
     </ScrollView>
   );
 }

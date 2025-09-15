@@ -270,12 +270,19 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     <ScrollView contentContainerStyle={commonStyles.appContainer} >
 <AppIconButton
-  icon="log-in"
-  label="Login"
-  onPress={() => navigation.navigate('LoginScreen')} 
+  icon={currentUserId ? "log-out-outline" : "log-in-outline"}
+  label={currentUserId ? "Log out" : "Log in"}
+  onPress={() => {
+    if (currentUserId) {
+      logoutUser(navigation);
+    } else {
+      navigation.navigate("LoginScreen"); // navigate to login
+    }
+  }}
   variant="primary"
-  style={{alignSelf:'flex-end', paddingVertical: 5, paddingHorizontal: 18,}}
+  style={{ alignSelf: "flex-end", paddingVertical: 5, paddingHorizontal: 18 }}
 />
+
 <ScrollView >
   
   <View style={commonStyles.buttonWrapper}>
