@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 type Variant = 'primary' | 'secondary' | 'edit' | 'delete' | 'close';
@@ -31,8 +31,10 @@ export const AppIconButton: React.FC<Props> = ({
       onPress={onPress}
       disabled={disabled}
     >
+      <View style={{flexDirection:'row'}}>
       <Ionicons name={icon} size={20} color={styles.icon.color} style={styles.icon} />
       <Text style={styles.text}>{label}</Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -72,9 +74,9 @@ const getStyles = (variant: Variant, disabled: boolean) => {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor,
-      paddingVertical: 12,
+      paddingVertical: 10,
       whiteSpace: 'nowrap',
-      paddingHorizontal: 25,
+      paddingHorizontal: 22,
       alignSelf: 'center',
       borderRadius: variant === 'close' ? 0 : 12,
       marginVertical: 6,
@@ -89,6 +91,7 @@ const getStyles = (variant: Variant, disabled: boolean) => {
     icon: {
       color: textColor,
       marginRight: 8,
+      
     } as TextStyle,
     text: {
       color: textColor,

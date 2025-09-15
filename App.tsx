@@ -11,7 +11,7 @@ import AllEntriesScreen from './app/(tabs)/AllEntriesScreen';
 
 export type RootStackParamList = {
   IndexScreen: undefined;
-  Login: undefined;
+  LoginScreen: undefined;
   HomeScreen: undefined;
   AllEntriesScreen: undefined;
 };
@@ -35,16 +35,15 @@ export default function App() {
 
   return (
     <NavigationContainer>
-  
-        <Stack.Screen name="IndexScreen" component={IndexScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />'
-            <Stack.Navigator
-        initialRouteName={user ? 'HomeScreen' : 'IndexScreen'}
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="AllEntriesScreen" component={AllEntriesScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+  <Stack.Navigator
+    initialRouteName={user ? 'HomeScreen' : 'IndexScreen'}
+    screenOptions={{ headerShown: false }}
+  >
+    <Stack.Screen name="IndexScreen" component={IndexScreen} />
+    <Stack.Screen name="LoginScreen" component={LoginScreen} />
+    <Stack.Screen name="HomeScreen" component={HomeScreen} />
+    <Stack.Screen name="AllEntriesScreen" component={AllEntriesScreen} />
+  </Stack.Navigator>
+</NavigationContainer>
   );
 }

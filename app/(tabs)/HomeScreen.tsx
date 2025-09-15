@@ -23,8 +23,9 @@ import { ReminderDisplay } from '@/components/reminder/ReminderDisplay';
 import { AddOptionsModal } from '@/components/AddOptionsModal';
 import { commonStyles } from '@/styles/SharedStyles';
 import { logoutUser } from '@/utils/auth';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useNames } from '@/utils/api';
+import { RootStackParamList } from '@/App';
 interface Reminder {
   _id: string;
   date: string;
@@ -115,7 +116,7 @@ const handleDayPress = async (day: any) => {
 };
 
 
-const navigation = useNavigation();
+const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
 
   const saveEntry = () =>
@@ -269,13 +270,11 @@ const navigation = useNavigation();
 
     <ScrollView contentContainerStyle={commonStyles.appContainer} >
 <AppIconButton
-  icon="log-out-outline"
-  label="Log out"
-  onPress={() => logoutUser(navigation)}
+  icon="log-in"
+  label="Login"
+  onPress={() => navigation.navigate('LoginScreen')} 
   variant="primary"
-  style={{alignSelf:'flex-end',     paddingVertical: 8,  paddingHorizontal: 18,}}
-
-     
+  style={{alignSelf:'flex-end', paddingVertical: 5, paddingHorizontal: 18,}}
 />
 <ScrollView >
   
