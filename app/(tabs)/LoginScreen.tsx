@@ -1,6 +1,6 @@
 // src/screens/LoginScreen.tsx
 import React, { useState } from 'react';
-import { View, TextInput, Text, Image } from 'react-native';
+import { ScrollView, TextInput, Text, Image } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { formStyles } from '@/styles/FormStyles';
@@ -35,7 +35,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={commonStyles.container}>
+<ScrollView style={commonStyles.scroll} contentContainerStyle={commonStyles.container}>
             <Image source={Images.HomeScreenBG} style={commonStyles.image} />
 
       <TextInput
@@ -57,6 +57,6 @@ export default function LoginScreen() {
       <AppIconButton icon="add" label="Register" onPress={register} variant="primary" />
       <AppIconButton icon="log-in" label="Login" onPress={login} variant="edit" />
 
-    </View>
+    </ScrollView>
   );
 }

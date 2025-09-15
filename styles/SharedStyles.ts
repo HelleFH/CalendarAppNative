@@ -12,21 +12,21 @@ export const commonStyles = StyleSheet.create({
     textAlign: 'left',
 
   },
-  container: {
+
+    scroll: {
     flex: 1,
+    backgroundColor: 'white',
+  },
+   container: {
     paddingTop: 50,
     paddingBottom: 50,
     paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    textAlign: 'left',
     width: '100%',
     maxWidth: 500,
-    display: 'flex',
     alignSelf: 'center',
-    backgroundColor: 'white',
     gap: 20,
-    marginTop:20,
   },
   entryContainer: {
     display: 'flex',
