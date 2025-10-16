@@ -1,6 +1,14 @@
+import { Tabs } from 'expo-router';
 import React from 'react';
-import { Stack } from 'expo-router';
 
-export default function Layout() {
-  return <Stack screenOptions={{ headerShown: false }} />;
+export default function TabsLayout() {
+  return (
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#007AFF',
+        tabBarStyle: { backgroundColor: 'white' },
+      }}
+    />
+  );
 }
