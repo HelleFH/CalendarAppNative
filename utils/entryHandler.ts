@@ -12,6 +12,7 @@ import {
   addReminder,
   fetchEntryById,
   fetchAllEntries,
+  deleteEntryImage,
 
 } from '@/utils/api';
 import { createFormData } from '@/utils/createFormData';
@@ -292,6 +293,30 @@ export const deleteEntryHandler = async ({
     handleDayPress({ dateString: selectedDate });
   } catch (err) {
     alert('Failed to delete entry');
+  }
+};
+
+export const deleteImageHandler = async ({
+  entryId,
+  imageUrl,
+  setImages,
+}: {
+  entryId: string;
+  imageUrl: string;
+  setImages: React.Dispatch<React.SetStateAction<string[]>>;
+}) => {
+  if (!entryId || !imageUrl) {
+    alert('Missing entry ID or image URL.');
+    return;
+  }
+
+  try {
+    const updatedImages = await deleteEntryImage(entryId, imageUrl);
+    alert('Image deleted!');
+    setImages(updatedImages);
+  } catch (err) {
+    console.error('Failed to delete image:', err);
+    alert('Failed to delete image.');
   }
 };
 

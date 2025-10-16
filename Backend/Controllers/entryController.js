@@ -1,17 +1,10 @@
-import cloudinary from 'cloudinary';
 import Entry from '../models/entryModel.js';
 import UpdateEntry from '../models/updateEntryModel.js';
 import multer from 'multer';
 import streamifier from 'streamifier';
 import Reminder from '../models/reminderModel.js';
 import mongoose from 'mongoose';
-
-// Cloudinary config
-cloudinary.config({
-  cloud_name: 'dvagswjsf',
-  api_key: '541989745898263',
-  api_secret: 'ppzQEDXFiCcFdicfNYCupeZaRu0',
-});
+import cloudinary from '../config/cloudinary.js';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -126,6 +119,55 @@ const getAllNames = async (req, res) => {
   } catch (err) {
     console.error('Failed to fetch names:', err);
     res.status(500).json({ error: 'Failed to fetch names' });
+  }
+};
+
+ const deleteImage = async (req, res) => {
+  console.log('🚀 deleteImage route HIT');
+
+  try {
+    const { entryId, imageUrl } = req.body;
+
+    if (!entryId || !imageUrl) {
+      return res.status(400).json({ message: 'Entry ID and image URL are required' });
+    }
+
+    // 🪴 Find the entry
+    const entry = await Entry.findById(entryId);
+    if (!entry) {
+      return res.status(404).json({ message: 'Entry not found' });
+    }
+
+    // ✅ Check if image exists in entry
+    if (!entry.images.includes(imageUrl)) {
+      return res.status(404).json({ message: 'Image not found in this entry' });
+    }
+
+    // 🖼️ Extract Cloudinary public ID from image URL
+    const publicId = imageUrl.split('/').pop().split('.')[0];
+    console.log(`🧩 Extracted publicId: ${publicId}`);
+
+    // 🔥 Delete image from Cloudinary
+    try {
+      await cloudinary.uploader.destroy(publicId);
+      console.log(`✅ Deleted image from Cloudinary: ${publicId}`);
+    } catch (err) {
+      console.error(`❌ Failed to delete image from Cloudinary: ${publicId}`, err);
+      return res.status(500).json({ message: 'Failed to delete image from Cloudinary' });
+    }
+
+    // 🧹 Remove image from entry in MongoDB
+    entry.images = entry.images.filter((url) => url !== imageUrl);
+    await entry.save();
+
+    console.log(`✅ Image removed from entry ${entryId}`);
+    res.status(200).json({
+      message: 'Image deleted successfully',
+      images: entry.images,
+    });
+  } catch (err) {
+    console.error('❌ Error in deleteImage:', err);
+    res.status(500).json({ error: 'Something went wrong while deleting image' });
   }
 };
 
@@ -254,25 +296,75 @@ const getEntryDatesByUser = async (req, res) => {
 };
 
 
-const getEntryByUserAndDate = async (req, res) => {
+const getEntriesForDate = async (req, res) => {
   const { userId, date } = req.query;
-  console.log('Received GET /entries with:', req.query);
+  console.log('🚀 /entries-for-date called', { userId, date });
 
   if (!userId || !date) {
+    console.warn('⚠️ Missing userId or date');
     return res.status(400).json({ message: 'Missing userId or date' });
   }
 
   try {
-    const entry = await Entry.findOne({ userId, date });
+    const [entries, updates, reminders] = await Promise.all([
+      Entry.find({ userId, date }),
+      UpdateEntry.find({ userId, date }),
+      Reminder.find({ userId, date }),
+    ]);
 
-    if (!entry) {
-      return res.status(404).json({ message: 'No entry found for this user and date' });
-    }
+    console.log('✅ Data fetched', {
+      entriesCount: entries.length,
+      updatesCount: updates.length,
+      remindersCount: reminders.length,
+    });
 
-    res.json(entry);
+    res.json({ entries, updates, reminders });
   } catch (err) {
-    console.error('Error fetching entry:', err);
-    res.status(500).json({ message: 'Server error while fetching entry' });
+    console.error('❌ Error fetching combined entries:', err);
+    res.status(500).json({ message: 'Server error while fetching combined entries' });
   }
 };
-export { addEntry, getAllNames, deleteEntry, getEntryById, editEntry,getAllEntriesByUser,getEntryDatesByUser, getEntryByUserAndDate };
+
+const getMarkedDates = async (req, res) => {
+  const { userId } = req.query;
+  console.log('🚀 GET /marked-dates called with:', { userId });
+
+  if (!userId) {
+    console.warn('⚠️ Missing userId');
+    return res.status(400).json({ message: 'Missing userId' });
+  }
+
+  try {
+    const [entries, updates, reminders] = await Promise.all([
+      Entry.find({ userId }),
+      UpdateEntry.find({ userId }),
+      Reminder.find({ userId }),
+    ]);
+
+    const markedDates = {};
+
+    entries.forEach(e => {
+      if (!markedDates[e.date]) markedDates[e.date] = { icons: [] };
+      if (!markedDates[e.date].icons.includes('entry')) markedDates[e.date].icons.push('entry');
+    });
+
+    updates.forEach(u => {
+      if (!markedDates[u.date]) markedDates[u.date] = { icons: [] };
+      if (!markedDates[u.date].icons.includes('update')) markedDates[u.date].icons.push('update');
+    });
+
+    reminders.forEach(r => {
+      if (!markedDates[r.date]) markedDates[r.date] = { icons: [] };
+      if (!markedDates[r.date].icons.includes('reminder')) markedDates[r.date].icons.push('reminder');
+    });
+
+    console.log('✅ Marked dates calculated:', markedDates);
+
+    res.json(markedDates);
+  } catch (err) {
+    console.error('❌ Error fetching marked dates:', err);
+    res.status(500).json({ message: 'Server error while fetching marked dates' });
+  }
+};
+
+export { getEntriesForDate, getMarkedDates, addEntry, getAllNames, deleteEntry, getEntryById, editEntry,getAllEntriesByUser,getEntryDatesByUser, deleteImage };

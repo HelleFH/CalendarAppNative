@@ -1,38 +1,6 @@
 import mongoose from 'mongoose';
 import Reminder from "../models/reminderModel.js";
 
-export const getReminderDatesByUser = async (req, res) => {
-  const { userId } = req.query;
-
-  try {
-    const reminders = await Reminder.find({ userId });
-    const dates = reminders.map(reminder => reminder.date);
-    res.json(dates);
-  } catch (err) {
-    console.error('Error fetching reminders:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-export const getRemindersByUserAndDate = async (req, res) => {
-  const { userId, date } = req.query;
-
-  if (!userId || !date) {
-    return res.status(400).json({ message: 'Missing userId or date' });
-  }
-
-  try {
-    const reminders = await Reminder.find({ userId, date });
-
-    if (reminders.length === 0) {
-      return res.status(404).json({ message: 'No reminders found for this user and date' });
-    }
-
-    res.json(reminders);
-  } catch (err) {
-    console.error('Error fetching reminders:', err);
-    res.status(500).json({ message: 'Server error while fetching reminders' });
-  }
-};
 export const getRemindersByParent = async (req, res) => {
   console.log('>>> ROUTE HIT: /reminders/by-parent');
   console.log('>>> Query:', req.query);

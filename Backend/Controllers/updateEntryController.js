@@ -1,14 +1,7 @@
 import mongoose from 'mongoose';
-import cloudinary from 'cloudinary';
 import UpdateEntry from '../models/updateEntryModel.js';
-import Entry from '../models/entryModel.js'; // ✅ Fix incorrect import
-
-// Cloudinary config
-cloudinary.config({
-  cloud_name: 'dvagswjsf',
-  api_key: '541989745898263',
-  api_secret: 'ppzQEDXFiCcFdicfNYCupeZaRu0',
-});
+import Entry from '../models/entryModel.js'; 
+import cloudinary from '../config/cloudinary.js';
 
 
 const deleteUpdateEntry = async (req, res) => {
@@ -156,27 +149,6 @@ const getUpdateEntryDatesByUser = async (req, res) => {
 };
 
 
-const getUpdateEntriesByUserAndDate = async (req, res) => {
-  const { userId, date } = req.query;
-
-  if (!userId || !date) {
-    return res.status(400).json({ message: 'Missing userId or date' });
-  }
-
-  try {
-    const updates = await UpdateEntry.find({ userId, date });
-
-    if (updates.length === 0) {
-      return res.status(404).json({ message: 'No update entries found for this user and date' });
-    }
-
-    res.json(updates);
-  } catch (err) {
-    console.error('Error fetching update entries:', err);
-    res.status(500).json({ message: 'Server error while fetching update entries' });
-  }
-};
-
 
 const editUpdateEntry = async (req, res) => {
   const { entryId } = req.params;
@@ -230,4 +202,4 @@ const editUpdateEntry = async (req, res) => {
   }
 };
 
-export { updateEntry, deleteUpdateEntry, editUpdateEntry,getUpdatesByParent,getUpdateEntryDatesByUser,getUpdateEntriesByUserAndDate };
+export { updateEntry, deleteUpdateEntry, editUpdateEntry,getUpdatesByParent,getUpdateEntryDatesByUser };

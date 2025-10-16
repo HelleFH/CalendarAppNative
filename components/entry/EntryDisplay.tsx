@@ -194,15 +194,15 @@ useEffect(() => {
         }}
         itemType="entry"
       />
-      <EntryDetailModal
-        visible={showEntryModal}
-        entry={entry}
-        onClose={() => setShowEntryModal(false)}
-        onEditUpdate={onEditUpdate}
-        onDeleteUpdate={onDeleteUpdate}
-        onDeleteEntry={onDeleteEntry}
-        onEditEntry={onEditEntry}
-      />
-    </View>
+   <EntryDetailModal
+  visible={showEntryModal}
+  entry={entry}
+  onClose={() => setShowEntryModal(false)}
+  onEditUpdate={onEditUpdate}
+  onDeleteUpdate={onDeleteUpdate}
+  onDeleteEntry={onDeleteEntry}
+  onEditEntry={onEditEntry}
+/>
+    </View>   
   );
 };

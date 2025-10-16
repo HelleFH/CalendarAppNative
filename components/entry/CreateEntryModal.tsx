@@ -20,7 +20,13 @@ interface CreateEntryModalProps {
   selectedDate: string;
 
 }
-
+interface EntryProps {
+  _id: string;
+  name: string;
+  date: string;
+  notes: string;
+  images?: string[];
+}
 export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
   visible,
   onClose,
@@ -35,6 +41,7 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
   setName,
   selectedDate
 }) => {
+const [editingEntry, setEditingEntry] = useState<EntryProps | null>(null);
 
 
   return (
@@ -50,6 +57,7 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
           images={images}
           setImages={setImages}
           saveEntry={saveEntry}
+  entryId={editingEntry?._id} 
         />
 
         <AppIconButton
