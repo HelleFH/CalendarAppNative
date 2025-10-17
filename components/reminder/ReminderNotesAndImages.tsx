@@ -3,13 +3,13 @@ import { View, TextInput, Button, Image, ScrollView, StyleSheet } from 'react-na
 import { commonStyles } from '@/styles/SharedStyles';
 
 
-interface UpdateNotesAndImagesProps {
+interface ReminderNotesAndImages {
   notes: string;
   setNotes: (notes: string) => void;
   saveEntry: () => void;
 }
 
-export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
+export const ReminderNotesAndImages: React.FC<ReminderNotesAndImages> = ({
   notes,
   setNotes,
   saveEntry,
