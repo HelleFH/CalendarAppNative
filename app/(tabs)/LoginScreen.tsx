@@ -8,7 +8,7 @@ import Images from '@/assets/images';
 import { commonStyles } from '@/styles/SharedStyles';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App'; 
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, uqseRoute } from '@react-navigation/native';
 
 export default function LoginScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

@@ -49,6 +49,8 @@ export const SelectEntryForReminder: React.FC<SelectEntryForReminderProps> = ({
         style={formStyles.input}
         dropdownIconColor="#319795"
         mode="dropdown"
+          testID="picker"
+
       >
         <Picker.Item label="Select an entry..." value="" />
         {allNames.map((entry) => (

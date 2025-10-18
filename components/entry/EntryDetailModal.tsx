@@ -67,31 +67,34 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
           { top: 50,
            }
         ]}>
-          <TouchableOpacity
-            onPress={onClose}
-            style={{
-              position: 'absolute',
-              top: 10,
-              right: 10,
-              zIndex: 1,
-              padding: 8,
-            }}
-          >
-            <Ionicons name="close" size={24} color="black" />
-          </TouchableOpacity>
+      <TouchableOpacity
+  testID="close-button"
+  
+  onPress={onClose}
+  style={{
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+    padding: 8,
+  }}
+>
+  <Ionicons name="close" size={24} color="black" />
+</TouchableOpacity>
 
-
-          <EntryDisplay
-            key={entry._id}
-            entry={entry}
-            onEditUpdate={onEditUpdate}
-            onDeleteUpdate={onDeleteUpdate}
-            onDeleteEntry={onDeleteEntry}
-            onEditEntry={onEditEntry}
-            showUpdatesInline={false}
-            disableDetailModal={true}
-            onRequestCloseModal={onClose}
-          />
+<EntryDisplay
+  testID="entry-display"
+  key={entry._id}
+  entry={entry}
+  onEditUpdate={onEditUpdate}
+  onDeleteUpdate={onDeleteUpdate}
+  onDeleteEntry={onDeleteEntry}
+  onEditEntry={onEditEntry}
+  showUpdatesInline={false}
+  disableDetailModal={true}
+  onRequestCloseModal={onClose}
+    updateEntries={updateEntries}
+/>
         </ScrollView>
       </View>
     </Modal>

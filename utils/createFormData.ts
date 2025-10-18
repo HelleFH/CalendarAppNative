@@ -33,9 +33,9 @@ export const createFormData = async ({
       blob = new Blob([byteArray], { type: mimeType });
       fileType = mimeType.split('/')[1];
     } else if (imageUri.startsWith('file://')) {
-      const fileInfo = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
+  const fileInfo = await FileSystem.readAsStringAsync(imageUri, {
+  encoding: 'base64', // ✅ just a string
+});
 
       const byteArray = new Uint8Array([...atob(fileInfo)].map(c => c.charCodeAt(0)));
       blob = new Blob([byteArray], { type: 'image/jpeg' });

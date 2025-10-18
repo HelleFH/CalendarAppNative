@@ -31,7 +31,9 @@ interface EntryDisplayProps {
   onPress?: () => void;
   showUpdatesInline?: boolean;
   disableDetailModal?: boolean;
-  onRequestCloseModal?: () => void;
+ testID?: string;
+   onRequestCloseModal?: () => void;
+  updateEntries?: UpdateEntryProps[];
 }
 interface UpdateEntryProps {
   _id: string;
@@ -39,6 +41,7 @@ interface UpdateEntryProps {
   notes: string;
   images?: string[];
   parentObjectId?: string;
+   testID?: string;
 }
 
 export const EntryDisplay: React.FC<EntryDisplayProps> = ({
@@ -49,8 +52,8 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   onDeleteUpdate,
   onPress,
   disableDetailModal,
-  onRequestCloseModal
-
+  onRequestCloseModal,
+ testID
 }) => {
 
   const [updateEntries, setUpdateEntries] = useState<UpdateEntryProps[]>([]);
@@ -103,7 +106,7 @@ useEffect(() => {
 
 
   return (
-    <View style={commonStyles.container}>
+    <View testID={testID} style={commonStyles.container}>
       <TouchableOpacity  
         onPress={() => {
           if (!disableDetailModal) setShowEntryModal(true);

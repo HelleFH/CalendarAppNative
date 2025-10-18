@@ -32,7 +32,7 @@ export const AppIconButton: React.FC<Props> = ({
       disabled={disabled}
     >
       <View style={{flexDirection:'row'}}>
-      <Ionicons name={icon} size={20} color={styles.icon.color} style={styles.icon} />
+      <Ionicons testID="icon" name={icon} size={20} color={styles.icon.color} style={styles.icon} />
       <Text style={styles.text}>{label}</Text>
       </View>
     </TouchableOpacity>
