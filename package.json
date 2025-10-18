@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "plantcalendarapp",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -10,7 +10,9 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
-        "build": "expo build:web"
+       "type": "module",
+    "build": "npx expo export",
+    "export": "npx expo export"
 
   },
   "dependencies": {
