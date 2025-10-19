@@ -48,7 +48,7 @@ const addEntry = async (req, res) => {
 
     res.status(200).json({ message: 'Entry added successfully', entry: newEntry });
   } catch (err) {
-    console.error('🚨 Error in addEntry:', err);
+    console.error(' Error in addEntry:', err);
     res.status(500).json({ error: 'Something went wrong in addEntry' });
   }
 };
@@ -147,12 +147,12 @@ const getAllNames = async (req, res) => {
     const publicId = imageUrl.split('/').pop().split('.')[0];
     console.log(`🧩 Extracted publicId: ${publicId}`);
 
-    // 🔥 Delete image from Cloudinary
+    //  Delete image from Cloudinary
     try {
       await cloudinary.uploader.destroy(publicId);
       console.log(`✅ Deleted image from Cloudinary: ${publicId}`);
     } catch (err) {
-      console.error(`❌ Failed to delete image from Cloudinary: ${publicId}`, err);
+      console.error(` Failed to delete image from Cloudinary: ${publicId}`, err);
       return res.status(500).json({ message: 'Failed to delete image from Cloudinary' });
     }
 
@@ -166,13 +166,13 @@ const getAllNames = async (req, res) => {
       images: entry.images,
     });
   } catch (err) {
-    console.error('❌ Error in deleteImage:', err);
+    console.error(' Error in deleteImage:', err);
     res.status(500).json({ error: 'Something went wrong while deleting image' });
   }
 };
 
 const deleteEntry = async (req, res) => {
-  console.log('🚀 deleteEntry route HIT');
+  console.log(' deleteEntry route HIT');
 
   try {
     const { entryId } = req.params;
@@ -195,14 +195,14 @@ const deleteEntry = async (req, res) => {
           await cloudinary.uploader.destroy(publicId);
           console.log(`✅ Deleted entry image: ${publicId}`);
         } catch (err) {
-          console.error(`❌ Failed to delete entry image: ${publicId}`, err);
+          console.error(`Failed to delete entry image: ${publicId}`, err);
         }
       }));
     }
 
     // 🔄 Delete related update entries
     const updateEntries = await UpdateEntry.find({ parentObjectId: entryId });
-    console.log(`🔎 Found ${updateEntries.length} update entries for parentObjectId: ${entryId}`);
+    console.log(`Found ${updateEntries.length} update entries for parentObjectId: ${entryId}`);
 
     await Promise.all(updateEntries.map(async (updateEntry) => {
       if (updateEntry.images?.length > 0) {
@@ -212,7 +212,7 @@ const deleteEntry = async (req, res) => {
             await cloudinary.uploader.destroy(publicId);
             console.log(`✅ Deleted update entry image: ${publicId}`);
           } catch (err) {
-            console.error(`❌ Failed to delete update entry image: ${publicId}`, err);
+            console.error(`Failed to delete update entry image: ${publicId}`, err);
           }
         }));
       }
@@ -298,10 +298,10 @@ const getEntryDatesByUser = async (req, res) => {
 
 const getEntriesForDate = async (req, res) => {
   const { userId, date } = req.query;
-  console.log('🚀 /entries-for-date called', { userId, date });
+  console.log(' /entries-for-date called', { userId, date });
 
   if (!userId || !date) {
-    console.warn('⚠️ Missing userId or date');
+    console.warn('Missing userId or date');
     return res.status(400).json({ message: 'Missing userId or date' });
   }
 
@@ -320,7 +320,7 @@ const getEntriesForDate = async (req, res) => {
 
     res.json({ entries, updates, reminders });
   } catch (err) {
-    console.error('❌ Error fetching combined entries:', err);
+    console.error('Error fetching combined entries:', err);
     res.status(500).json({ message: 'Server error while fetching combined entries' });
   }
 };
@@ -330,7 +330,7 @@ const getMarkedDates = async (req, res) => {
   console.log('🚀 GET /marked-dates called with:', { userId });
 
   if (!userId) {
-    console.warn('⚠️ Missing userId');
+    console.warn('Missing userId');
     return res.status(400).json({ message: 'Missing userId' });
   }
 
@@ -358,11 +358,11 @@ const getMarkedDates = async (req, res) => {
       if (!markedDates[r.date].icons.includes('reminder')) markedDates[r.date].icons.push('reminder');
     });
 
-    console.log('✅ Marked dates calculated:', markedDates);
+    console.log('Marked dates calculated:', markedDates);
 
     res.json(markedDates);
   } catch (err) {
-    console.error('❌ Error fetching marked dates:', err);
+    console.error('Error fetching marked dates:', err);
     res.status(500).json({ message: 'Server error while fetching marked dates' });
   }
 };
