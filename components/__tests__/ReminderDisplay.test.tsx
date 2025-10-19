@@ -9,7 +9,7 @@ jest.mock('../../components/AppIconButton', () => ({
   ),
 }));
 
-jest.mock('../components/DeleteConfirmationModal', () => ({
+jest.mock('../DeleteConfirmationModal', () => ({
   DeleteConfirmationModal: ({ visible, onConfirm, onCancel }: any) => (
     visible ? <button onClick={onConfirm}>Confirm Delete</button> : null
   ),

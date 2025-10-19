@@ -2,13 +2,13 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { CreateReminderModal } from '../reminder/CreateReminderModal';
 
-jest.mock('../../components/AppIconButton', () => ({
+jest.mock('../AppIconButton', () => ({
   AppIconButton: ({ onPress, label }: any) => (
     <button onClick={onPress}>{label}</button>
   ),
 }));
 
-jest.mock('../components/reminder/SelectEntryForReminder', () => ({
+jest.mock('../reminder/SelectEntryForReminder', () => ({
   SelectEntryForReminder: ({ onEntrySelected }: any) => (
     <button onClick={() => onEntrySelected('id1')}>Select Entry</button>
   ),

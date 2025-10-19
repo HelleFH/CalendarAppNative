@@ -18,10 +18,15 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // Only load analytics in the browser
-if (typeof window !== 'undefined') {
-  import('firebase/analytics').then(({ getAnalytics }) => {
-    getAnalytics(app);
-  });
+if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
+  import('firebase/analytics')
+    .then(({ getAnalytics }) => {
+      try {
+        getAnalytics(app);
+      } catch {
+        console.warn('Analytics disabled in test env');
+      }
+    })
+    .catch(() => {});
 }
-
 export { auth };

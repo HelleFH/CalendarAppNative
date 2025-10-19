@@ -2,6 +2,7 @@
   "name": "plantcalendarapp",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
@@ -10,13 +11,13 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
-       "type": "module",
+    "type": "module",
     "build": "npx expo export",
     "export": "npx expo export"
-
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
+    "@react-native-community/datetimepicker": "^8.4.5",
     "@react-native-picker/picker": "^2.11.4",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",

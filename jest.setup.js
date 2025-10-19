@@ -1,3 +1,4 @@
+// jest.setup.js
 jest.mock('@expo/vector-icons', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -9,15 +10,11 @@ jest.mock('@expo/vector-icons', () => {
   };
 });
 
-// Mock Expo environment variable
 global.process = global.process || {};
 global.process.env = global.process.env || {};
 global.process.env.EXPO_OS = 'ios';
-
-// Mock window.alert
 global.alert = jest.fn();
 
-// Gesture handler setup
 import 'react-native-gesture-handler/jestSetup';
 
 // Firebase mocks

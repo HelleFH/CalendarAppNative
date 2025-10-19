@@ -4,8 +4,13 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "set NODE_OPTIONS=--experimental-vm-modules && jest --runInBand --detectOpenHandles",
-    "start": "node server.js"
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/default-esm",
+    "extensionsToTreatAsEsm": [
+      ".js"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -18,7 +23,7 @@
     "dotenv": "^16.5.0",
     "expo": "^53.0.12",
     "express": "^5.1.0",
-    "mongoose": "^8.16.0",
+    "mongoose": "^8.19.1",
     "multer": "^2.0.1",
     "react-dom": "19.0.0",
     "react-native-web": "^0.20.0",

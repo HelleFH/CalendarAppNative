@@ -1,17 +1,30 @@
 module.exports = {
-  preset: 'jest-expo',
-  setupFiles: ['./jest.setup.js'],
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
-  testEnvironment: 'jsdom',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  transform: {
-    '^.+\\.[jt]sx?$': 'babel-jest',
-  },
-  transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?react-native|@react-native|@react-navigation|expo(nent)?|@expo(nent)?/.*|@expo/vector-icons)',
+  projects: [
+    // --- FRONTEND ---
+    {
+      displayName: 'frontend',
+      preset: 'jest-expo',
+      setupFiles: ['./jest.setup.js'],
+      setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
+      testEnvironment: 'jsdom',
+      testMatch: [
+        '<rootDir>/components/__tests__/**/*.[jt]s?(x)',
+        '<rootDir>/app/**/__tests__/**/*.[jt]s?(x)',
+      ],
+      transformIgnorePatterns: [
+        'node_modules/(?!((jest-)?react-native|@react-native|expo|@expo|@react-navigation))',
+      ],
+    },
+
+    // --- BACKEND ---
+    {
+      displayName: 'backend',
+      testEnvironment: 'node',
+      setupFilesAfterEnv: ['<rootDir>/jest.backend.setup.js'],
+      testMatch: ['<rootDir>/Backend/test/**/*.test.js'],
+      transform: {}, // Keep no transform
+      // ✅ Removed extensionsToTreatAsEsm
+      moduleNameMapper: {},
+    },
   ],
-  moduleNameMapper: {
-    '^@components/(.*)$': '<rootDir>/components/$1',
-    '^@utils/(.*)$': '<rootDir>/utils/$1',
-  },
 };
