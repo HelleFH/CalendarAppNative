@@ -1,6 +1,5 @@
-// components/TopMenu.tsx
-import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Modal, Pressable } from 'react-native';
+import React, { useState, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/App';
@@ -13,18 +12,41 @@ interface TopMenuProps {
 
 export const TopMenu: React.FC<TopMenuProps> = ({ navigation, currentUserId, onLogout }) => {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number; width: number }>({
+    x: 0,
+    y: 0,
+    width: 0,
+  });
+  const buttonRef = useRef<View>(null);
 
-  const toggleMenu = () => setMenuVisible(!menuVisible);
+  const toggleMenu = () => {
+    if (!menuVisible && buttonRef.current) {
+      // measure the button position for absolute placement
+      buttonRef.current.measure((_fx, _fy, width, height, px, py) => {
+        setMenuPosition({ x: px, y: py + height, width });
+      });
+    }
+    setMenuVisible(!menuVisible);
+  };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
+      <TouchableOpacity ref={buttonRef} onPress={toggleMenu} style={styles.menuButton}>
         <Ionicons name="menu" size={28} color="#0E4732" />
       </TouchableOpacity>
 
       <Modal transparent visible={menuVisible} animationType="fade">
         <Pressable style={styles.overlay} onPress={toggleMenu}>
-          <View style={styles.menu}>
+          <View
+            style={[
+              styles.menu,
+              {
+                position: 'absolute',
+                top: menuPosition.y,
+                left: menuPosition.x,
+              },
+            ]}
+          >
             {currentUserId ? (
               <>
                 <TouchableOpacity
@@ -70,7 +92,7 @@ export const TopMenu: React.FC<TopMenuProps> = ({ navigation, currentUserId, onL
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     padding: 10,
   },
   menuButton: {
@@ -79,14 +101,10 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.2)',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
   },
   menu: {
     backgroundColor: 'white',
     borderRadius: 12,
-    marginTop: 90,
-    marginRight: 15,
     paddingVertical: 8,
     width: 160,
     elevation: 5,

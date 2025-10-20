@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, db } from '../../firebase';
+import { auth, db } from '../firebase';
 import { UserForm } from '@/components/UserForm';
 
 export default function RegisterScreen({ navigation }: any) {

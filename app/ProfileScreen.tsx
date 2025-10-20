@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, KeyboardAvoidingView, Platform, Text, Alert } from 'react-native';
-import { auth, db } from '../../firebase';
+import { auth, db } from '../firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { FormInput } from '@/components/FormInput';
 import { AppIconButton } from '@/components/AppIconButton';

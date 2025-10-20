@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import LoginScreen from '../LoginScreen';
+import LoginScreen from '@/app/LoginScreen';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -38,7 +38,7 @@ describe('LoginScreen', () => {
         'test@example.com',
         '123456'
       );
-      expect(mockNavigate).toHaveBeenCalledWith('HomeScreen');
+      expect(mockNavigate).toHaveBeenCalledWith('Calendar');
     });
   });
 
@@ -69,7 +69,7 @@ describe('LoginScreen', () => {
         'test@example.com',
         '123456'
       );
-      expect(mockNavigate).toHaveBeenCalledWith('HomeScreen');
+      expect(mockNavigate).toHaveBeenCalledWith('Calendar');
     });
   });
 

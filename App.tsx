@@ -5,15 +5,15 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
 
 import IndexScreen from './app/(tabs)/Welcome';
-import LoginScreen from './app/(tabs)/LoginScreen';
-import HomeScreen from './app/(tabs)/HomeScreen';
+import LoginScreen from './app/LoginScreen';
+import Calendar from './app/(tabs)/Calendar';
 import AllEntriesScreen from './app/(tabs)/AllEntriesScreen';
-import ProfileScreen from './app/(tabs)/ProfileScreen';
+import ProfileScreen from './app/ProfileScreen';
 
 export type RootStackParamList = {
   IndexScreen: undefined;
   LoginScreen: undefined;
-  HomeScreen: undefined;
+  Calendar: undefined;
   AllEntriesScreen: undefined;
   ProfileScreen: undefined;
 
@@ -39,12 +39,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={user ? 'HomeScreen' : 'IndexScreen'}
+        initialRouteName={user ? 'Calendar' : 'IndexScreen'}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="IndexScreen" component={IndexScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="Calendar" component={Calendar} />
         <Stack.Screen name="AllEntriesScreen" component={AllEntriesScreen} />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
 

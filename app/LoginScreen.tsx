@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, KeyboardAvoidingView, Platform, Text } from 'react-native';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth, db } from '../../firebase';
+import { auth, db } from '../firebase';
 import { FormInput } from '@/components/FormInput';
 import { AppIconButton } from '@/components/AppIconButton';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
@@ -30,7 +30,7 @@ export default function LoginScreen() {
       }
 
       alert('Logged in!');
-      navigation.navigate('HomeScreen');
+      navigation.navigate('Calendar');
     } catch (err: any) {
       setError(err.message);
     }
@@ -60,7 +60,7 @@ export default function LoginScreen() {
       }
 
       alert('Logged in with Google!');
-      navigation.navigate('HomeScreen');
+      navigation.navigate('Calendar');
     } catch (err: any) {
       setError(err.message);
     }

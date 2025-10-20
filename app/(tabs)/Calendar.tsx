@@ -6,9 +6,6 @@ import { EntryDisplay } from '@/components/entry/EntryDisplay';
 import { UpdateEntryDisplay } from '@/components/updateEntry/UpdateEntryDisplay';
 import { ReminderDisplay } from '@/components/reminder/ReminderDisplay';
 import { AddOptionsModal } from '@/components/AddOptionsModal';
-import { CreateEntryModal } from '@/components/entry/CreateEntryModal';
-import { CreateUpdateEntryModal } from '@/components/updateEntry/CreateUpdateEntryModal';
-import { CreateReminderModal } from '@/components/reminder/CreateReminderModal';
 import { useEntries } from '@/hooks/useEntries';
 import { logoutUser } from '@/utils/auth';
 import { useNavigation } from '@react-navigation/native';
@@ -19,7 +16,7 @@ import { TopMenu } from '@/components/TopMenu';
 import { auth, db } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-const HomeScreen = () => {
+const Calendar = () => {
   const {
     currentUserId,
     selectedDate,
@@ -134,4 +131,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default Calendar;

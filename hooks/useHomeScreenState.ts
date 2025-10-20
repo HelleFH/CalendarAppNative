@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const useHomeScreenState = () => {
+export const useCalendarState = () => {
   return {
     reminders: useState([]),
     selectedDate: useState(''),

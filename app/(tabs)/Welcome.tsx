@@ -8,7 +8,7 @@ import { AppIconButton } from '@/components/AppIconButton';
 
 type RootStackParamList = {
   LoginScreen: undefined;
-  HomeScreen: undefined;
+  Calendar: undefined;
   AllEntriesScreen: undefined;
   IndexScreen:undefined;
 };
