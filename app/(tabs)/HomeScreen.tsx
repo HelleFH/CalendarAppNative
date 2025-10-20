@@ -15,6 +15,9 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/App';
 import { NavigationProp } from '@react-navigation/native';
 import { commonStyles } from '@/styles/SharedStyles';
+import { TopMenu } from '@/components/TopMenu';
+import { auth, db } from '@/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const HomeScreen = () => {
   const {
@@ -45,14 +48,37 @@ const HomeScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isAddOptionsVisible, setIsAddOptionsVisible] = useState(false);
+  const [firstName, setFirstName] = useState<string | null>(null);
+
+    useEffect(() => {
+    const loadUserName = async () => {
+      if (!currentUserId) return;
+      try {
+        const userRef = doc(db, 'users', currentUserId);
+        const snap = await getDoc(userRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          setFirstName(data.firstName || null);
+        }
+      } catch (err) {
+        console.warn('Failed to load user first name', err);
+      }
+    };
+
+    loadUserName();
+  }, [currentUserId]);
 
   return (
     <ScrollView contentContainerStyle={commonStyles.appContainer}>
-      <AppIconButton
-        icon={currentUserId ? 'log-out-outline' : 'log-in-outline'}
-        label={currentUserId ? 'Log out' : 'Log in'}
-        onPress={() => currentUserId ? logoutUser(navigation) : navigation.navigate('LoginScreen')}
-      />
+      <View style={{ flex: 1, padding:15, display:'flex', alignItems:'center', flexDirection:'row', justifyContent:'space-between', flexWrap:'nowrap', backgroundColor: '#fff' }}>
+    
+          <Text>Hi, {firstName || 'Guest'}!</Text>
+              <TopMenu
+          navigation={navigation}
+          currentUserId={currentUserId}
+          onLogout={() => logoutUser(navigation)}
+        />
+      </View>
 
       <Text style={commonStyles.header}>Plant Calendar</Text>
 

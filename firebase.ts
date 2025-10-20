@@ -1,9 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore'; 
 
-// DO NOT IMPORT getAnalytics at the top level
-// import { getAnalytics } from 'firebase/analytics'; ❌
-
+// Firebase config
 const firebaseConfig = {
   apiKey: 'AIzaSyCifDD5O_xjzLJdBxgYSB0JfRXZ2FqpKlQ',
   authDomain: 'plantcalendarapp.firebaseapp.com',
@@ -14,8 +13,14 @@ const firebaseConfig = {
   measurementId: 'G-BYT8XJHLT9',
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Auth
 const auth = getAuth(app);
+
+// Firestore
+const db = getFirestore(app); // ✅ create Firestore instance
 
 // Only load analytics in the browser
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
@@ -29,4 +34,6 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'test') {
     })
     .catch(() => {});
 }
-export { auth };
+
+// ✅ Export both auth and db
+export { auth, db };

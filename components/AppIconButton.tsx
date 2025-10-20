@@ -6,6 +6,7 @@ type Variant = 'primary' | 'secondary' | 'edit' | 'delete' | 'close';
 
 interface Props {
   icon: keyof typeof Ionicons.glyphMap;
+  
   label: string;
   onPress: () => void;
   variant?: Variant;

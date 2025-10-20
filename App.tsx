@@ -8,12 +8,15 @@ import IndexScreen from './app/(tabs)/Welcome';
 import LoginScreen from './app/(tabs)/LoginScreen';
 import HomeScreen from './app/(tabs)/HomeScreen';
 import AllEntriesScreen from './app/(tabs)/AllEntriesScreen';
+import ProfileScreen from './app/(tabs)/ProfileScreen';
 
 export type RootStackParamList = {
   IndexScreen: undefined;
   LoginScreen: undefined;
   HomeScreen: undefined;
   AllEntriesScreen: undefined;
+  ProfileScreen: undefined;
+
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -35,15 +38,17 @@ export default function App() {
 
   return (
     <NavigationContainer>
-  <Stack.Navigator
-    initialRouteName={user ? 'HomeScreen' : 'IndexScreen'}
-    screenOptions={{ headerShown: false }}
-  >
-    <Stack.Screen name="IndexScreen" component={IndexScreen} />
-    <Stack.Screen name="LoginScreen" component={LoginScreen} />
-    <Stack.Screen name="HomeScreen" component={HomeScreen} />
-    <Stack.Screen name="AllEntriesScreen" component={AllEntriesScreen} />
-  </Stack.Navigator>
-</NavigationContainer>
+      <Stack.Navigator
+        initialRouteName={user ? 'HomeScreen' : 'IndexScreen'}
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="IndexScreen" component={IndexScreen} />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="AllEntriesScreen" component={AllEntriesScreen} />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

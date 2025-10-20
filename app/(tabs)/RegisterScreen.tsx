@@ -1,0 +1,71 @@
+import React, { useState } from 'react';
+import { ScrollView, KeyboardAvoidingView, Platform, Text } from 'react-native';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
+import { FormInput } from '@/components/FormInput';
+import { AppIconButton } from '@/components/AppIconButton';
+import { UserForm } from '@/components/UserForm';
+
+export default function RegisterScreen({ navigation }: any) {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [country, setCountry] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [error, setError] = useState('');
+
+  const register = async () => {
+    setError('');
+    try {
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
+
+      // Send verification email
+      await sendEmailVerification(user);
+
+      // Create Firestore profile
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        firstName,
+        lastName,
+        country,
+        postcode,
+        createdAt: serverTimestamp(),
+        emailVerified: user.emailVerified,
+      });
+
+      alert('Registered! Please verify your email before logging in.');
+      navigation.navigate('LoginScreen');
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+    <UserForm
+  firstName={firstName}
+  lastName={lastName}
+  email={email}
+  country={country}
+  postcode={postcode}
+  onChange={(field, value) => {
+    switch (field) {
+      case 'firstName': setFirstName(value); break;
+      case 'lastName': setLastName(value); break;
+      case 'email': setEmail(value); break;
+      case 'country': setCountry(value); break;
+      case 'postcode': setPostcode(value); break;
+    }
+  }}
+  onSubmit={register}
+  submitLabel="Register"
+  error={error}
+/>
+
+    </KeyboardAvoidingView>
+  );
+}
