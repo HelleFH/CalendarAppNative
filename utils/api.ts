@@ -9,7 +9,7 @@ interface ReminderData {
   parentObjectId:string;
 }
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://calendarappnative.onrender.com';
 // Fetch combined marked dates with icons
 export const fetchMarkedDatesCombined = async (userId: string) => {
   try {
@@ -249,7 +249,7 @@ export const useNames = (currentUserId: string | null) => {
   const fetchNames = async () => {
     if (!currentUserId) return;
     try {
-      const res = await axios.get('http://localhost:5000/entries/names', {
+      const res = await axios.get('https://calendarappnative.onrender.com/entries/names', {
         params: { userId: currentUserId },
       });
       setAllNames(res.data);
