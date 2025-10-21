@@ -4,8 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
 
-import IndexScreen from './app/(tabs)/Welcome';
-import LoginScreen from './app/LoginScreen';
+import IndexScreen from './app/(tabs)/Home';
 import Calendar from './app/(tabs)/Calendar';
 import AllEntriesScreen from './app/(tabs)/AllEntriesScreen';
 import ProfileScreen from './app/ProfileScreen';
