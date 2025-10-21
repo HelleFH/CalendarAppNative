@@ -221,7 +221,6 @@ const deleteEntry = async (req, res) => {
       console.log(`✅ Deleted update entry with ID: ${updateEntry._id}`);
     }));
 
-    // 🔔 Delete related reminders
     const reminders = await Reminder.find({ parentObjectId: entryId });
     console.log(`🔎 Found ${reminders.length} reminders for parentObjectId: ${entryId}`);
 

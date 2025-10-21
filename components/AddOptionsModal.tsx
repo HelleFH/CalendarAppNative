@@ -68,16 +68,16 @@ export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
           />
 
           <AppIconButton
-            icon="document-text-outline"
+            icon="add"
             variant="Primary"
-            label="+ Plant Update"
+            label="Plant Update"
             onPress={onAddUpdate}
             style={{ width: BUTTON_WIDTH, marginBottom: theme.spacing.sm }}
           />
 
           <AppIconButton
             icon="alarm-outline"
-            variant="Primary"
+            variant="Tertiary"
             label="Reminder"
             onPress={onAddReminder}
             style={{ width: BUTTON_WIDTH, marginBottom: theme.spacing.md }}

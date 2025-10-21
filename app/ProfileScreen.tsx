@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, KeyboardAvoidingView, Platform, Text, Alert } from 'react-native';
+import { ScrollView, KeyboardAvoidingView, Platform, Text, Alert, View } from 'react-native';
 import { auth, db } from '../firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { FormInput } from '@/components/FormInput';
@@ -10,8 +10,11 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native'; // 👈 Import navigation
+import { Ionicons } from '@expo/vector-icons'; // 👈 For a close icon
 
 export default function ProfileScreen() {
+  const navigation = useNavigation(); // 👈 Hook
   const user = auth.currentUser;
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -116,6 +119,15 @@ export default function ProfileScreen() {
       style={{ flex: 1 }}
     >
       <ScrollView contentContainerStyle={{ padding: 20 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10 }}>
+          <Ionicons
+            name="close"
+            size={28}
+            color="#333"
+            onPress={() => navigation.goBack()}   
+          />
+        </View>
+
         <FormInput label="First Name" value={firstName} onChangeText={setFirstName} />
         <FormInput label="Last Name" value={lastName} onChangeText={setLastName} />
         <FormInput label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
@@ -151,7 +163,7 @@ export default function ProfileScreen() {
 
         {error ? <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text> : null}
 
-        <AppIconButton icon="save" label="Save Changes" onPress={saveProfile}/>
+        <AppIconButton icon="save" label="Save Changes" onPress={saveProfile} />
       </ScrollView>
     </KeyboardAvoidingView>
   );

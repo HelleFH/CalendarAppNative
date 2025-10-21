@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Modal, Pressable } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Modal, Pressable, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/styles/ThemeProvider';
 import { NavigationProp } from '@react-navigation/native';
@@ -19,7 +19,12 @@ export const TopMenu: React.FC<TopMenuProps> = ({ navigation, currentUserId, onL
 
   const toggleMenu = () => {
     if (!menuVisible && buttonRef.current) {
-      buttonRef.current.measure((_fx, _fy, width, height, px, py) => setMenuPosition({ x: px, y: py + height, width }));
+      buttonRef.current.measure((_fx, _fy, width, height, px, py) => {
+        const screenWidth = Dimensions.get('window').width;
+        const menuWidth = theme.sizes.menuWidth;
+        const safeLeft = Math.min(px, screenWidth - menuWidth - theme.spacing.sm);
+        setMenuPosition({ x: safeLeft, y: py + height, width: menuWidth });
+      });
     }
     setMenuVisible(!menuVisible);
   };
@@ -31,57 +36,51 @@ export const TopMenu: React.FC<TopMenuProps> = ({ navigation, currentUserId, onL
       </TouchableOpacity>
 
       <Modal transparent visible={menuVisible} animationType="fade">
-        <Pressable style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)' }} onPress={toggleMenu}>
+        <Pressable style={styles.overlay} onPress={toggleMenu}>
           <View
-            style={{
-              position: 'absolute',
-              top: menuPosition.y,
-              left: menuPosition.x,
-              backgroundColor: theme.colors.background,
-              borderRadius: theme.radius.md,
-              paddingVertical: theme.spacing.xs,
-              width: theme.sizes.menuWidth,
-              elevation: 5,
-              shadowColor: '#000',
-              shadowOpacity: 0.2,
-              shadowOffset: { width: 0, height: 2 },
-            }}
+            style={[
+              styles.menu,
+              {
+                top: menuPosition.y,
+                left: menuPosition.x,
+                backgroundColor: theme.colors.background,
+                width: theme.sizes.menuWidth,
+                borderRadius: theme.radius.md,
+                shadowColor: theme.colors.border,
+              },
+            ]}
           >
             {currentUserId ? (
               <>
-                <TouchableOpacity
-                  style={{ flexDirection: 'row', alignItems: 'center', padding: theme.spacing.sm }}
+                <MenuItem
+                  icon="person-circle-outline"
+                  text="Profile"
+                  color={theme.colors.text}
                   onPress={() => {
                     toggleMenu();
                     navigation.navigate('ProfileScreen');
                   }}
-                >
-                  <Ionicons name="person-circle-outline" size={22} color={theme.colors.text} />
-                  <Text style={{ fontSize: theme.fontSize.lg, marginLeft: theme.spacing.sm, color: theme.colors.text }}>Profile</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{ flexDirection: 'row', alignItems: 'center', padding: theme.spacing.sm }}
+                />
+                <MenuItem
+                  icon="log-out-outline"
+                  text="Logout"
+                  color={theme.colors.error}
                   onPress={() => {
                     toggleMenu();
                     onLogout();
                   }}
-                >
-                  <Ionicons name="log-out-outline" size={22} color={theme.colors.error} />
-                  <Text style={{ fontSize: theme.fontSize.lg, marginLeft: theme.spacing.sm, color: theme.colors.error }}>Logout</Text>
-                </TouchableOpacity>
+                />
               </>
             ) : (
-              <TouchableOpacity
-                style={{ flexDirection: 'row', alignItems: 'center', padding: theme.spacing.sm }}
+              <MenuItem
+                icon="log-in-outline"
+                text="Login"
+                color={theme.colors.text}
                 onPress={() => {
                   toggleMenu();
                   navigation.navigate('LoginScreen');
                 }}
-              >
-                <Ionicons name="log-in-outline" size={22} color={theme.colors.text} />
-                <Text style={{ fontSize: theme.fontSize.lg, marginLeft: theme.spacing.sm, color: theme.colors.text }}>Login</Text>
-              </TouchableOpacity>
+              />
             )}
           </View>
         </Pressable>
@@ -89,3 +88,44 @@ export const TopMenu: React.FC<TopMenuProps> = ({ navigation, currentUserId, onL
     </View>
   );
 };
+
+const MenuItem = ({
+  icon,
+  text,
+  color,
+  onPress,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  text: string;
+  color: string;
+  onPress: () => void;
+}) => (
+  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+    <Ionicons name={icon} size={22} color={color} />
+    <Text style={[styles.menuText, { color }]}>{text}</Text>
+  </TouchableOpacity>
+);
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+  menu: {
+    position: 'absolute',
+    paddingVertical: 4,
+    elevation: 5,
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  menuText: {
+    fontSize: 16,
+    marginLeft: 10,
+  },
+});

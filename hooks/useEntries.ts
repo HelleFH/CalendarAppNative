@@ -32,7 +32,7 @@ export const useEntries = () => {
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
 
   // --- Fetch entries for date ---
-  
+
 
 
   // --- Fetch entries for date ---
@@ -60,8 +60,8 @@ export const useEntries = () => {
   }, [currentUserId]);
 
   // --- CRUD handlers (unified and re-exported) ---
-  const saveEntry = () => saveEntryHandler({ 
-    selectedDate, notes, images, currentUserId, name, 
+  const saveEntry = () => saveEntryHandler({
+    selectedDate, notes, images, currentUserId, name,
     setMarkedDates, setEntryForSelectedDate, setParentObjectId, fetchNames, handleDayPress
   });
 
@@ -80,76 +80,78 @@ export const useEntries = () => {
 
   const handleDeleteUpdateEntry = (entryId: string) =>
     deleteUpdateEntryHandler({ entryId, selectedDate, setMarkedDates, handleDayPress });
-const handleUpdate = ({ parentObjectId, notes, images }: any) =>
-  saveUpdateEntryHandler({
-    parentObjectId,
-    selectedDate,
-    notes,
-    images,
-    currentUserId,
-    setMarkedDates,
-    setParentObjectId,
-    setEntryForSelectedDate,
-    handleDayPress,
-  });
+
+  
+  const handleUpdate = ({ parentObjectId, notes, images }: any) =>
+    saveUpdateEntryHandler({
+      parentObjectId,
+      selectedDate,
+      notes,
+      images,
+      currentUserId,
+      setMarkedDates,
+      setParentObjectId,
+      setEntryForSelectedDate,
+      handleDayPress,
+    });
 
 
   const handleEditEntry = (entry: any) => {
-  setNotes(entry.notes);
-  setImages(entry.images || []);
-  setName(entry.name);
-  setSelectedDate(entry.date);
-  setIsEditing(true);
-  setEditingEntryId(entry._id);
-};
+    setNotes(entry.notes);
+    setImages(entry.images || []);
+    setName(entry.name);
+    setSelectedDate(entry.date);
+    setIsEditing(true);
+    setEditingEntryId(entry._id);
+  };
 
-const handleEditUpdate = (entry: any) => {
-  setNotes(entry.notes);
-  setImages(entry.images || []);
-  setSelectedDate(entry.date);
-  setIsEditing(true);
-  setEditingEntryId(entry._id);
-  setParentObjectId(entry.parentObjectId || null);
-};
+  const handleEditUpdate = (entry: any) => {
+    setNotes(entry.notes);
+    setImages(entry.images || []);
+    setSelectedDate(entry.date);
+    setIsEditing(true);
+    setEditingEntryId(entry._id);
+    setParentObjectId(entry.parentObjectId || null);
+  };
 
-const handleEditReminder = (entry: any) => {
-  setNotes(entry.notes);
-  setSelectedDate(entry.date);
-  setIsEditing(true);
-  setEditingEntryId(entry._id);
-};
+  const handleEditReminder = (entry: any) => {
+    setNotes(entry.notes);
+    setSelectedDate(entry.date);
+    setIsEditing(true);
+    setEditingEntryId(entry._id);
+  };
 
- return {
-  currentUserId,
-  allNames,
-  fetchNames,
-  selectedDate,
-  setSelectedDate,
-  notes,
-  setNotes,
-  images,
-  setImages,
-  name,
-  setName,
-  markedDates,
-  entryForSelectedDate,
-  updateEntryForSelectedDate,
-  reminderForSelectedDate,
-  handleDayPress,
-  saveEntry,
-  saveEditedEntry,
-  saveEditedUpdateEntry,
-  handleDeleteEntry,
-  handleDeleteUpdateEntry,
-  handleUpdate,
-  handleEditEntry,
-  handleEditUpdate,
-  handleEditReminder,
-  parentObjectId,
-  setParentObjectId,
-  isEditing,
-  setIsEditing,
-  editingEntryId,
-  setEditingEntryId,
-};
+  return {
+    currentUserId,
+    allNames,
+    fetchNames,
+    selectedDate,
+    setSelectedDate,
+    notes,
+    setNotes,
+    images,
+    setImages,
+    name,
+    setName,
+    markedDates,
+    entryForSelectedDate,
+    updateEntryForSelectedDate,
+    reminderForSelectedDate,
+    handleDayPress,
+    saveEntry,
+    saveEditedEntry,
+    saveEditedUpdateEntry,
+    handleDeleteEntry,
+    handleDeleteUpdateEntry,
+    handleUpdate,
+    handleEditEntry,
+    handleEditUpdate,
+    handleEditReminder,
+    parentObjectId,
+    setParentObjectId,
+    isEditing,
+    setIsEditing,
+    editingEntryId,
+    setEditingEntryId,
+  };
 };

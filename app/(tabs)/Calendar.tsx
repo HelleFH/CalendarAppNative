@@ -4,12 +4,13 @@ import { AppIconButton } from '@/components/AppIconButton';
 import { CalendarComponent } from '../../components/CalendarComponent';
 import { EntryDisplay } from '@/components/entry/EntryDisplay';
 import { UpdateEntryDisplay } from '@/components/updateEntry/UpdateEntryDisplay';
-import { fetchMarkedDates, fetchEntriesForDate, fetchMarkedDatesCombined, fetchEntriesForDateCombined } from '@/utils/api';
+import { fetchMarkedDates,  fetchMarkedDatesCombined, fetchEntriesForDateCombined } from '@/utils/api';
 import { CreateEntryModal } from '@/components/entry/CreateEntryModal';
 import { CreateUpdateEntryModal } from '@/components/updateEntry/CreateUpdateEntryModal';
 import { useCurrentUser } from '@/components/CurrentUser';
 import { CreateReminderModal } from '@/components/reminder/CreateReminderModal';
 import {
+  
   saveEntryHandler,
   saveEditedEntryHandler,
   saveEditedUpdateEntryHandler,
@@ -26,6 +27,9 @@ import { logoutUser } from '@/utils/auth';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useNames } from '@/utils/api';
 import { RootStackParamList } from '@/App';
+import { TopMenu } from '@/components/TopMenu';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
 interface Reminder {
   _id: string;
   date: string;
@@ -88,10 +92,27 @@ const HomeScreen = () => {
   const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined);
   const [isAddOptionsVisible, setIsAddOptionsVisible] = useState(false);
   const [editingUpdateEntry, setEditingUpdateEntry] = useState<UpdateEntryProps | null>(null);
+  const [firstName, setFirstName] = useState<string | null>(null);
 
 
 const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    useEffect(() => {
+    const loadUserName = async () => {
+      if (!currentUserId) return;
+      try {
+        const userRef = doc(db, 'users', currentUserId);
+        const snap = await getDoc(userRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          setFirstName(data.firstName || null);
+        }
+      } catch (err) {
+        console.warn('Failed to load user first name', err);
+      }
+    };
 
+    loadUserName();
+  }, [currentUserId]);
 
   const saveEntry = () =>
     saveEntryHandler({
@@ -119,7 +140,6 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
       setIsCreateModalVisible,
       setIsEditing,
       setEditingEntryId,
-      handleDayPress,
       fetchMarkedDates,
       fetchNames,
     });
@@ -134,7 +154,6 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
       setIsCreateModalVisible,
       setIsEditing,
       setEditingEntryId,
-      handleDayPress,
       fetchMarkedDates,
     });
 
@@ -145,7 +164,6 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
       setMarkedDates,
       setEntryForSelectedDate,
       setUpdateEntryForSelectedDate,
-      handleDayPress,
     });
 
   const handleDeleteUpdateEntry = (entryId: string) =>
@@ -153,7 +171,6 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
       entryId,
       selectedDate,
       setMarkedDates,
-      handleDayPress,
     });
 
   const handleDeleteReminder = (reminderId: string) => {
@@ -167,7 +184,6 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
       onSuccess: async () => {
         const newMarked = await fetchMarkedDates(currentUserId);
         setMarkedDates(newMarked);
-        handleDayPress({ dateString: selectedDate });
       },
     });
   };
@@ -268,19 +284,15 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
 
     <ScrollView contentContainerStyle={commonStyles.appContainer} >
-<AppIconButton
-  icon={currentUserId ? "log-out-outline" : "log-in-outline"}
-  label={currentUserId ? "Log out" : "Log in"}
-  onPress={() => {
-    if (currentUserId) {
-      logoutUser(navigation);
-    } else {
-      navigation.navigate("LoginScreen"); // navigate to login
-    }
-  }}
-  style={{ alignSelf: "flex-end", paddingVertical: 5, paddingHorizontal: 18 }}
-/>
-
+   <View style={{ flex: 1, padding:15, display:'flex', alignItems:'center', flexDirection:'row', justifyContent:'space-between', flexWrap:'nowrap', backgroundColor: '#fff' }}>
+    
+          <Text>Hi, {firstName || 'Guest'}!</Text>
+              <TopMenu
+          navigation={navigation}
+          currentUserId={currentUserId}
+          onLogout={() => logoutUser(navigation)}
+        />
+      </View>
 <ScrollView >
   
   <View style={commonStyles.buttonWrapper}>

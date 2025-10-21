@@ -61,13 +61,13 @@ export const CardWithActions: React.FC<CardWithActionsProps> = ({
       </TouchableOpacity>
 
       <View style={commonStyles.buttonWrapper}>
-        {onEdit && <AppIconButton icon="pencil" label="Edit" onPress={onEdit} variant="edit" />}
+        {onEdit && <AppIconButton icon="pencil" label="Edit" onPress={onEdit} variant="Primary" />}
         {onDelete && (
           <AppIconButton
             icon="remove"
             label="Delete"
             onPress={() => setShowDelete(true)}
-            variant="delete"
+            variant="Delete"
           />
         )}
         {extraActions}

@@ -1,23 +1,29 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, Text, ViewStyle } from 'react-native';
+import { Ionicons } from '@expo/vector-icons'; 
 import { useTheme } from '@/styles/ThemeProvider';
 
 interface AppIconButtonProps {
   label: string;
-  variant?: 'Primary' | 'Secondary';
+  variant?: 'Primary' | 'Secondary' | 'Tertiary' | 'Delete';
   onPress: () => void;
   disabled?: boolean;
   style?: ViewStyle;
-  icon?: string; // optional if you use icon library
+  icon?: keyof typeof Ionicons.glyphMap; 
 }
-export const AppIconButton: React.FC<AppIconButtonProps> = ({ label, variant = 'Primary', onPress, disabled, style }) => {
+export const AppIconButton: React.FC<AppIconButtonProps> = ({
+  label,
+  variant = 'Primary',
+  onPress,
+  disabled,
+  style,
+  icon,
+}) => {
   const { theme } = useTheme();
 
-  // Ensure variant exists, default to Primary if not
   const btnVariant = theme.Button[variant] || theme.Button.Primary;
-
   const state = disabled ? 'disabled' : 'rest';
-  const btnStyle = btnVariant[state] || btnVariant.rest; // fallback to rest
+  const btnStyle = btnVariant[state] || btnVariant.rest;
 
   return (
     <TouchableOpacity
@@ -28,15 +34,30 @@ export const AppIconButton: React.FC<AppIconButtonProps> = ({ label, variant = '
           backgroundColor: btnStyle.background,
           paddingVertical: theme.spacing.sm,
           paddingHorizontal: theme.spacing.md,
-          borderRadius: theme.radius.md,
+          borderRadius: theme.radius.sm,
           alignItems: 'center',
           flexDirection: 'row',
           justifyContent: 'center',
+          opacity: disabled ? 0.7 : 1,
         },
         style,
       ]}
     >
-      <Text style={{ color: btnStyle.text, fontSize: theme.fontSize.lg, fontWeight: '600' }}>
+      {icon && (
+        <Ionicons
+          name={icon}
+          size={20}
+          color={btnStyle.text}
+          style={{ marginRight: theme.spacing.sm }}
+        />
+      )}
+      <Text
+        style={{
+          color: btnStyle.text,
+          fontSize: theme.fontSize.lg,
+          fontWeight: '600',
+        }}
+      >
         {label}
       </Text>
     </TouchableOpacity>

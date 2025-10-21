@@ -294,7 +294,6 @@ export const deleteEntryHandler = async ({
     alert('Failed to delete entry');
   }
 };
-
 export const deleteUpdateEntryHandler = async ({
   entryId,
   selectedDate,
@@ -302,20 +301,23 @@ export const deleteUpdateEntryHandler = async ({
   handleDayPress,
 }: any) => {
   try {
-    await deleteUpdateEntry(entryId);
-    alert('Deleted update entry');
+    await deleteUpdateEntry(entryId); 
+    console.log('Deleted entry successfully');
 
     setMarkedDates((prev: any) => {
       const updated = { ...prev };
-      delete updated[selectedDate];
+      if (selectedDate) delete updated[selectedDate];
       return updated;
     });
 
-    handleDayPress({ dateString: selectedDate });
+    if (handleDayPress) handleDayPress({ dateString: selectedDate });
+    alert('Deleted update entry ');
   } catch (err) {
-    alert('Failed to delete update entry');
+    console.error('Error deleting update entry:', err);
+    alert(' Failed to delete update entry');
   }
 };
+
 export const saveUpdateEntryHandler = async ({
   parentObjectId,
   selectedDate,
