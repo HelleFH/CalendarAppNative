@@ -168,7 +168,7 @@ export const commonStyles = StyleSheet.create({
 
   image: {
     width: 300,
-    height: 300,
+    height: 200,
     resizeMode: 'contain',
     borderRadius: 10,
   },

@@ -10,6 +10,7 @@ import { RootStackParamList } from '@/App';
 import { GoogleSignInButton } from '@/components/GoogleSignInButton';
 import Images from '@/assets/images';
 import { useTheme } from '../styles/ThemeProvider';
+import { commonStyles } from '@/styles/SharedStyles';
 
 const googleProvider = new GoogleAuthProvider();
 const screenWidth = Dimensions.get('window').width;
@@ -81,11 +82,11 @@ export default function LoginScreen() {
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: theme.spacing.lg,
-        backgroundColor: theme.colors.background, // <-- themed background
+        backgroundColor: theme.colors.background,
       }}
     >
-      <Image source={Images.HomeScreenBG} style={{ width: screenWidth, height: 200 }} />
-      <Image source={Images.Logo} style={{ width: theme.sizes.logoLarge.width, height: theme.sizes.logoLarge.height, marginVertical: theme.spacing.md }} />
+      <Image source={Images.HomeScreenBG} style={commonStyles.image} />
+      <Image source={Images.Logo} style={commonStyles.image} />
       <Text style={{ textAlign: 'center', color: theme.colors.text, marginBottom: theme.spacing.md }}>
         Sign in with your email and password to continue.
       </Text>
@@ -96,6 +97,8 @@ export default function LoginScreen() {
           width: screenWidth,
           flexDirection: 'column',
           gap: theme.spacing.md,
+          justifyContent:'center',
+          alignItems:'center'
         }}
       >
         <FormInput label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />

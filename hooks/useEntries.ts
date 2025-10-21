@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { 
-  fetchEntriesForDateCombined, 
-  fetchMarkedDatesCombined 
+
 } from '../utils/api';
 import {
   saveEntryHandler,
@@ -79,9 +78,19 @@ export const useEntries = () => {
 
   const handleDeleteUpdateEntry = (entryId: string) =>
     deleteUpdateEntryHandler({ entryId, selectedDate, setMarkedDates, handleDayPress });
+const handleUpdate = ({ parentObjectId, notes, images }: any) =>
+  saveUpdateEntryHandler({
+    parentObjectId,
+    selectedDate,
+    notes,
+    images,
+    currentUserId,
+    setMarkedDates,
+    setParentObjectId,
+    setEntryForSelectedDate,
+    handleDayPress,
+  });
 
-  const handleUpdate = () =>
-    saveUpdateEntryHandler({ parentObjectId, selectedDate, notes, images, currentUserId, setMarkedDates, setParentObjectId, setEntryForSelectedDate, handleDayPress });
 
   const handleEditEntry = (entry: any) => {
   setNotes(entry.notes);

@@ -12,7 +12,6 @@ import {
   addReminder,
   fetchEntryById,
   fetchAllEntries,
-  deleteEntryImage,
 
 } from '@/utils/api';
 import { createFormData } from '@/utils/createFormData';
@@ -127,6 +126,7 @@ export const fetchAndSetParentEntry = async (
     setParentEntry(null);
   }
 };
+
 export const saveEntryHandler = async ({
   selectedDate,
   notes,
@@ -134,6 +134,9 @@ export const saveEntryHandler = async ({
   currentUserId,
   name,
   setMarkedDates,
+  setIsCreateModalVisible,
+  setEntryForSelectedDate,
+  setSelectedOriginalEntry,
   setParentObjectId,
   fetchNames,
   handleDayPress,
@@ -155,27 +158,25 @@ export const saveEntryHandler = async ({
   });
 
   try {
-    await addEntry(formData);
+    const response = await addEntry(formData);
     alert('Entry saved!');
-    setParentObjectId(null);
-    fetchNames?.();
-
-    // refresh entries and marked dates
-    if (handleDayPress) {
-      await handleDayPress({ dateString: selectedDate });
-    }
-
+    setEntryForSelectedDate(response.data.entry);
     setMarkedDates((prev: any) => ({
       ...prev,
       [selectedDate]: { marked: true, dotColor: '#4CAF50' },
     }));
+    setIsCreateModalVisible(false);
+    setSelectedOriginalEntry(null);
+    setParentObjectId(null);
+    fetchNames();
+    handleDayPress({ dateString: selectedDate });
 
   } catch (error: any) {
     const message = axios.isAxiosError(error)
       ? error.response?.data?.message || error.message
       : error instanceof Error
-      ? error.message
-      : 'Unknown error';
+        ? error.message
+        : 'Unknown error';
 
     if (message === 'Name already exists. Please choose a different one.') {
       alert('That name is already used. Please choose a unique name.');
@@ -184,7 +185,6 @@ export const saveEntryHandler = async ({
     }
   }
 };
-
 
 export const saveEditedEntryHandler = async ({
   editingEntryId,
@@ -295,30 +295,6 @@ export const deleteEntryHandler = async ({
   }
 };
 
-export const deleteImageHandler = async ({
-  entryId,
-  imageUrl,
-  setImages,
-}: {
-  entryId: string;
-  imageUrl: string;
-  setImages: React.Dispatch<React.SetStateAction<string[]>>;
-}) => {
-  if (!entryId || !imageUrl) {
-    alert('Missing entry ID or image URL.');
-    return;
-  }
-
-  try {
-    const updatedImages = await deleteEntryImage(entryId, imageUrl);
-    alert('Image deleted!');
-    setImages(updatedImages);
-  } catch (err) {
-    console.error('Failed to delete image:', err);
-    alert('Failed to delete image.');
-  }
-};
-
 export const deleteUpdateEntryHandler = async ({
   entryId,
   selectedDate,
@@ -340,7 +316,6 @@ export const deleteUpdateEntryHandler = async ({
     alert('Failed to delete update entry');
   }
 };
-
 export const saveUpdateEntryHandler = async ({
   parentObjectId,
   selectedDate,

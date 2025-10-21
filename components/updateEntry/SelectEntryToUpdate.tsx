@@ -1,54 +1,59 @@
-// SelectEntryToUpdate.tsx
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-
-export interface NameEntry {
+import { commonStyles } from '@/styles/SharedStyles';
+import { formStyles } from '@/styles/FormStyles';
+interface Entry {
   _id: string;
   name: string;
+  notes?: string;
+  images?: string[];
 }
 
-interface Props {
-  allNames: NameEntry[];
-  selectedId: string;
-  setSelectedId: (id: string) => void;
-  setParentObjectId: (id: string | null) => void;
+interface SelectEntryToUpdateProps {
+  allNames: Entry[];
+  setParentObjectId: (id: string) => void;
   setNotes: (notes: string) => void;
   setImages: (images: string[]) => void;
   setName: (name: string) => void;
+  onEntrySelected: (id: string) => void;
 }
 
-export const SelectEntryToUpdate: React.FC<Props> = ({
+export const SelectEntryToUpdate: React.FC<SelectEntryToUpdateProps> = ({
   allNames,
-  selectedId,
-  setSelectedId,
   setParentObjectId,
   setNotes,
   setImages,
   setName,
+  onEntrySelected,
 }) => {
-  const handleSelect = (id: string) => {
-    setSelectedId(id);
-    setParentObjectId(id);
-    const selected = allNames.find((n) => n._id === id);
-    if (selected) {
-      setName(selected.name);
-      setNotes('');
-      setImages([]);
+  const [selectedValue, setSelectedValue] = useState<string>('');
+
+  const handleSelect = (itemValue: string) => {
+    setSelectedValue(itemValue);
+    const selectedEntry = allNames.find((e) => e._id === itemValue);
+    if (selectedEntry) {
+      setParentObjectId(selectedEntry._id);
+      setNotes(selectedEntry.notes || '');
+      setImages(selectedEntry.images || []);
+      setName(selectedEntry.name);
+      onEntrySelected(selectedEntry._id);
     }
   };
 
   return (
-    <View>
-      <Picker
-        selectedValue={selectedId || ''}
-        onValueChange={(itemValue) => handleSelect(itemValue)}
-      >
-        <Picker.Item label="Select a plant" value="" />
-        {allNames.map((entry) => (
-          <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
-        ))}
-      </Picker>
-    </View>
+
+    <Picker
+      selectedValue={selectedValue}
+      onValueChange={handleSelect}
+      style={{ ...formStyles.input, marginTop: 30 }}
+      dropdownIconColor="#319795"
+      mode="dropdown"
+    >
+      <Picker.Item label="Select an entry..." value="" />
+      {allNames.map((entry) => (
+        <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
+      ))}
+    </Picker>
   );
 };
