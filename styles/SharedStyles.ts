@@ -63,17 +63,12 @@ export const commonStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cancelButton: {
-    marginTop: 20,
-    alignSelf:'center',
-    textDecorationLine:'underline',
-  },
+
   buttonWrapper: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems:'center',
     flexWrap:'wrap',
-    marginTop: 10,
     gap: 8,
   },
 
@@ -130,7 +125,6 @@ export const commonStyles = StyleSheet.create({
     color: '#1E90FF',
     fontSize: 18,
     fontWeight: 600,
-    marginTop: 20,
   },
 
   // Inputs
@@ -163,7 +157,6 @@ export const commonStyles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
   },
 
   image: {

@@ -10,7 +10,9 @@ import { RootStackParamList } from '@/App';
 import { GoogleSignInButton } from '@/components/GoogleSignInButton';
 import Images from '@/assets/images';
 import { useTheme } from '../styles/ThemeProvider';
-import { commonStyles } from '@/styles/SharedStyles';
+import { router } from 'expo-router';
+
+const { theme } = useTheme();
 
 const googleProvider = new GoogleAuthProvider();
 const screenWidth = Dimensions.get('window').width;
@@ -26,24 +28,24 @@ export default function LoginScreen() {
   const register = () => {
     navigation.navigate('RegisterScreen');
   };
+const login = async () => {
+  setError('');
+  try {
+    const userCred = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCred.user;
 
-  const login = async () => {
-    setError('');
-    try {
-      const userCred = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCred.user;
-
-      if (!user.emailVerified) {
-        alert('Please verify your email before logging in!');
-        return;
-      }
-
-      alert('Logged in!');
-      navigation.navigate('Calendar');
-    } catch (err: any) {
-      setError(err.message);
+    if (!user.emailVerified) {
+      alert('Please verify your email before logging in!');
+      return;
     }
-  };
+
+    alert('Logged in!');
+    router.replace('/Calendar');
+  } catch (err: any) {
+    setError(err.message);
+  }
+};
+
 
   const signInWithGoogle = async () => {
     try {
@@ -68,7 +70,8 @@ export default function LoginScreen() {
       }
 
       alert('Logged in with Google!');
-      navigation.navigate('Calendar');
+          router.replace('/Calendar');
+
     } catch (err: any) {
       setError(err.message);
     }
@@ -85,8 +88,28 @@ export default function LoginScreen() {
         backgroundColor: theme.colors.background,
       }}
     >
-      <Image source={Images.HomeScreenBG} style={commonStyles.image} />
-      <Image source={Images.Logo} style={commonStyles.image} />
+
+<Image
+  source={Images.HomeScreenBG}
+  style={{
+    width: 200,
+    height: 200,               
+    resizeMode: 'cover',
+    borderRadius: theme.radius.md,
+    marginBottom: theme.spacing.md,
+  }}
+/>
+
+<Image
+  source={Images.Logo}
+  style={{
+    width: theme.sizes.logoLarge.width,
+    height: theme.sizes.logoLarge.height,
+    resizeMode: 'contain',
+    marginBottom: theme.spacing.md,
+  }}
+/>
+
       <Text style={{ textAlign: 'center', color: theme.colors.text, marginBottom: theme.spacing.md }}>
         Sign in with your email and password to continue.
       </Text>
@@ -109,6 +132,7 @@ export default function LoginScreen() {
         <AppIconButton
           icon="log-in"
           label="Login"
+          variant='Primary'
           style={{
             borderRadius: theme.radius.md,
             width: 175,
@@ -126,6 +150,7 @@ export default function LoginScreen() {
         <AppIconButton
           icon="clipboard"
           label="Register"
+          variant='Tertiary'
           style={{
             borderRadius: theme.radius.md,
             width: 175,

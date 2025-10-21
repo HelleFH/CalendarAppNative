@@ -31,13 +31,13 @@ export default function IndexScreen() {
       </Text>
 
 
-      <View>
+      <View style={commonStyles.buttonWrapper}>
         <AppIconButton
           icon="log-in"
           label="Login"
           onPress={() => navigation.navigate('LoginScreen')}
           disabled={false}
-          variant="primary"
+          variant="Primary"
         />
 
 
@@ -46,7 +46,7 @@ export default function IndexScreen() {
           label="Get Started"
           onPress={() => navigation.navigate('LoginScreen')}
           disabled={false}
-          variant="secondary"
+          variant="Secondary"
         />
       </View>
     </ScrollView>
