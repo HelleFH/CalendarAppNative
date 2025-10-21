@@ -9,7 +9,31 @@ interface ReminderData {
   parentObjectId:string;
 }
 
-const API_URL = 'https://calendarappnative.onrender.com';
+const API_URL = 'http://localhost:5000';
+// Fetch combined marked dates with icons
+export const fetchMarkedDatesCombined = async (userId: string) => {
+  try {
+    const res = await axios.get(`${API_URL}/entries/marked-dates`, { params: { userId } });
+    return res.data; 
+  } catch (err) {
+    console.error('Error fetching marked dates combined:', err);
+    return {};
+  }
+};
+// Fetch all entries, updates, and reminders for a specific date (combined endpoint)
+export const fetchEntriesForDateCombined = async (userId: string, date: string) => {
+  try {
+    const res = await axios.get(`${API_URL}/entries/entries-for-date`, { params: { userId, date } });
+    return {
+      originalEntries: res.data.entries || [],
+      updateEntries: res.data.updates || [],
+      reminders: res.data.reminders || [],
+    };
+  } catch (err) {
+    console.error('Error fetching combined entries for date:', err);
+    return { originalEntries: [], updateEntries: [], reminders: [] };
+  }
+};
 
 export const fetchNames = (userId: string) =>
   axios.get(`${API_URL}/entries/names`, { params: { userId } });
@@ -18,7 +42,7 @@ export const fetchMarkedDates = async (userId: string) => {
   const [entries, updates, reminders] = await Promise.all([
     axios.get(`${API_URL}/entries/dates`, { params: { userId } }),
     axios.get(`${API_URL}/entries/update-entries/dates`, { params: { userId } }),
-        axios.get(`${API_URL}/entries/reminders/dates`, { params: { userId } }),
+    axios.get(`${API_URL}/entries/reminders/dates`, { params: { userId } }),
   ]);
 
   
@@ -225,7 +249,7 @@ export const useNames = (currentUserId: string | null) => {
   const fetchNames = async () => {
     if (!currentUserId) return;
     try {
-      const res = await axios.get('https://calendarappnative.onrender.com/entries/names', {
+      const res = await axios.get('http://localhost:5000/entries/names', {
         params: { userId: currentUserId },
       });
       setAllNames(res.data);

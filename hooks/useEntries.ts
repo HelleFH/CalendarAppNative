@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { 
-
-} from '../utils/api';
+import { fetchEntriesForDateCombined, fetchMarkedDatesCombined } from '../utils/api';
 import {
   saveEntryHandler,
   saveEditedEntryHandler,
@@ -32,6 +30,10 @@ export const useEntries = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+
+  // --- Fetch entries for date ---
+  
+
 
   // --- Fetch entries for date ---
   const handleDayPress = async (day: any) => {
@@ -116,6 +118,7 @@ const handleEditReminder = (entry: any) => {
   setIsEditing(true);
   setEditingEntryId(entry._id);
 };
+
  return {
   currentUserId,
   allNames,

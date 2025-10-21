@@ -4,7 +4,7 @@ import { AppIconButton } from '@/components/AppIconButton';
 import { CalendarComponent } from '../../components/CalendarComponent';
 import { EntryDisplay } from '@/components/entry/EntryDisplay';
 import { UpdateEntryDisplay } from '@/components/updateEntry/UpdateEntryDisplay';
-import { fetchMarkedDates, fetchEntriesForDate } from '@/utils/api';
+import { fetchMarkedDates, fetchEntriesForDate, fetchMarkedDatesCombined, fetchEntriesForDateCombined } from '@/utils/api';
 import { CreateEntryModal } from '@/components/entry/CreateEntryModal';
 import { CreateUpdateEntryModal } from '@/components/updateEntry/CreateUpdateEntryModal';
 import { useCurrentUser } from '@/components/CurrentUser';
@@ -88,32 +88,6 @@ const HomeScreen = () => {
   const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined);
   const [isAddOptionsVisible, setIsAddOptionsVisible] = useState(false);
   const [editingUpdateEntry, setEditingUpdateEntry] = useState<UpdateEntryProps | null>(null);
-
-
-const handleDayPress = async (day: any) => {
-  setSelectedDate(day.dateString);
-  setEntryForSelectedDate([]);
-  setUpdateEntryForSelectedDate([]);
-  setReminderForSelectedDate([]);
-  setNotes('');
-  setImages([]);
-
-  if (!currentUserId) return;
-
-  try {
-    const { originalEntries, updateEntries, reminders } = await fetchEntriesForDate(currentUserId, day.dateString);
-    console.log('Fetched entries for date:', { originalEntries, updateEntries, reminders });
-    setEntryForSelectedDate(originalEntries || []);
-    setUpdateEntryForSelectedDate(updateEntries || []);
-    setReminderForSelectedDate(reminders || []);
-
-    const newMarked = await fetchMarkedDates(currentUserId);
-    console.log('Fetched marked dates:', newMarked);
-    setMarkedDates(newMarked);
-  } catch (err) {
-    console.error('Error fetching entries:', err);
-  }
-};
 
 
 const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -265,6 +239,31 @@ const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   useEffect(() => {
     handleDayPress({ dateString: today });
   }, [currentUserId]);
+  
+  // --- Fetch entries for date ---
+  const handleDayPress = async (day: any) => {
+    if (!currentUserId) return;
+
+    const dateString = day.dateString || day;
+    setSelectedDate(dateString);
+
+    try {
+      const { originalEntries, updateEntries, reminders } = await fetchEntriesForDateCombined(currentUserId, dateString);
+      setEntryForSelectedDate(originalEntries);
+      setUpdateEntryForSelectedDate(updateEntries);
+      setReminderForSelectedDate(reminders);
+
+      const newMarked = await fetchMarkedDatesCombined(currentUserId);
+      setMarkedDates(newMarked);
+    } catch (err) {
+      console.error('Error fetching entries:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (currentUserId) handleDayPress(selectedDate);
+  }, [currentUserId]);
+
 
   return (
 
