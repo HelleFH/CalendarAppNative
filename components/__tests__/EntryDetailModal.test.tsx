@@ -102,7 +102,7 @@ describe('EntryDetailModal', () => {
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        `http://localhost:5000/updates/${entry._id}`
+        `https://calendarappnative.onrender.com/updates/${entry._id}`
       );
     });
 

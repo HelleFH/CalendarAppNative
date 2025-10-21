@@ -9,7 +9,7 @@ interface ReminderData {
   parentObjectId: string;
 }
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://calendarappnative.onrender.com';
 
 // Fetch all names for a user
 
