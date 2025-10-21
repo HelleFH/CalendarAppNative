@@ -44,6 +44,7 @@
     "expo-system-ui": "~5.0.10",
     "expo-web-browser": "~15.0.8",
     "firebase": "^12.4.0",
+    "mongoose": "^8.19.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-is": "^19.2.0",

@@ -61,7 +61,7 @@ export const useEntries = () => {
   // --- CRUD handlers (unified and re-exported) ---
   const saveEntry = () => saveEntryHandler({ 
     selectedDate, notes, images, currentUserId, name, 
-    setMarkedDates, setEntryForSelectedDate, setParentObjectId, fetchNames 
+    setMarkedDates, setEntryForSelectedDate, setParentObjectId, fetchNames, handleDayPress
   });
 
   const saveEditedEntry = () => saveEditedEntryHandler({

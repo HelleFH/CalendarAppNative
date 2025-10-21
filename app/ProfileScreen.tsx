@@ -147,12 +147,11 @@ export default function ProfileScreen() {
           icon="key"
           label="Change Password"
           onPress={handleChangePassword}
-          variant="secondary"
         />
 
         {error ? <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text> : null}
 
-        <AppIconButton icon="save" label="Save Changes" onPress={saveProfile} variant="primary" />
+        <AppIconButton icon="save" label="Save Changes" onPress={saveProfile}/>
       </ScrollView>
     </KeyboardAvoidingView>
   );

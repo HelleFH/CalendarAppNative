@@ -5,6 +5,7 @@ import { AppIconButton } from '../AppIconButton';
 import { formStyles } from '@/styles/FormStyles';
 import { commonStyles } from '@/styles/SharedStyles';
 import { deleteImageHandler } from '@/utils/entryHandler';
+import { EditableNotesWithImages } from '../EditableNotesWithImages';
 
 interface NotesAndImagesProps {
   notes: string;
@@ -56,37 +57,18 @@ export const NotesAndImages: React.FC<NotesAndImagesProps> = ({
   }
 };
   return (
-    <View style={formStyles.container}>
-      <TextInput
-        style={[formStyles.input]}
-        placeholder="Enter Plant name"
-        value={name}
-        onChangeText={setName}
-        editable={true}
-      />
-      <TextInput
-        style={formStyles.input}
-        placeholder="Add notes"
-        value={notes}
-        onChangeText={setNotes}
-      />
-      <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
+  <EditableNotesWithImages
+  showName
+  allowImages
+  allowDeleteImages
+  name={name}
+  setName={setName}
+  notes={notes}
+  setNotes={setNotes}
+  images={images}
+  setImages={setImages}
+  entryId={entryId}
+/>
 
-      <ScrollView horizontal style={formStyles.scrollContainer}>
-        <View style={commonStyles.imageWrapper}>
-
-    {images.map((uri, index) => (
-  <View key={index} style={{ marginRight: 10 }}>
-    <Image source={{ uri }} style={formStyles.image} />
-  <AppIconButton
-                icon="trash"
-                label="Delete"
-                onPress={() => handleDeleteImage(uri)}
-              />
-  </View>
-))}
-        </View>
-      </ScrollView>
-    </View>
   );
 };

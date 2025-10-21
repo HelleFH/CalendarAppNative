@@ -9,9 +9,10 @@ interface ReminderData {
   parentObjectId: string;
 }
 
-const API_URL = 'https://calendarappnative.onrender.com';
+const API_URL = 'http://localhost:5000';
 
 // Fetch all names for a user
+
 export const fetchNames = (userId: string) =>
   axios.get(`${API_URL}/entries/names`, { params: { userId } });
 
@@ -150,24 +151,31 @@ export const fetchAllEntries = async (userId: string) => {
     return [];
   }
 };
+interface NameEntry {
+  _id: string;
+  name: string;
+}
 
-// React hook for fetching names
 export const useNames = (currentUserId: string | null) => {
-  const [allNames, setAllNames] = useState<string[]>([]);
+  const [allNames, setAllNames] = useState<NameEntry[]>([]);
 
-  const fetchNamesFn = async () => {
+  const fetchNames = async () => {
     if (!currentUserId) return;
     try {
-      const res = await axios.get(`${API_URL}/entries/names`, { params: { userId: currentUserId } });
-      setAllNames(res.data);
+      const res = await axios.get(`${API_URL}/entries/names`, {
+        params: { userId: currentUserId },
+      });
+      setAllNames(res.data); // must be array of { _id, name }
     } catch (err) {
-      console.error('Error fetching names:', err);
+      console.error(err);
     }
   };
 
   useEffect(() => {
-    fetchNamesFn();
+    fetchNames();
   }, [currentUserId]);
 
-  return { allNames, fetchNames: fetchNamesFn };
+  return { allNames, fetchNames };
 };
+
+

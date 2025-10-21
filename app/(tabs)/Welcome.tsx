@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, Image, StyleSheet } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Images from '../../assets/images';
 import { commonStyles } from '@/styles/SharedStyles';
@@ -10,14 +10,14 @@ type RootStackParamList = {
   LoginScreen: undefined;
   Calendar: undefined;
   AllEntriesScreen: undefined;
-  IndexScreen:undefined;
+  IndexScreen: undefined;
 };
 
 export default function IndexScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-<ScrollView style={commonStyles.scroll} contentContainerStyle={commonStyles.container}>
+    <ScrollView style={commonStyles.scroll} contentContainerStyle={commonStyles.container}>
       <Image source={Images.HomeScreenBG} style={commonStyles.image} />
 
       <Text style={commonStyles.title}>The Plant Calendar 🌱</Text>
@@ -31,24 +31,24 @@ export default function IndexScreen() {
       </Text>
 
 
-<View>
+      <View>
         <AppIconButton
           icon="log-in"
           label="Login"
-          onPress={() => navigation.navigate('LoginScreen')} 
+          onPress={() => navigation.navigate('LoginScreen')}
           disabled={false}
           variant="primary"
         />
- 
- 
+
+
         <AppIconButton
           icon="add"
           label="Get Started"
-          onPress={() => navigation.navigate('LoginScreen')} 
+          onPress={() => navigation.navigate('LoginScreen')}
           disabled={false}
           variant="secondary"
         />
-</View>
+      </View>
     </ScrollView>
   );
 }

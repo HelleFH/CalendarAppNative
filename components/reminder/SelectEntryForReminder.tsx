@@ -44,8 +44,8 @@ export const SelectEntryForReminder: React.FC<SelectEntryForReminderProps> = ({
   return (
 
       <Picker
-        selectedValue={selectedValue}
-        onValueChange={handleSelect}
+          selectedValue={selectedValue}
+      onValueChange={handleSelect}
         style={formStyles.input}
         dropdownIconColor="#319795"
         mode="dropdown"

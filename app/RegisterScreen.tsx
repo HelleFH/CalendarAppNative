@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View, Text } from 'react-native';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { UserForm } from '@/components/UserForm';
+import { useTheme } from '../styles/ThemeProvider';
 
 export default function RegisterScreen({ navigation }: any) {
+  const { theme } = useTheme(); // <-- get theme
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -48,30 +50,43 @@ export default function RegisterScreen({ navigation }: any) {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-      <UserForm
-        firstName={firstName}
-        lastName={lastName}
-        email={email}
-        password={password}
-        confirmPassword={confirmPassword}
-        country={country}
-        postcode={postcode}
-        onChange={(field, value) => {
-          switch (field) {
-            case 'firstName': setFirstName(value); break;
-            case 'lastName': setLastName(value); break;
-            case 'email': setEmail(value); break;
-            case 'password': setPassword(value); break;
-            case 'confirmPassword': setConfirmPassword(value); break;
-            case 'country': setCountry(value); break;
-            case 'postcode': setPostcode(value); break;
-          }
-        }}
-        onSubmit={register}
-        submitLabel="Register"
-        error={error}
-      />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1, backgroundColor: theme.colors.background }}
+    >
+      <ScrollView contentContainerStyle={{ padding: theme.spacing.md }}>
+        <View style={{ marginBottom: theme.spacing.lg }}>
+          <UserForm
+            firstName={firstName}
+            lastName={lastName}
+            email={email}
+            password={password}
+            confirmPassword={confirmPassword}
+            country={country}
+            postcode={postcode}
+            onChange={(field, value) => {
+              switch (field) {
+                case 'firstName': setFirstName(value); break;
+                case 'lastName': setLastName(value); break;
+                case 'email': setEmail(value); break;
+                case 'password': setPassword(value); break;
+                case 'confirmPassword': setConfirmPassword(value); break;
+                case 'country': setCountry(value); break;
+                case 'postcode': setPostcode(value); break;
+              }
+            }}
+            onSubmit={register}
+            submitLabel="Register"
+            error={error}
+          />
+        </View>
+
+        {error ? (
+          <Text style={{ color: theme.colors.error, fontSize: theme.fontSize.sm, marginBottom: theme.spacing.md }}>
+            {error}
+          </Text>
+        ) : null}
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }

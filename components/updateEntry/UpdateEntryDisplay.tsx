@@ -7,6 +7,7 @@ import { UpdateEntryDetailModal } from './UpdateEntryDetailModal';
 import { Ionicons } from '@expo/vector-icons';
 import { fetchAndSetParentEntry } from '@/utils/entryHandler';
 import { EntryDetailModal } from '../entry/EntryDetailModal';
+import { CardWithActions } from '../CardWithActions';
 
 interface UpdateEntryProps {
   _id: string;
@@ -80,97 +81,26 @@ useEffect(() => {
   }
 }, [entry?.parentObjectId]);
   return (
-<View style={[commonStyles.container, { backgroundColor: '#F0F8FF' }]}>
-      {parentEntry?.name ? (
-       <Text style={commonStyles.title}>
-  Update for{' '}
-  <Text
-    style={[commonStyles.title, { textDecorationLine: 'underline', color: 'blue' }]}
-    onPress={() => setShowEntryModal(true)}
-  >
-    {parentEntry.name}
-  </Text>{' '}
-  ({entry.date})
-</Text>
-      ) : (
-        <Text style={commonStyles.title}>Loading...</Text>
-      )}
+<CardWithActions
+  title={`Update for ${parentEntry?.name} (${entry.date})`}
+  notes={entry.notes}
+  images={entry.images ?? []}
+  onEdit={() => {
+    onEditUpdate(entry);
+    setEditingEntryId?.(entry._id);
+    onRequestCloseModal?.();
+  }}
+  onDelete={() => onDeleteUpdate(entry._id)}
+  detailModal={
+    <UpdateEntryDetailModal
+      visible={showDetailModal}
+      entry={entry}
+      onClose={() => setShowDetailModal(false)}
+      onEditUpdate={onEditUpdate}
+      onDeleteUpdate={onDeleteUpdate}
+    />
+  }
+/>
 
-      <Text style={commonStyles.notes}>{entry.notes}</Text>
-
-      <TouchableOpacity
-        onPress={() => {
-          if (!disableDetailModal) setShowDetailModal(true);
-        }}
-        activeOpacity={0.7}
-      >
-        {images.length > 0 && (
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
-            {images.length > 1 && (
-              <TouchableOpacity onPress={handlePrevImage}>
-                <Ionicons name="chevron-back" size={24} color="black" />
-              </TouchableOpacity>
-            )}
-            <Image source={{ uri: images[currentImageIndex] }} style={commonStyles.image} />
-            {images.length > 1 && (
-              <TouchableOpacity onPress={handleNextImage}>
-                <Ionicons name="chevron-forward" size={24} color="black" />
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-      </TouchableOpacity>
-
-      <View style={commonStyles.buttonWrapper}>
-        <AppIconButton
-          icon="pencil"
-          label="Edit"
-          onPress={() => {
-            onEditUpdate(entry);
-            setEditingEntryId?.(entry._id);
-            onRequestCloseModal?.();
-          }}
-          variant="edit"
-        />
-        <AppIconButton
-          icon="remove"
-          label="Delete"
-          onPress={() => setShowDeleteModal(true)}
-          variant="delete"
-        />
-      </View>
-
-      {parentEntry && (
-        <EntryDetailModal
-          visible={showEntryModal}
-          entry={parentEntry}
-          onClose={() => setShowEntryModal(false)}
-          onEditUpdate={onEditUpdate}
-          onDeleteUpdate={onDeleteUpdate}
-          onDeleteEntry={() => { }}
-          onEditEntry={() => { }}
-        />
-      )}
-
-      <DeleteConfirmationModal
-        visible={showDeleteModal}
-        onCancel={() => setShowDeleteModal(false)}
-        onConfirm={() => {
-          onDeleteUpdate(entry._id);
-          setShowDeleteModal(false);
-        }}
-        itemType="update"
-      />
-
-      <UpdateEntryDetailModal
-        visible={showDetailModal}
-        entry={{
-          ...entry,
-        }}
-        onClose={() => setShowDetailModal(false)}
-        onEditUpdate={onEditUpdate}
-        onDeleteUpdate={onDeleteUpdate}
-      />
-    </View>
   );
 };

@@ -192,6 +192,9 @@ export const commonStyles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
   },
+  logo: {   width: 200,
+    resizeMode: 'contain',
+   },
 
   // Misc
   dateContainer: {

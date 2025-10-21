@@ -1,37 +1,44 @@
 import React from 'react';
 import { View, Text, TextInput, TextInputProps, StyleSheet } from 'react-native';
+import { useTheme } from '../styles/ThemeProvider';
 
 interface FormInputProps extends TextInputProps {
   label: string;
   error?: string;
+  required?: boolean;
 }
 
-export const FormInput: React.FC<FormInputProps> = ({ label, error, style, ...props }) => (
-  <View style={styles.container}>
-    <Text style={styles.label}>{label}</Text>
-    <TextInput
-      {...props}
-      style={[styles.input, style, error ? styles.inputError : null]}
-      placeholder={props.placeholder || label}
-      placeholderTextColor="#aaa"
-    />
-    {error ? <Text style={styles.error}>{error}</Text> : null}
-  </View>
-);
+export const FormInput: React.FC<FormInputProps> = ({ label, error, required, style, ...props }) => {
+  const { theme } = useTheme();
+  const inputState = props.editable === false ? 'disabled' : 'rest';
 
-const styles = StyleSheet.create({
-  container: { marginBottom: 15 },
-  label: { fontSize: 14, marginBottom: 5, fontWeight: '600', color: '#333' },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: '#000',
-    backgroundColor: '#fff',
-  },
-  inputError: { borderColor: 'red' },
-  error: { marginTop: 5, color: 'red', fontSize: 12 },
-});
+  const inputStyle = theme.TextInput[inputState];
+
+  return (
+    <View style={{ marginBottom: theme.spacing.md }}>
+      <Text style={{ fontSize: theme.fontSize.md, marginBottom: theme.spacing.xs, fontWeight: '600', color: theme.colors.text }}>
+        {label}
+        {required && <Text style={{ color: theme.colors.error }}> *</Text>}
+      </Text>
+      <TextInput
+        {...props}
+        style={[
+          {
+            borderWidth: 1,
+            borderColor: inputState === 'disabled' ? inputStyle.border : inputStyle.border,
+            borderRadius: theme.radius.md,
+            paddingHorizontal: theme.spacing.sm,
+            paddingVertical: theme.spacing.sm,
+            fontSize: theme.fontSize.lg,
+            color: inputStyle.text,
+            backgroundColor: inputStyle.background,
+          },
+          style,
+        ]}
+        placeholder={props.placeholder || label}
+        placeholderTextColor={inputStyle.placeholder}
+      />
+      {error && <Text style={{ color: theme.colors.error, fontSize: theme.fontSize.sm, marginTop: theme.spacing.xs }}>{error}</Text>}
+    </View>
+  );
+};

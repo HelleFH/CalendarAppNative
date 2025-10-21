@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import { useTheme } from '@/styles/ThemeProvider';
 
 interface CountryPickerProps {
   value: string;
@@ -12,35 +13,46 @@ const countries = [
   { label: 'Denmark', value: 'DK' },
   { label: 'United Kingdom', value: 'GB' },
   { label: 'Germany', value: 'DE' },
-  // ... add more countries
 ];
 
 export const CountryPicker: React.FC<CountryPickerProps> = ({ value, onValueChange }) => {
+  const { theme } = useTheme();
+  const inputStyle = theme.TextInput.rest;
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Country</Text>
+    <View style={{ marginBottom: theme.spacing.md }}>
+      <Text style={{ marginBottom: theme.spacing.xs, fontWeight: '600', fontSize: theme.fontSize.md, color: theme.colors.text }}>
+        Country
+      </Text>
       <RNPickerSelect
         onValueChange={onValueChange}
         items={countries}
         value={value}
         placeholder={{ label: 'Select your country', value: '' }}
         style={{
-          inputIOS: styles.input,
-          inputAndroid: styles.input,
+          inputIOS: {
+            paddingHorizontal: theme.spacing.sm,
+            paddingVertical: theme.spacing.sm,
+            borderWidth: 1,
+            borderColor: inputStyle.border,
+            borderRadius: theme.radius.md,
+            fontSize: theme.fontSize.lg,
+            color: inputStyle.text,
+            backgroundColor: inputStyle.background,
+          },
+          inputAndroid: {
+            paddingHorizontal: theme.spacing.sm,
+            paddingVertical: theme.spacing.sm,
+            borderWidth: 1,
+            borderColor: inputStyle.border,
+            borderRadius: theme.radius.md,
+            fontSize: theme.fontSize.lg,
+            color: inputStyle.text,
+            backgroundColor: inputStyle.background,
+          },
+          placeholder: { color: inputStyle.placeholder },
         }}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { marginBottom: 15 },
-  label: { marginBottom: 5, fontWeight: '600' },
-  input: {
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    color: '#000',
-  },
-});

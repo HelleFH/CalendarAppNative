@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, Button, TouchableOpacity } from 'react-native';
+import { BaseModal } from '../baseModal';
 import { NotesAndImages } from './NotesAndImages';
-import { AppIconButton } from '../AppIconButton';
-import { commonStyles } from '@/styles/SharedStyles';
-import { formStyles } from '@/styles/FormStyles';
 
 interface CreateEntryModalProps {
   visible: boolean;
   onClose: () => void;
   isEditing: boolean;
-  saveEntry: () => void;
-  saveEditedEntry: () => void;
+  saveEntry: () => void | Promise<void>;
+  saveEditedEntry: () => void | Promise<void>;
   notes: string;
   setNotes: (notes: string) => void;
   images: string[];
@@ -18,8 +15,8 @@ interface CreateEntryModalProps {
   name: string;
   setName: (name: string) => void;
   selectedDate: string;
-
 }
+
 interface EntryProps {
   _id: string;
   name: string;
@@ -27,6 +24,7 @@ interface EntryProps {
   notes: string;
   images?: string[];
 }
+
 export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
   visible,
   onClose,
@@ -39,46 +37,41 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
   setImages,
   name,
   setName,
-  selectedDate
+  selectedDate,
 }) => {
-const [editingEntry, setEditingEntry] = useState<EntryProps | null>(null);
+  const [editingEntry, setEditingEntry] = useState<EntryProps | null>(null);
 
+  const handleSave = async () => {
+    try {
+      if (isEditing) {
+        await saveEditedEntry();
+      } else {
+        await saveEntry();
+      }
+      onClose(); // ✅ close the modal here after saving
+    } catch (err) {
+      console.error('Error saving entry:', err);
+    }
+  };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View style={formStyles.container}>
-        <Text style={formStyles.title}>Add a plant for {selectedDate} </Text>
-
-        <NotesAndImages
-          name={name}
-          setName={setName}
-          notes={notes}
-          setNotes={setNotes}
-          images={images}
-          setImages={setImages}
-          saveEntry={saveEntry}
-  entryId={editingEntry?._id} 
-        />
-
-        <AppIconButton
-          icon='save'
-          label={isEditing ? 'Save Changes' : 'Save Entry'}
-          onPress={isEditing ? saveEditedEntry : saveEntry}
-          variant='edit'
-
-        />
-
-        <TouchableOpacity onPress={() => {
-          onClose();
-        }} 
-        >
-          <Text style={commonStyles.cancelButton}>Cancel</Text>
-        </TouchableOpacity>
-
-
-
-      </View>
-    </Modal>
+    <BaseModal
+      visible={visible}
+      onClose={onClose}
+      title={`Add a plant for ${selectedDate}`}
+      saveLabel={isEditing ? 'Save Changes' : 'Save Entry'}
+      onSave={handleSave}
+      saveVariant="Edit"
+    >
+      <NotesAndImages
+        name={name}
+        setName={setName}
+        notes={notes}
+        setNotes={setNotes}
+        images={images}
+        setImages={setImages}
+        saveEntry={saveEntry}
+    entryId={editingEntry?._id} />
+    </BaseModal>
   );
 };
-

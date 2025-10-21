@@ -1,8 +1,7 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { AppIconButton } from '@/components/AppIconButton';
-import { commonStyles } from '@/styles/SharedStyles';
-import { formStyles } from '@/styles/FormStyles';
+import { useTheme } from '@/styles/ThemeProvider';
 
 interface AddOptionsModalProps {
   visible: boolean;
@@ -11,8 +10,6 @@ interface AddOptionsModalProps {
   onAddUpdate: () => void;
   onAddReminder: () => void;
 }
-const BUTTON_WIDTH = 200;
-
 
 export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
   visible,
@@ -21,6 +18,9 @@ export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
   onAddUpdate,
   onAddReminder,
 }) => {
+  const { theme } = useTheme();
+  const BUTTON_WIDTH = 200;
+
   return (
     <Modal
       visible={visible}
@@ -28,37 +28,69 @@ export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={commonStyles.modalOverlay}>
-        <View style={commonStyles.modalContainer}>
-          <Text style={formStyles.title}>What would you like to add?</Text>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.3)',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: theme.spacing.md,
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: theme.colors.background,
+            borderRadius: theme.radius.md,
+            padding: theme.spacing.md,
+            width: '100%',
+            maxWidth: 350,
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: theme.fontSize.xl,
+              fontWeight: '700',
+              marginBottom: theme.spacing.md,
+              color: theme.colors.text,
+              textAlign: 'center',
+            }}
+          >
+            What would you like to add?
+          </Text>
 
-        
-<AppIconButton
-  icon="document-text-outline"
-  variant="secondary"
-  label="New Plant"
-  onPress={onAddEntry}
-  style={{ width: BUTTON_WIDTH }}
-/>
+          <AppIconButton
+            icon="document-text-outline"
+            variant="Secondary"
+            label="New Plant"
+            onPress={onAddEntry}
+            style={{ width: BUTTON_WIDTH, marginBottom: theme.spacing.sm }}
+          />
 
-<AppIconButton
-  icon="document-text-outline"
-  variant="primary"
-  label="+ Plant Update"
-  onPress={onAddUpdate}
-  style={{ width: BUTTON_WIDTH }}
-/>
+          <AppIconButton
+            icon="document-text-outline"
+            variant="Primary"
+            label="+ Plant Update"
+            onPress={onAddUpdate}
+            style={{ width: BUTTON_WIDTH, marginBottom: theme.spacing.sm }}
+          />
 
-<AppIconButton
-  icon="alarm-outline"
-  variant="edit"
-  label="Reminder"
-  onPress={onAddReminder}
-  style={{ width: BUTTON_WIDTH }}
-/>
+          <AppIconButton
+            icon="alarm-outline"
+            variant="Primary"
+            label="Reminder"
+            onPress={onAddReminder}
+            style={{ width: BUTTON_WIDTH, marginBottom: theme.spacing.md }}
+          />
 
-          <TouchableOpacity onPress={onClose} style={commonStyles.cancelButton}>
-            <Text>Cancel</Text>
+          <TouchableOpacity
+            onPress={onClose}
+            style={{
+              paddingVertical: theme.spacing.sm,
+              paddingHorizontal: theme.spacing.md,
+            }}
+          >
+            <Text style={{ color: theme.colors.text, fontSize: theme.fontSize.md }}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>

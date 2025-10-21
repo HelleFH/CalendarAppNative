@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, TextInput, Button, Image, ScrollView, StyleSheet } from 'react-native';
 import { commonStyles } from '@/styles/SharedStyles';
+import { EditableNotesWithImages } from '../EditableNotesWithImages';
 
 
 interface ReminderNotesAndImagesProps {
@@ -16,14 +17,13 @@ export const ReminderNotesAndImages: React.FC<ReminderNotesAndImagesProps> = ({
 }) => {
 
   return (
-   <View style={commonStyles.entryContainer}>
-      <TextInput
-        style={commonStyles.input}
-        placeholder="Add notes"
-        value={notes}
-        onChangeText={setNotes}
-      />
-    </View>
+<EditableNotesWithImages
+  showName={false}
+  allowImages={false}
+  notes={notes}
+  setNotes={setNotes}
+/>
+
   );
 };
 

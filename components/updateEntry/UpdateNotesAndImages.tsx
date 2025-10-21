@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { AppIconButton } from '../AppIconButton';
 import { formStyles } from '@/styles/FormStyles';
 import { commonStyles } from '@/styles/SharedStyles';
+import { EditableNotesWithImages } from '../EditableNotesWithImages';
 interface UpdateNotesAndImagesProps {
   notes: string;
   setNotes: (notes: string) => void;
@@ -51,24 +52,15 @@ export const UpdateNotesAndImages: React.FC<UpdateNotesAndImagesProps> = ({
 
 
   return (
-    <View style={formStyles.container}>
+  <EditableNotesWithImages
+  showName={false}
+  allowImages
+  allowDeleteImages
+  notes={notes}
+  setNotes={setNotes}
+  images={images}
+  setImages={setImages}
+/>
 
-      <TextInput
-        style={formStyles.input}
-        placeholder="Add notes"
-        value={notes}
-        onChangeText={setNotes}
-      />
-
-      <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
-
-      <ScrollView horizontal style={formStyles.scrollContainer}>
-        <View style={commonStyles.imageWrapper}>
-          {images.map((uri, index) => (
-            <Image key={index} source={{ uri }} style={formStyles.image} />
-          ))}
-        </View>
-      </ScrollView>
-    </View>
   );
 };

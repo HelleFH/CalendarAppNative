@@ -16,6 +16,7 @@ export type RootStackParamList = {
   Calendar: undefined;
   AllEntriesScreen: undefined;
   ProfileScreen: undefined;
+  RegisterScreen:undefined;
 
 };
 

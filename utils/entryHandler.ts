@@ -127,7 +127,6 @@ export const fetchAndSetParentEntry = async (
     setParentEntry(null);
   }
 };
-
 export const saveEntryHandler = async ({
   selectedDate,
   notes,
@@ -135,9 +134,6 @@ export const saveEntryHandler = async ({
   currentUserId,
   name,
   setMarkedDates,
-  setIsCreateModalVisible,
-  setEntryForSelectedDate,
-  setSelectedOriginalEntry,
   setParentObjectId,
   fetchNames,
   handleDayPress,
@@ -159,25 +155,27 @@ export const saveEntryHandler = async ({
   });
 
   try {
-    const response = await addEntry(formData);
+    await addEntry(formData);
     alert('Entry saved!');
-    setEntryForSelectedDate(response.data.entry);
+    setParentObjectId(null);
+    fetchNames?.();
+
+    // refresh entries and marked dates
+    if (handleDayPress) {
+      await handleDayPress({ dateString: selectedDate });
+    }
+
     setMarkedDates((prev: any) => ({
       ...prev,
       [selectedDate]: { marked: true, dotColor: '#4CAF50' },
     }));
-    setIsCreateModalVisible(false);
-    setSelectedOriginalEntry(null);
-    setParentObjectId(null);
-    fetchNames();
-    handleDayPress({ dateString: selectedDate });
 
   } catch (error: any) {
     const message = axios.isAxiosError(error)
       ? error.response?.data?.message || error.message
       : error instanceof Error
-        ? error.message
-        : 'Unknown error';
+      ? error.message
+      : 'Unknown error';
 
     if (message === 'Name already exists. Please choose a different one.') {
       alert('That name is already used. Please choose a unique name.');
@@ -186,6 +184,7 @@ export const saveEntryHandler = async ({
     }
   }
 };
+
 
 export const saveEditedEntryHandler = async ({
   editingEntryId,
@@ -341,6 +340,7 @@ export const deleteUpdateEntryHandler = async ({
     alert('Failed to delete update entry');
   }
 };
+
 export const saveUpdateEntryHandler = async ({
   parentObjectId,
   selectedDate,

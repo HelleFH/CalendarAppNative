@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Button, TextInput, Text, Platform, TouchableOpacity } from 'react-native';
+import { Modal, View, Button, TextInput, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AppIconButton } from '../AppIconButton';
 import { commonStyles } from '@/styles/SharedStyles';
 import { SelectEntryForReminder } from './SelectEntryForReminder';
-import { formStyles } from '@/styles/FormStyles';
+import { BaseModal } from '../baseModal';
+import { useTheme } from '@/styles/ThemeProvider'; // <-- import your hook
 
 interface CreateReminderModalProps {
   visible: boolean;
@@ -35,9 +36,10 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   setName,
   setImages,
 }) => {
+  const { theme } = useTheme(); // <-- get theme here
+
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Set today's date by default when modal opens and reminderDate not set
   useEffect(() => {
     if (visible && !reminderDate) {
       setReminderDate(new Date());
@@ -68,61 +70,61 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View style={formStyles.container}>
-        <Text style={formStyles.title}>Create a reminder for one of your plants</Text>
+    <BaseModal
+      visible={visible}
+      onClose={onClose}
+      title="Create a reminder for one of your plants"
+      saveLabel="Save Reminder"
+      onSave={handleSaveReminder}
+      saveVariant="Edit"
+    >
+      <SelectEntryForReminder
+        allNames={allNames}
+        setParentObjectId={setParentObjectId}
+        setNotes={setNotes}
+        setImages={setImages}
+        setName={setName}
+        onEntrySelected={(id: string) => setParentObjectId(id)}
+      />
 
-        <SelectEntryForReminder
-          allNames={allNames}
-          setParentObjectId={setParentObjectId}
-          setNotes={setNotes}
-          setImages={setImages}
-          setName={setName}
-          onEntrySelected={(id: string) => setParentObjectId(id)}
+      <TextInput
+        style={{
+          borderWidth: 1,
+          borderColor: theme.colors.border,
+          borderRadius: theme.radius.md,
+          padding: theme.spacing.sm,
+          color: theme.colors.text,
+          backgroundColor: theme.colors.background,
+          marginBottom: theme.spacing.md,
+        }}
+        placeholder="Enter reminder notes"
+        placeholderTextColor={theme.colors.placeholder}
+        value={notes}
+        onChangeText={setNotes}
+      />
+
+      {Platform.OS === 'web' ? (
+        <input
+          type="date"
+          value={reminderDate ? reminderDate.toISOString().substring(0, 10) : ''}
+          onChange={(e) => {
+            const selected = new Date(e.target.value + 'T00:00');
+            setReminderDate(selected);
+          }}
         />
-        <TextInput
-          style={formStyles.input}
-          placeholder="Enter reminder notes"
-          value={notes}
-          onChangeText={setNotes}
-        />
-
-        <View style={{ marginBottom: 20 }}>
-          <Text style={{ fontSize: 16, marginBottom: 10 }}>
-            {reminderDate ? reminderDate.toLocaleDateString() : 'Select reminder date'}
-          </Text>
-
-          {Platform.OS === 'web' ? (
-            <input
-              type="date"
-              value={reminderDate ? reminderDate.toISOString().substring(0, 10) : ''}
-              onChange={(e) => {
-                const selected = new Date(e.target.value + 'T00:00');
-                setReminderDate(selected);
-              }}
+      ) : (
+        <>
+          <Button title="Pick a Date" onPress={() => setShowDatePicker(true)} />
+          {showDatePicker && (
+            <DateTimePicker
+              value={reminderDate ?? new Date()}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
             />
-          ) : (
-            <>
-              <Button title="Pick a Date" onPress={() => setShowDatePicker(true)} />
-              {showDatePicker && (
-                <DateTimePicker
-                  value={reminderDate ?? new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={handleDateChange}
-                />
-              )}
-            </>
           )}
-        </View>
-
-        <AppIconButton icon="save" label="Save Reminder" onPress={handleSaveReminder} variant="edit" />
-        <TouchableOpacity onPress={
-          onClose}
-        >
-          <Text style={commonStyles.cancelButton}>Cancel</Text>
-        </TouchableOpacity>      
-        </View>
-    </Modal>
+        </>
+      )}
+    </BaseModal>
   );
 };

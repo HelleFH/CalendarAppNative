@@ -1,12 +1,9 @@
+// CreateUpdateEntryModal.tsx
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, TouchableOpacity } from 'react-native';
+import { BaseModal } from '../baseModal';
 import { UpdateNotesAndImages } from './UpdateNotesAndImages';
 import { SelectEntryToUpdate } from './SelectEntryToUpdate';
-import { useNames } from '@/utils/api';
 import { useCurrentUser } from '../CurrentUser';
-import { AppIconButton } from '../AppIconButton';
-import { commonStyles } from '@/styles/SharedStyles';
-import { formStyles } from '@/styles/FormStyles';
 
 interface UpdateEntryProps {
   _id: string;
@@ -21,17 +18,17 @@ interface CreateUpdateEntryModalProps {
   onClose: () => void;
   isEditing: boolean;
   editingEntry: UpdateEntryProps | null;
-  saveEntry: () => void;
-  saveEditedUpdateEntry: () => void;
+  saveEntry: () => void | Promise<void>;
+  saveEditedUpdateEntry: () => void | Promise<void>;
   notes: string;
-  setNotes: (n: string) => void;
+  setNotes: React.Dispatch<React.SetStateAction<string>>;
   images: string[];
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   parentObjectId: string | null;
   setParentObjectId: (id: string | null) => void;
-  allNames: any[];
+  allNames: { _id: string; name: string }[];
   name: string;
-  setName: (n: string) => void;
+  setName: (name: string) => void;
 }
 
 export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
@@ -52,100 +49,80 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   setName,
 }) => {
   const { currentUserId } = useCurrentUser();
-  const { fetchNames } = useNames(currentUserId);
+  const [selectedId, setSelectedId] = useState<string>('');
 
-  const [selectingEntry, setSelectingEntry] = useState(!isEditing);
+  // Initialize modal fields once when it opens
   useEffect(() => {
-    if (visible) {
-      if (isEditing && editingEntry) {
-        setParentObjectId(editingEntry.parentObjectId ?? null);
-        setNotes(editingEntry.notes);
-        setImages(editingEntry.images ?? []);
+    if (!visible) return;
 
-        // Find the name from allNames that matches parentObjectId (or editingEntry info)
-        const matchingName = allNames.find(n => n._id === editingEntry.parentObjectId)?.name ?? '';
-        setName(matchingName);
-
-        setSelectingEntry(false);
-      } else {
-        setParentObjectId(null);
-        setNotes('');
-        setImages([]);
-        setName('');
-        setSelectingEntry(true);
-      }
+    if (isEditing && editingEntry) {
+      setParentObjectId(editingEntry.parentObjectId || '');
+      setSelectedId(editingEntry.parentObjectId || '');
+      setNotes(editingEntry.notes);
+      setImages(editingEntry.images || []);
+      setName(allNames.find(n => n._id === editingEntry.parentObjectId)?.name || '');
+    } else if (!isEditing) {
+      setParentObjectId('');
+      setSelectedId('');
+      setNotes('');
+      setImages([]);
+      setName('');
     }
-  }, [visible, isEditing, editingEntry, setParentObjectId, setNotes, setImages, setName, allNames]);
+  }, [visible]);
+
+  // Sync selectedId with parentObjectId
+  useEffect(() => {
+    setParentObjectId(selectedId);
+    const selectedName = allNames.find(n => n._id === selectedId)?.name || '';
+    setName(selectedName);
+  }, [selectedId, allNames]);
 
   const handleSave = () => {
-    if (isEditing) {
-      saveEditedUpdateEntry();
-    } else {
-      saveEntry();
+    if (!parentObjectId) {
+      alert('No entry selected.');
+      return;
     }
-    onClose();
-    setSelectingEntry(!isEditing);
-    setParentObjectId(null);
-    setNotes('');
-    setImages([]);
-    setName('');
-  };
+    if (!notes || images.length === 0) {
+      alert('Please provide notes and at least one image.');
+      return;
+    }
 
+    if (isEditing) saveEditedUpdateEntry();
+    else saveEntry();
 
-  const handleClose = () => {
     onClose();
-    setSelectingEntry(false);
   };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
-      <View style={formStyles.container}>
-        <Text style={commonStyles.title}>
-          {isEditing
-            ? `Edit your update for ${name}`
-            : 'Create an update for one of your plants'}
-        </Text>
-        {!isEditing && (
-          <SelectEntryToUpdate
-            allNames={allNames}
-            setParentObjectId={setParentObjectId}
-            setNotes={setNotes}
-            setImages={setImages}
-            setName={setName}
-            onEntrySelected={(id: string) => {
-              setParentObjectId(id);
-            }}
-          />
-        )}
+    <BaseModal
+      visible={visible}
+      onClose={onClose}
+      title={isEditing ? `Edit update for ${name}` : 'Create an update'}
+      saveLabel={isEditing ? 'Save Changes' : 'Save'}
+      onSave={handleSave}
+      saveVariant="Edit"
+    >
+      <SelectEntryToUpdate
+        allNames={allNames}
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
+        setParentObjectId={setParentObjectId}
+        setNotes={setNotes}
+        setImages={setImages}
+        setName={setName}
+      />
 
-        <UpdateNotesAndImages
-          notes={notes}
-          setNotes={setNotes}
-          images={images}
-          setImages={setImages}
-          saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
-          initialImages={editingEntry?.images}
-          isNewEntry={!isEditing}
-          isEditing={isEditing}
-          name={name}
-        />
-
-        <AppIconButton
-          icon="save"
-          label={isEditing ? 'Save Changes' : 'Save'}
-          onPress={handleSave}
-          variant="edit"
-        />
-        <TouchableOpacity onPress={
-          handleClose}
-        >
-          <Text style={commonStyles.cancelButton}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
-
-
+      <UpdateNotesAndImages
+        notes={notes}
+        setNotes={setNotes}
+        images={images}
+        setImages={setImages}
+        saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
+        initialImages={editingEntry?.images || []}
+        isNewEntry={!isEditing}
+        isEditing={isEditing}
+        name={name}
+      />
+    </BaseModal>
   );
 };
-
-

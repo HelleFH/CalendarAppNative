@@ -135,6 +135,7 @@ const updateEntry = async (req, res) => {
     res.status(500).json({ error: 'Something went wrong in updateEntry' });
   }
 };
+
 const getUpdateEntryDatesByUser = async (req, res) => {
   const { userId } = req.query;
 

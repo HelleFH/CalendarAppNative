@@ -6,6 +6,7 @@ import { commonStyles } from '@/styles/SharedStyles';
 import { fetchAndSetParentEntry } from '@/utils/entryHandler';
 import { EntryDetailModal } from '../entry/EntryDetailModal';
 import { Ionicons } from '@expo/vector-icons';
+import { CardWithActions } from '../CardWithActions';
 
 interface ReminderProps {
   _id: string;
@@ -44,65 +45,25 @@ useEffect(() => {
 }, [reminder?.parentObjectId]);
 
   return (
-    <View style={commonStyles.entryContainer}>
-      {/* ✅ Make the name clickable */}
-      {parentEntry?.name ? (
-<View style={{ flexDirection: 'row', alignItems: 'center',width:'100%', marginBottom:10,gap:5, }}>
-  <Ionicons name="alarm-outline" size={20} />
-  <Text style={commonStyles.subtitle}>
-    Reminder for{' '}
-    <Text
-      style={[commonStyles.subtitle, { color: 'blue', textDecorationLine: 'underline' }]}
-      onPress={() => setShowParentModal(true)}
-    >
-      {parentEntry.name}
-    </Text>
-  </Text>
-</View>
-
-        
-      ) : (
-        <Text style={commonStyles.title}>Loading...</Text>
-      )}
-
-      <Text   style={commonStyles.notes}>{reminder.notes}</Text>
-
-      <View style={commonStyles.buttonWrapper}>
-        <AppIconButton
-          icon="pencil"
-          label="Edit"
-          onPress={() => onEditReminder(reminder)}
-          variant="edit"
-        />
-        <AppIconButton
-          icon="remove"
-          label="Delete"
-          onPress={() => setShowDeleteModal(true)}
-          variant="close"
-        />
-      </View>
-
-      {/* ✅ Show modal when parent name is clicked */}
-      {parentEntry && (
-        <EntryDetailModal
-          visible={showParentModal}
-          entry={parentEntry}
-          onClose={() => setShowParentModal(false)}
-          onEditUpdate={() => { }} 
-          onDeleteUpdate={() => { }}
-          onDeleteEntry={() => { }}
-          onEditEntry={() => { }} />
-      )}
-
-      <DeleteConfirmationModal
-        visible={showDeleteModal}
-        onCancel={() => setShowDeleteModal(false)}
-        onConfirm={() => {
-          onDeleteReminder(reminder._id);
-          setShowDeleteModal(false);
-        }}
-        itemType="entry"
+<CardWithActions
+  title={`Reminder for ${parentEntry?.name}`}
+  notes={reminder.notes}
+  onEdit={() => onEditReminder(reminder)}
+  onDelete={() => onDeleteReminder(reminder._id)}
+  detailModal={
+    parentEntry && (
+      <EntryDetailModal
+        visible={showParentModal}
+        entry={parentEntry}
+        onClose={() => setShowParentModal(false)}
+        onEditUpdate={() => {}}
+        onDeleteUpdate={() => {}}
+        onDeleteEntry={() => {}}
+        onEditEntry={() => {}}
       />
-    </View>
+    )
+  }
+/>
+
   );
 };

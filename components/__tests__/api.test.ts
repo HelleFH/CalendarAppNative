@@ -18,7 +18,7 @@ describe('API utility functions', () => {
     const res = await api.fetchNames(userId);
 
     expect(mockedAxios.get).toHaveBeenCalledWith(
-      'https://calendarappnative.onrender.com/entries/names',
+      'http://localhost:5000/entries/names',
       { params: { userId } }
     );
     expect(res.data).toEqual(['Plant 1', 'Plant 2']);
@@ -31,7 +31,7 @@ describe('API utility functions', () => {
     const res = await api.addReminder(payload);
 
     expect(mockedAxios.post).toHaveBeenCalledWith(
-      'https://calendarappnative.onrender.com/entries/reminders/create',
+      'http://localhost:5000/entries/reminders/create',
       payload
     );
     expect(res).toEqual({ id: 'r1' });
@@ -42,7 +42,7 @@ describe('API utility functions', () => {
     await api.deleteReminder('r1');
 
     expect(mockedAxios.delete).toHaveBeenCalledWith(
-      'https://calendarappnative.onrender.com/entries/reminders/r1'
+      'http://localhost:5000/entries/reminders/r1'
     );
   });
 
@@ -55,7 +55,7 @@ describe('API utility functions', () => {
     const result = await api.fetchEntriesForDateCombined('u1', '2023-01-01');
 
     expect(mockedAxios.get).toHaveBeenCalledWith(
-      'https://calendarappnative.onrender.com/entries/entries-for-date',
+      'http://localhost:5000/entries/entries-for-date',
       { params: { userId: 'u1', date: '2023-01-01' } }
     );
     expect(result).toEqual({ originalEntries: [1], updateEntries: [2], reminders: [3] });
@@ -67,7 +67,7 @@ describe('API utility functions', () => {
 
     const result = await api.updateEntry({ editingEntryId: 'e1', formData });
     expect(mockedAxios.put).toHaveBeenCalledWith(
-      'https://calendarappnative.onrender.com/entries/edit-entry/e1',
+      'http://localhost:5000/entries/edit-entry/e1',
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     );
@@ -79,7 +79,7 @@ describe('API utility functions', () => {
     const result = await api.deleteEntryImage('e1', 'img.jpg');
 
     expect(mockedAxios.delete).toHaveBeenCalledWith(
-      'https://calendarappnative.onrender.com/entries/image',
+      'http://localhost:5000/entries/image',
       { data: { entryId: 'e1', imageUrl: 'img.jpg' } }
     );
     expect(result).toEqual(['img1.jpg']);
@@ -90,7 +90,7 @@ describe('API utility functions', () => {
 
     const res = await api.fetchEntryById('e1');
 
-    expect(mockedAxios.get).toHaveBeenCalledWith('https://calendarappnative.onrender.com/entries/by-parent/e1');
+    expect(mockedAxios.get).toHaveBeenCalledWith('http://localhost:5000/entries/by-parent/e1');
     expect(res).toEqual({ _id: 'e1', name: 'Plant' });
   });
 
@@ -99,7 +99,7 @@ describe('API utility functions', () => {
     const hook = api.useNames('u1');
     await hook.fetchNames();
     expect(mockedAxios.get).toHaveBeenCalledWith(
-      'https://calendarappnative.onrender.com/entries/names',
+      'http://localhost:5000/entries/names',
       { params: { userId: 'u1' } }
     );
   });
