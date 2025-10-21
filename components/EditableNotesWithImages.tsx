@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, TextInput, Image, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AppIconButton } from './AppIconButton';
-import { commonStyles } from '@/styles/SharedStyles';
-import { formStyles } from '@/styles/FormStyles';
+import { useTheme } from '@/styles/ThemeProvider';
 import { deleteImageHandler } from '@/utils/entryHandler';
 
 interface EditableNotesWithImagesProps {
@@ -31,6 +30,7 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
   allowImages = false,
   allowDeleteImages = false,
 }) => {
+  const { theme } = useTheme();
 
   const pickImages = async () => {
     if (!setImages) return;
@@ -53,32 +53,58 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
     if (entryId) deleteImageHandler({ entryId, imageUrl: uri, setImages });
   };
 
+  const inputStyle = {
+    backgroundColor: theme.TextInput.rest.background,
+    borderColor: theme.TextInput.rest.border,
+    color: theme.TextInput.rest.text,
+    padding: theme.spacing.sm,
+    borderRadius: theme.radius.md,
+    marginBottom: theme.spacing.md,
+    fontSize: theme.fontSize.md,
+  };
+
+  const imageWrapperStyle = {
+    flexDirection: 'row',
+    marginTop: theme.spacing.sm,
+  };
+
+  const imageStyle = {
+    width: 100,
+    height: 100,
+    borderRadius: theme.radius.md,
+    marginRight: theme.spacing.sm,
+  };
+
   return (
-    <View style={formStyles.container}>
+    <View style={{ width: '100%' }}>
       {showName && setName && (
         <TextInput
-          style={formStyles.input}
+          style={inputStyle}
           placeholder="Enter name"
+          placeholderTextColor={theme.colors.placeholder}
           value={name}
           onChangeText={setName}
         />
       )}
 
       <TextInput
-        style={formStyles.input}
+        style={inputStyle}
         placeholder="Add notes"
+        placeholderTextColor={theme.colors.placeholder}
         value={notes}
         onChangeText={setNotes}
+        multiline
       />
 
       {allowImages && setImages && (
         <>
-          <AppIconButton icon="add" label="Pick Images" onPress={pickImages} />
-          <ScrollView horizontal style={formStyles.scrollContainer}>
-            <View style={commonStyles.imageWrapper}>
+          <AppIconButton icon="add" label="Pick Images" variant="Secondary" onPress={pickImages} />
+
+          <ScrollView horizontal style={{ marginTop: theme.spacing.sm }}>
+            <View >
               {images.map((uri, index) => (
-                <View key={index} style={{ marginRight: 10 }}>
-                  <Image source={{ uri }} style={formStyles.image} />
+                <View key={index}>
+                  <Image source={{ uri }} style={imageStyle} />
                   {allowDeleteImages && (
                     <AppIconButton
                       icon="trash"

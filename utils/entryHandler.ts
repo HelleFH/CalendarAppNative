@@ -279,21 +279,24 @@ export const deleteEntryHandler = async ({
 }: any) => {
   try {
     await deleteEntry(entryId);
-    alert('Deleted entry');
 
-    setMarkedDates((prev: any) => {
+    // Update the UI after deletion
+    setMarkedDates?.((prev: any) => {
       const updated = { ...prev };
       delete updated[selectedDate];
       return updated;
     });
 
-    setEntryForSelectedDate(null);
-    setUpdateEntryForSelectedDate([]);
-    handleDayPress({ dateString: selectedDate });
+    setEntryForSelectedDate?.(null);
+    setUpdateEntryForSelectedDate?.([]);
+    handleDayPress?.({ dateString: selectedDate });
+
+  
   } catch (err) {
-    alert('Failed to delete entry');
+    console.error('Error deleting entry:', err);
   }
 };
+
 export const deleteUpdateEntryHandler = async ({
   entryId,
   selectedDate,

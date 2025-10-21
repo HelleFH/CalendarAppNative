@@ -7,6 +7,7 @@ import { useCurrentUser } from '../CurrentUser';
 import { AppIconButton } from '../AppIconButton';
 import { commonStyles } from '@/styles/SharedStyles';
 import { formStyles } from '@/styles/FormStyles';
+import { BaseModal } from '../baseModal';
 
 interface UpdateEntryProps {
   _id: string;
@@ -33,7 +34,6 @@ interface CreateUpdateEntryModalProps {
   name: string;
   setName: (n: string) => void;
 }
-
 export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   visible,
   onClose,
@@ -51,21 +51,16 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
   name,
   setName,
 }) => {
-  const { currentUserId } = useCurrentUser();
-  const { fetchNames } = useNames(currentUserId);
+  const [selectingEntry, setSelectingEntry] = React.useState(!isEditing);
 
-  const [selectingEntry, setSelectingEntry] = useState(!isEditing);
-  useEffect(() => {
+  React.useEffect(() => {
     if (visible) {
       if (isEditing && editingEntry) {
         setParentObjectId(editingEntry.parentObjectId ?? null);
         setNotes(editingEntry.notes);
         setImages(editingEntry.images ?? []);
-
-        // Find the name from allNames that matches parentObjectId (or editingEntry info)
         const matchingName = allNames.find(n => n._id === editingEntry.parentObjectId)?.name ?? '';
         setName(matchingName);
-
         setSelectingEntry(false);
       } else {
         setParentObjectId(null);
@@ -75,14 +70,11 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
         setSelectingEntry(true);
       }
     }
-  }, [visible, isEditing, editingEntry, setParentObjectId, setNotes, setImages, setName, allNames]);
+  }, [visible, isEditing, editingEntry, allNames]);
 
   const handleSave = () => {
-    if (isEditing) {
-      saveEditedUpdateEntry();
-    } else {
-      saveEntry();
-    }
+    if (isEditing) saveEditedUpdateEntry();
+    else saveEntry();
     onClose();
     setSelectingEntry(!isEditing);
     setParentObjectId(null);
@@ -91,58 +83,37 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
     setName('');
   };
 
-
-  const handleClose = () => {
-    onClose();
-    setSelectingEntry(false);
-  };
-
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
-      <View style={formStyles.container}>
-        <Text style={commonStyles.title}>
-          {isEditing
-            ? `Edit your update for ${name}`
-            : 'Create an update for one of your plants'}
-        </Text>
-        {!isEditing && (
-          <SelectEntryToUpdate
-            allNames={allNames}
-            setParentObjectId={setParentObjectId}
-            setNotes={setNotes}
-            setImages={setImages}
-            setName={setName}
-            onEntrySelected={(id: string) => {
-              setParentObjectId(id);
-            }}
-          />
-        )}
-
-        <UpdateNotesAndImages
-          notes={notes}
+    <BaseModal
+      visible={visible}
+      onClose={onClose}
+      title={isEditing ? `Edit update for ${name}` : 'Create an update'}
+      saveLabel={isEditing ? 'Save Changes' : 'Save'}
+      onSave={handleSave}
+      saveVariant="Primary"
+    >
+      {selectingEntry && !isEditing && (
+        <SelectEntryToUpdate
+          allNames={allNames}
+          setParentObjectId={setParentObjectId}
           setNotes={setNotes}
-          images={images}
           setImages={setImages}
-          saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
-          initialImages={editingEntry?.images}
-          isNewEntry={!isEditing}
-          isEditing={isEditing}
-          name={name}
+          setName={setName}
+          onEntrySelected={(id: string) => setParentObjectId(id)}
         />
+      )}
 
-        <AppIconButton
-          icon="save"
-          label={isEditing ? 'Save Changes' : 'Save'}
-          onPress={handleSave}
-        />
-        <TouchableOpacity onPress={
-          handleClose}
-        >
-          <Text style={commonStyles.cancelButton}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
-
-
+      <UpdateNotesAndImages
+        notes={notes}
+        setNotes={setNotes}
+        images={images}
+        setImages={setImages}
+        saveEntry={isEditing ? saveEditedUpdateEntry : saveEntry}
+        initialImages={editingEntry?.images}
+        isNewEntry={!isEditing}
+        isEditing={isEditing}
+        name={name}
+      />
+    </BaseModal>
   );
 };

@@ -50,7 +50,7 @@ export const SelectEntryToUpdate: React.FC<SelectEntryToUpdateProps> = ({
       dropdownIconColor="#319795"
       mode="dropdown"
     >
-      <Picker.Item label="Select an entry..." value="" />
+      <Picker.Item label="Choose a plant to update..." value="" />
       {allNames.map((entry) => (
         <Picker.Item key={entry._id} label={entry.name} value={entry._id} />
       ))}

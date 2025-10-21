@@ -30,7 +30,7 @@ describe('SelectEntryForReminder', () => {
       />
     );
 
-    expect(getByDisplayValue('Select an entry...')).toBeTruthy();
+    expect(getByDisplayValue('Choose an entry...')).toBeTruthy();
   });
 
   it('calls callbacks when selecting an entry', () => {
