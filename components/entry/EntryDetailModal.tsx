@@ -47,7 +47,7 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
     const fetchUpdates = async () => {
       if (!entry?._id) return;
       try {
-        const response = await fetch(`https://calendarappnative.onrender.com/updates/${entry._id}`);
+        const response = await fetch(`http://localhost:5000/entries/update-entries/by-parent/${entry._id}`);
         const data: UpdateEntryProps[] = await response.json();
         setUpdateEntries(data);
       } catch (err) {

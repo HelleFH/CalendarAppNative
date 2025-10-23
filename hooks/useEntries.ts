@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchEntriesForDateCombined, fetchMarkedDatesCombined } from '../utils/api';
+import { fetchEntriesForDateCombined, fetchMarkedDates, fetchMarkedDatesCombined } from '../utils/api';
 import {
   saveEntryHandler,
   saveEditedEntryHandler,
@@ -13,7 +13,7 @@ import {
 import { useNames } from '../utils/api';
 import { useCurrentUser } from '../components/CurrentUser';
 
-export const useEntries = () => {
+export const useEntries = (_id: string) => {
   const { currentUserId } = useCurrentUser();
   const { allNames, fetchNames } = useNames(currentUserId);
 
@@ -27,15 +27,13 @@ export const useEntries = () => {
   const [updateEntryForSelectedDate, setUpdateEntryForSelectedDate] = useState<any[]>([]);
   const [reminderForSelectedDate, setReminderForSelectedDate] = useState<any[]>([]);
   const [parentObjectId, setParentObjectId] = useState<string | null>(null);
+const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
 
-  // --- Fetch entries for date ---
 
 
-
-  // --- Fetch entries for date ---
   const handleDayPress = async (day: any) => {
     if (!currentUserId) return;
 
@@ -65,10 +63,29 @@ export const useEntries = () => {
     setMarkedDates, setEntryForSelectedDate, setParentObjectId, fetchNames, handleDayPress
   });
 
-  const saveEditedEntry = () => saveEditedEntryHandler({
-    editingEntryId, selectedDate, notes, currentUserId, name, images,
-    setIsEditing, setEditingEntryId, handleDayPress, fetchMarkedDatesCombined, fetchNames
+const saveEditedEntry = (entryId: string) => {
+  if (!entryId || !currentUserId) {
+    alert("Cannot edit: missing user or entry ID.");
+    return;
+  }
+
+  saveEditedEntryHandler({
+    editingEntryId: entryId,
+    selectedDate,
+    notes,
+    currentUserId,
+    name,
+    images,
+    setIsCreateModalVisible,
+    setIsEditing,
+    setEditingEntryId,
+    handleDayPress,
+    fetchMarkedDates,
+    fetchNames,
   });
+};
+
+
 
   const saveEditedUpdateEntry = () => saveEditedUpdateEntryHandler({
     editingEntryId, selectedDate, notes, currentUserId, images,
@@ -95,16 +112,15 @@ export const useEntries = () => {
       handleDayPress,
     });
 
-
-  const handleEditEntry = (entry: any) => {
-    setNotes(entry.notes);
-    setImages(entry.images || []);
-    setName(entry.name);
-    setSelectedDate(entry.date);
-    setIsEditing(true);
-    setEditingEntryId(entry._id);
-  };
-
+const handleEditEntry = (entry: any) => {
+  setNotes(entry.notes);
+  setImages(entry.images || []);
+  setName(entry.name);
+  setSelectedDate(entry.date);
+  setIsEditing(true);
+  setEditingEntryId(entry._id);
+   setIsCreateModalVisible(true); 
+};
   const handleEditUpdate = (entry: any) => {
     setNotes(entry.notes);
     setImages(entry.images || []);

@@ -186,6 +186,7 @@ export const saveEntryHandler = async ({
   }
 };
 
+
 export const saveEditedEntryHandler = async ({
   editingEntryId,
   selectedDate,
@@ -199,36 +200,57 @@ export const saveEditedEntryHandler = async ({
   handleDayPress,
   fetchMarkedDates,
   fetchNames,
-}: any) => {
+}: {
+  editingEntryId: string;
+  selectedDate: string;
+  notes: string;
+  currentUserId: string;
+  name: string;
+  images: string[];
+  setIsCreateModalVisible: (visible: boolean) => void;
+  setIsEditing: (val: boolean) => void;
+  setEditingEntryId: (id: string | null) => void;
+  handleDayPress: (date: { dateString: string }) => void;
+  fetchMarkedDates: (userId: string) => void;
+  fetchNames: () => void;
+}) => {
+  // ✅ Step 1: Validate
   if (!editingEntryId || !selectedDate || !notes || !currentUserId || !name) {
     alert('Missing data for editing.');
     return;
   }
 
-  const formData = await createFormData({
-    data: {
-      date: selectedDate,
-      notes,
-      userId: currentUserId,
-      name,
-      createdAt: new Date().toISOString(),
-    },
-    images,
-  });
-
   try {
+    // ✅ Step 2: Prepare form data — no new createdAt for updates
+    const formData = await createFormData({
+      data: {
+        date: selectedDate,
+        notes,
+        userId: currentUserId,
+        name,
+        updatedAt: new Date().toISOString(), // ✅ use updatedAt instead
+      },
+      images,
+    });
+
+    // ✅ Step 3: Perform update API call
     await updateEntry({ editingEntryId, formData });
-    alert('Entry updated!');
+
+    alert('Entry updated successfully!');
+
+    // ✅ Step 4: Reset modal + refresh UI
     setIsCreateModalVisible(false);
     setIsEditing(false);
     setEditingEntryId(null);
     handleDayPress({ dateString: selectedDate });
     fetchMarkedDates(currentUserId);
     fetchNames();
-  } catch (error) {
-    alert('Failed to update entry.');
+  } catch (error: any) {
+    console.error('Failed to update entry:', error);
+    alert('Failed to update entry. Please try again.');
   }
 };
+
 
 export const saveEditedUpdateEntryHandler = async ({
   editingEntryId,

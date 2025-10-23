@@ -12,27 +12,28 @@ const addEntry = async (req, res) => {
   try {
     const { name, date, notes, userId } = req.body;
 
-    // Check if an entry with the same name and userId already exists
     const existingEntry = await Entry.findOne({ name, userId });
     if (existingEntry) {
-      return res.status(400).json({ message: 'Name already exists. Please choose a different one.' });
+      return res.status(400).json({ message: 'Name already exists.' });
     }
 
     const imageUrls = [];
 
     if (req.files && req.files.length > 0) {
-      const uploadToCloudinaryBase64 = async (file, index) => {
-        const base64 = file.buffer.toString('base64');
-        const dataUrl = `data:${file.mimetype};base64,${base64}`;
-        const result = await cloudinary.uploader.upload(dataUrl, {
-          resource_type: 'image',
-        });
-        return result.secure_url;
-      };
+      console.log('Files received:', req.files);
 
-      for (let i = 0; i < req.files.length; i++) {
-        const imageUrl = await uploadToCloudinaryBase64(req.files[i], i);
-        imageUrls.push(imageUrl);
+      for (let file of req.files) {
+        const url = await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { resource_type: 'image' },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result.secure_url);
+            }
+          );
+          streamifier.createReadStream(file.buffer).pipe(stream);
+        });
+        imageUrls.push(url);
       }
     }
 
@@ -45,10 +46,9 @@ const addEntry = async (req, res) => {
     });
 
     await newEntry.save();
-
     res.status(200).json({ message: 'Entry added successfully', entry: newEntry });
   } catch (err) {
-    console.error(' Error in addEntry:', err);
+    console.error('Error in addEntry:', err);
     res.status(500).json({ error: 'Something went wrong in addEntry' });
   }
 };
@@ -122,7 +122,7 @@ const getAllNames = async (req, res) => {
   }
 };
 
- const deleteImage = async (req, res) => {
+const deleteImage = async (req, res) => {
   console.log('🚀 deleteImage route HIT');
 
   try {
@@ -366,4 +366,4 @@ const getMarkedDates = async (req, res) => {
   }
 };
 
-export { getEntriesForDate, getMarkedDates, addEntry, getAllNames, deleteEntry, getEntryById, editEntry,getAllEntriesByUser,getEntryDatesByUser, deleteImage };
+export { getEntriesForDate, getMarkedDates, addEntry, getAllNames, deleteEntry, getEntryById, editEntry, getAllEntriesByUser, getEntryDatesByUser, deleteImage };

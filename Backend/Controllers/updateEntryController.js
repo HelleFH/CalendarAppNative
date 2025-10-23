@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import UpdateEntry from '../models/updateEntryModel.js';
 import Entry from '../models/entryModel.js'; 
 import cloudinary from '../config/cloudinary.js';
+import streamifier from 'streamifier';
 
 
 const deleteUpdateEntry = async (req, res) => {
@@ -75,47 +76,52 @@ const getUpdatesByParent = async (req, res) => {
 
 const updateEntry = async (req, res) => {
   try {
-    const imageUrls = [];
-
     console.log('✅ Received POST /update-entry');
     console.log('➡️ req.body:', req.body);
-    console.log('📦 req.files length:', req.files?.length);
+    console.log('📦 req.files:', req.files);
 
-    const { parentObjectId, notes, date, userId, createdAt } = req.body;
+    const { parentObjectId, notes, date, userId } = req.body;
 
+    // Validate required fields
     if (!parentObjectId || !notes || !date || !userId) {
       return res.status(400).json({ message: 'Missing required fields for update' });
     }
 
-    // 🧩 Fetch original entry for name
+    // Fetch the parent entry to preserve name or other info if needed
     const parentEntry = await Entry.findById(parentObjectId);
     if (!parentEntry) {
       return res.status(404).json({ message: 'Parent entry not found' });
     }
-    const uploadToCloudinaryBase64 = async (file, index) => {
-      const base64 = file.buffer.toString('base64');
-      const dataUrl = `data:${file.mimetype};base64,${base64}`;
-    
-      try {
-        const result = await cloudinary.uploader.upload(dataUrl, {
-          resource_type: 'image',
-        });
-        console.log(`✅ Cloudinary upload ${index} success: ${result.secure_url}`);
-        return result.secure_url;
-      } catch (err) {
-        console.error(`❌ Cloudinary upload ${index} failed:`, err);
-        throw err;
+
+    // Function to upload a file buffer to Cloudinary using streams
+    const uploadToCloudinary = (file, index) =>
+      new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: 'image' },
+          (err, result) => {
+            if (err) {
+              console.error(`❌ Cloudinary upload ${index} failed:`, err);
+              reject(err);
+            } else {
+              console.log(`✅ Cloudinary upload ${index} success: ${result.secure_url}`);
+              resolve(result.secure_url);
+            }
+          }
+        );
+        streamifier.createReadStream(file.buffer).pipe(stream);
+      });
+
+    // Upload images if any
+    const imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      console.log(`📤 Uploading ${req.files.length} images to Cloudinary...`);
+      for (let i = 0; i < req.files.length; i++) {
+        const url = await uploadToCloudinary(req.files[i], i);
+        imageUrls.push(url);
       }
-    };
-
-    
-    for (let i = 0; i < req.files.length; i++) {
-      const imageUrl = await uploadToCloudinaryBase64(req.files[i], i);
-      imageUrls.push(imageUrl);
     }
-    
-    
 
+    // Create new UpdateEntry document
     const newUpdateEntry = new UpdateEntry({
       parentObjectId,
       notes,
@@ -124,17 +130,20 @@ const updateEntry = async (req, res) => {
       userId,
     });
 
-
     console.log('📄 Saving update entry to MongoDB...');
     await newUpdateEntry.save();
     console.log('✅ Update entry saved.');
 
-    res.status(200).json({ message: 'Update entry added successfully', updateEntry: newUpdateEntry });
+    res.status(200).json({
+      message: 'Update entry added successfully',
+      updateEntry: newUpdateEntry,
+    });
   } catch (err) {
     console.error('🚨 Error in updateEntry:', err);
     res.status(500).json({ error: 'Something went wrong in updateEntry' });
   }
 };
+
 
 const getUpdateEntryDatesByUser = async (req, res) => {
   const { userId } = req.query;

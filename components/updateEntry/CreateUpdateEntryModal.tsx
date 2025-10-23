@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import { UpdateNotesAndImages } from './UpdateNotesAndImages';
 import { SelectEntryToUpdate } from './SelectEntryToUpdate';
-import { useNames } from '@/utils/api';
-import { useCurrentUser } from '../CurrentUser';
-import { AppIconButton } from '../AppIconButton';
-import { commonStyles } from '@/styles/SharedStyles';
-import { formStyles } from '@/styles/FormStyles';
+
 import { BaseModal } from '../baseModal';
 
 interface UpdateEntryProps {
@@ -82,6 +78,11 @@ export const CreateUpdateEntryModal: React.FC<CreateUpdateEntryModalProps> = ({
     setImages([]);
     setName('');
   };
+useEffect(() => {
+  if (visible && !isEditing) {
+    setSelectingEntry(true);
+  }
+}, [visible, allNames]);
 
   return (
     <BaseModal

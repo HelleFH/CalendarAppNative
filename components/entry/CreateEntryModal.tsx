@@ -7,7 +7,7 @@ interface CreateEntryModalProps {
   onClose: () => void;
   isEditing: boolean;
   saveEntry: () => void | Promise<void>;
-  saveEditedEntry: () => void | Promise<void>;
+  saveEditedEntry: (id: string) => void | Promise<void>; 
   notes: string;
   setNotes: (notes: string) => void;
   images: string[];
@@ -15,6 +15,7 @@ interface CreateEntryModalProps {
   name: string;
   setName: (name: string) => void;
   selectedDate: string;
+  entryId?: string; 
 }
 
 interface EntryProps {
@@ -29,6 +30,7 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
   visible,
   onClose,
   isEditing,
+  entryId,           // ✅ add this line
   saveEntry,
   saveEditedEntry,
   notes,
@@ -41,18 +43,18 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
 }) => {
   const [editingEntry, setEditingEntry] = useState<EntryProps | null>(null);
 
-  const handleSave = async () => {
-    try {
-      if (isEditing) {
-        await saveEditedEntry();
-      } else {
-        await saveEntry();
-      }
-      onClose(); // ✅ close the modal here after saving
-    } catch (err) {
-      console.error('Error saving entry:', err);
+const handleSave = async () => {
+  try {
+    if (isEditing && entryId) {
+      await saveEditedEntry(entryId); // ✅ pass the correct entry id
+    } else {
+      await saveEntry();
     }
-  };
+    onClose();
+  } catch (err) {
+    console.error('Error saving entry:', err);
+  }
+};
 
   return (
     <BaseModal
