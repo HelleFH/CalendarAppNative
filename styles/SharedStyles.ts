@@ -15,16 +15,14 @@ export const commonStyles = StyleSheet.create({
 
     scroll: {
     flex: 1,
-    backgroundColor: 'white',
+
   },
    container: {
-    paddingTop: 50,
-    paddingBottom: 50,
     paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    maxWidth: 500,
+    maxWidth: 400,
     alignSelf: 'center',
     gap: 20,
   },

@@ -1,4 +1,3 @@
-// theme.ts
 export type ButtonState = {
   background: string;
   text: string;
@@ -11,6 +10,18 @@ export type ButtonVariant = {
   disabled: ButtonState;
 };
 
+export type TextInputVariant = {
+  rest: { background: string; border: string; text: string; placeholder: string };
+  focus: { background: string; border: string; text: string; placeholder: string };
+  disabled: { background: string; border: string; text: string; placeholder: string };
+};
+
+export type ImageVariant = {
+  width: number;
+  height: number;
+  borderRadius: number;
+  resizeMode: 'cover' | 'contain' | 'stretch' | 'center' | 'repeat';
+};
 export type Theme = {
   colors: {
     text: string;
@@ -48,15 +59,14 @@ export type Theme = {
     Secondary: ButtonVariant;
     Tertiary: ButtonVariant;
     Delete: ButtonVariant;
-
   };
-  TextInput: {
-    rest: { background: string; border: string; text: string; placeholder: string };
-    focus: { background: string; border: string; text: string; placeholder: string };
-    disabled: { background: string; border: string; text: string; placeholder: string };
+  TextInput: TextInputVariant;
+  Image: {
+    small: ImageVariant;
+    medium: ImageVariant;
+    large: ImageVariant;
   };
 };
-
 export const lightTheme: Theme = {
   colors: {
     text: '#333',
@@ -69,33 +79,40 @@ export const lightTheme: Theme = {
   radius: { sm: 4, md: 10, lg: 20 },
   fontSize: { sm: 12, md: 14, lg: 16, xl: 20, xxl: 24 },
   sizes: { logoSmall: { width: 100, height: 30 }, logoLarge: { width: 200, height: 60 }, menuWidth: 160 },
-  Button: {
-  Primary: {
-  rest: { background: '#4F772D', text: '#fff' },      // main earthy green
-  pressed: { background: '#3C5E23', text: '#fff' },   // darker on press
-  disabled: { background: '#A3B899', text: '#fff' },  // muted desaturated green
-},
-Secondary: {
-  rest: { background: '#31572C', text: '#fff' },      // deeper green
-  pressed: { background: '#24411F', text: '#fff' },   // darker forest green
-  disabled: { background: '#94A98C', text: '#fff' },  // faded olive
-},
-Tertiary: {
-  rest: { background: '#132A13', text: '#fff' },      // very dark green
-  pressed: { background: '#0D1E0D', text: '#fff' },   // nearly black-green
-  disabled: { background: '#7A8B75', text: '#fff' },  // soft gray-green
-},
-Delete: {
-  rest: { background: '#FF0000', text: '#fff' },      // bright red
-  pressed: { background: '#B00000', text: '#fff' },   // darker red when pressed
-  disabled: { background: '#F5A5A5', text: '#fff' },  // pale red when disabled
-},
 
+  Button: {
+    Primary: {
+      rest: { background: '#4F772D', text: '#fff' },
+      pressed: { background: '#3C5E23', text: '#fff' },
+      disabled: { background: '#A3B899', text: '#fff' },
+    },
+    Secondary: {
+      rest: { background: '#31572C', text: '#fff' },
+      pressed: { background: '#24411F', text: '#fff' },
+      disabled: { background: '#94A98C', text: '#fff' },
+    },
+    Tertiary: {
+      rest: { background: '#132A13', text: '#fff' },
+      pressed: { background: '#0D1E0D', text: '#fff' },
+      disabled: { background: '#7A8B75', text: '#fff' },
+    },
+    Delete: {
+      rest: { background: '#FF0000', text: '#fff' },
+      pressed: { background: '#B00000', text: '#fff' },
+      disabled: { background: '#F5A5A5', text: '#fff' },
+    },
   },
+
   TextInput: {
     rest: { background: '#fff', border: '#ccc', text: '#000', placeholder: '#aaa' },
     focus: { background: '#fff', border: '#4A90E2', text: '#000', placeholder: '#aaa' },
     disabled: { background: '#F5F5F5', border: '#ccc', text: '#aaa', placeholder: '#ccc' },
+  },
+
+  Image: {
+    small: { width: 50, height: 50, borderRadius: 8, resizeMode: 'cover' },
+    medium: { width: 100, height: 100, borderRadius: 10, resizeMode: 'cover' },
+    large: { width: 200, height: 200, borderRadius: 20, resizeMode: 'cover' },
   },
 };
 
@@ -119,12 +136,12 @@ export const darkTheme: Theme = {
       pressed: { background: '#2C8C78', text: '#fff' },
       disabled: { background: '#6ED8C9', text: '#fff' },
     },
-        Tertiary: {
+    Tertiary: {
       rest: { background: '#858585', text: '#fff' },
       pressed: { background: '#2C8C78', text: '#fff' },
       disabled: { background: '#6ED8C9', text: '#fff' },
     },
-           Delete: {
+    Delete: {
       rest: { background: '#858585', text: '#fff' },
       pressed: { background: '#2C8C78', text: '#fff' },
       disabled: { background: '#6ED8C9', text: '#fff' },

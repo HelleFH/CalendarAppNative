@@ -11,6 +11,7 @@ import { GoogleSignInButton } from '@/components/GoogleSignInButton';
 import Images from '@/assets/images';
 import { useTheme } from '../styles/ThemeProvider';
 import { router } from 'expo-router';
+import { getImageStyle } from '@/styles/ThemeHelpers';
 
 const { theme } = useTheme();
 
@@ -28,23 +29,23 @@ export default function LoginScreen() {
   const register = () => {
     navigation.navigate('RegisterScreen');
   };
-const login = async () => {
-  setError('');
-  try {
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCred.user;
+  const login = async () => {
+    setError('');
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
 
-    if (!user.emailVerified) {
-      alert('Please verify your email before logging in!');
-      return;
+      if (!user.emailVerified) {
+        alert('Please verify your email before logging in!');
+        return;
+      }
+
+      alert('Logged in!');
+      router.replace('/Calendar');
+    } catch (err: any) {
+      setError(err.message);
     }
-
-    alert('Logged in!');
-    router.replace('/Calendar');
-  } catch (err: any) {
-    setError(err.message);
-  }
-};
+  };
 
 
   const signInWithGoogle = async () => {
@@ -70,7 +71,7 @@ const login = async () => {
       }
 
       alert('Logged in with Google!');
-          router.replace('/Calendar');
+      router.replace('/Calendar');
 
     } catch (err: any) {
       setError(err.message);
@@ -89,26 +90,21 @@ const login = async () => {
       }}
     >
 
-<Image
-  source={Images.HomeScreenBG}
-  style={{
-    width: 200,
-    height: 200,               
-    resizeMode: 'cover',
-    borderRadius: theme.radius.md,
-    marginBottom: theme.spacing.md,
-  }}
-/>
+      <Image
+        source={Images.HomeScreenBG}
+        style={[getImageStyle(theme, 'small'), { marginHorizontal: theme.spacing.sm }]}
 
-<Image
-  source={Images.Logo}
-  style={{
-    width: theme.sizes.logoLarge.width,
-    height: theme.sizes.logoLarge.height,
-    resizeMode: 'contain',
-    marginBottom: theme.spacing.md,
-  }}
-/>
+      />
+
+      <Image
+        source={Images.Logo}
+        style={{
+          width: theme.sizes.logoLarge.width,
+          height: theme.sizes.logoLarge.height,
+          resizeMode: 'contain',
+          marginBottom: theme.spacing.md,
+        }}
+      />
 
       <Text style={{ textAlign: 'center', color: theme.colors.text, marginBottom: theme.spacing.md }}>
         Sign in with your email and password to continue.
@@ -120,8 +116,8 @@ const login = async () => {
           width: screenWidth,
           flexDirection: 'column',
           gap: theme.spacing.md,
-          justifyContent:'center',
-          alignItems:'center'
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
       >
         <FormInput label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />

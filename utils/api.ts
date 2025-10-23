@@ -243,6 +243,7 @@ export const fetchAllEntries = async (userId: string) => {
     return [];
   }
 };
+
 export const useNames = (currentUserId: string | null) => {
   const [allNames, setAllNames] = useState([]);
 

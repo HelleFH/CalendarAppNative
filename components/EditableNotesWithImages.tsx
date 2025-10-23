@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { AppIconButton } from './AppIconButton';
 import { useTheme } from '@/styles/ThemeProvider';
 import { deleteImageHandler } from '@/utils/entryHandler';
+import { getImageStyle } from '@/styles/ThemeHelpers';
 
 interface EditableNotesWithImagesProps {
   name?: string;
@@ -66,13 +67,13 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
   const imageWrapperStyle = {
     flexDirection: 'row',
     marginTop: theme.spacing.sm,
+    gap: theme.spacing.sm,
   };
 
   const imageStyle = {
     width: 100,
     height: 100,
     borderRadius: theme.radius.md,
-    marginRight: theme.spacing.sm,
   };
 
   return (
@@ -98,17 +99,26 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
 
       {allowImages && setImages && (
         <>
-          <AppIconButton icon="add" label="Pick Images" variant="Secondary" onPress={pickImages} />
+          <AppIconButton
+            icon="add"
+            label="Pick Images"
+            variant="Secondary"
+            onPress={pickImages}
+          />
 
           <ScrollView horizontal style={{ marginTop: theme.spacing.sm }}>
             <View >
               {images.map((uri, index) => (
                 <View key={index}>
-                  <Image source={{ uri }} style={imageStyle} />
+                  <Image source={{ uri }}    
+                  style={[getImageStyle(theme, 'large'), { marginHorizontal: theme.spacing.sm }]}
+                  
+ />
                   {allowDeleteImages && (
                     <AppIconButton
                       icon="trash"
                       label="Delete"
+                      variant="Delete"
                       onPress={() => handleDeleteImage(uri)}
                     />
                   )}

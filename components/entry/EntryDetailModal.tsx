@@ -83,17 +83,14 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
 </TouchableOpacity>
 
 <EntryDisplay
-  testID="entry-display"
   key={entry._id}
   entry={entry}
   onEditUpdate={onEditUpdate}
   onDeleteUpdate={onDeleteUpdate}
   onDeleteEntry={onDeleteEntry}
   onEditEntry={onEditEntry}
-  showUpdatesInline={false}
   disableDetailModal={true}
   onRequestCloseModal={onClose}
-    updateEntries={updateEntries}
 />
         </ScrollView>
       </View>

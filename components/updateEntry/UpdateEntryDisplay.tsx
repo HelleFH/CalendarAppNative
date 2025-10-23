@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { fetchAndSetParentEntry } from '@/utils/entryHandler';
 import { EntryDetailModal } from '../entry/EntryDetailModal';
 import { CardWithActions } from '../CardWithActions';
+import { useTheme } from '@/styles/ThemeProvider';
 
 interface UpdateEntryProps {
   _id: string;
@@ -52,6 +53,7 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
   const [parentEntry, setParentEntry] = useState<EntryProps | null>(null);
 
   const images = entry.images ?? [];
+  const { theme } = useTheme();
 
   const handleNextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -80,11 +82,28 @@ useEffect(() => {
     fetchAndSetParentEntry(entry, setParentEntry);
   }
 }, [entry?.parentObjectId]);
-  return (
-<CardWithActions
-  title={`Update for ${parentEntry?.name} (${entry.date})`}
+return (
+  <>
+      <View style={commonStyles.container}>
+  
+ <CardWithActions
+  title={
+    <Text style={{ fontSize: theme.fontSize.lg, color: theme.colors.text, fontWeight: 'bold' }}>
+      Update for{' '}
+      {parentEntry?.name ? (
+        <Text
+          style={{ color: '#1E90FF', textDecorationLine: 'underline' }}
+          onPress={() => setShowEntryModal(true)}
+        >
+          {parentEntry.name}
+        </Text>
+      ) : 'Unknown Parent'}{' '}
+      ({entry.date})
+    </Text>
+  }
   notes={entry.notes}
   images={entry.images ?? []}
+  onPress={() => setShowEntryModal(true)}
   onEdit={() => {
     onEditUpdate(entry);
     setEditingEntryId?.(entry._id);
@@ -102,5 +121,21 @@ useEffect(() => {
   }
 />
 
-  );
+
+    {parentEntry && (
+      <EntryDetailModal
+        visible={showEntryModal}
+        entry={parentEntry}
+        onClose={() => setShowEntryModal(false)}
+        onEditUpdate={onEditUpdate}
+        onDeleteUpdate={onDeleteUpdate}
+        onDeleteEntry={() => {}}
+        onEditEntry={() => {}}
+      />
+    )}
+      </View >
+
+  </>
+);
+
 };

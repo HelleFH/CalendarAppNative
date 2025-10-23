@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { AppIconButton } from '@/components/AppIconButton';
 import { CalendarComponent } from '../../components/CalendarComponent';
@@ -18,6 +18,8 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/App';
 import { deleteReminder } from '@/utils/api';
 import { UpdateEntryProps } from '@/types/UpdateEntryProps';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
 
 interface EntryProps {
   _id: string;
@@ -28,10 +30,7 @@ interface EntryProps {
 }
 
 const HomeScreen = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { currentUserId } = useCurrentUser();
-
-  // 🔹 Control modals
   const [isAddOptionsVisible, setIsAddOptionsVisible] = useState(false);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isReminderModalVisible, setIsReminderModalVisible] = useState(false);
@@ -47,34 +46,34 @@ const HomeScreen = () => {
 
   const [reminderDate, setReminderDate] = useState<Date | undefined>(undefined);
   const [editingUpdateEntry, setEditingUpdateEntry] = useState<UpdateEntryProps | null>(null);
-const {
-  markedDates,
-  handleDayPress,
-  entryForSelectedDate,
-  updateEntryForSelectedDate,
-  reminderForSelectedDate,
-  saveEntry,
-  saveEditedEntry,
-  saveEditedUpdateEntry,
-  handleDeleteEntry,
-  handleDeleteUpdateEntry,
-  handleEditEntry,
-  handleEditUpdate,
-  handleEditReminder,
-  notes,
-  setNotes,
-  images,
-  setImages,
-  name,
-  setName,
-  parentObjectId,
-  setParentObjectId,
-  allNames,
-  handleUpdate,
-} = useEntries(currentUserId!); 
+  const {
+    markedDates,
+    handleDayPress,
+    entryForSelectedDate,
+    updateEntryForSelectedDate,
+    reminderForSelectedDate,
+    saveEntry,
+    saveEditedEntry,
+    saveEditedUpdateEntry,
+    handleDeleteEntry,
+    handleDeleteUpdateEntry,
+    handleEditEntry,
+    handleEditUpdate,
+    handleEditReminder,
+    notes,
+    setNotes,
+    images,
+    setImages,
+    name,
+    setName,
+    parentObjectId,
+    setParentObjectId,
+    allNames,
+    handleUpdate,
+  } = useEntries(currentUserId!);
 
 
-    const handleEdit = (entry: EntryProps) => {
+  const handleEdit = (entry: EntryProps) => {
     setNotes(entry.notes);
     setImages(entry.images || []);
     setName(entry.name);
@@ -83,10 +82,31 @@ const {
     setIsEditing(true);
     setEditingEntryId(entry._id);
   };
+  const [firstName, setFirstName] = useState<string | null>(null);
+
+
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  useEffect(() => {
+    const loadUserName = async () => {
+      if (!currentUserId) return;
+      try {
+        const userRef = doc(db, 'users', currentUserId);
+        const snap = await getDoc(userRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          setFirstName(data.firstName || null);
+        }
+      } catch (err) {
+        console.warn('Failed to load user first name', err);
+      }
+    };
+
+    loadUserName();
+  }, [currentUserId]);
 
 
   return (
-     <ScrollView contentContainerStyle={commonStyles.appContainer}>
+    <ScrollView contentContainerStyle={commonStyles.appContainer}>
       <View
         style={{
           flex: 1,
@@ -96,7 +116,7 @@ const {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}
-      >     <Text>Hi!</Text>
+      >     <Text>Hi, {firstName}</Text>
         <TopMenu
           navigation={navigation}
           currentUserId={currentUserId}
@@ -147,17 +167,17 @@ const {
         }}
       />
 
-{Array.isArray(entryForSelectedDate) &&
-  entryForSelectedDate.map((entry, i) => (
-    <EntryDisplay
-      key={entry._id || i}
-      entry={entry}
-      onDeleteEntry={handleDeleteEntry}
-             onEditEntry={handleEdit}
-          onEditUpdate={handleEditUpdate}
-      onDeleteUpdate={handleDeleteUpdateEntry}
-    />
-  ))}
+      {Array.isArray(entryForSelectedDate) &&
+        entryForSelectedDate.map((entry, i) => (
+          <EntryDisplay
+            key={entry._id || i}
+            entry={entry}
+            onDeleteEntry={handleDeleteEntry}
+            onEditEntry={handleEdit}
+            onEditUpdate={handleEditUpdate}
+            onDeleteUpdate={handleDeleteUpdateEntry}
+          />
+        ))}
 
       {updateEntryForSelectedDate.map((update, i) => (
         <UpdateEntryDisplay
@@ -177,47 +197,46 @@ const {
           onDeleteReminder={deleteReminder}
         />
       ))}
-<CreateEntryModal
-  visible={isCreateModalVisible}
-  onClose={() => {
-    setIsCreateModalVisible(false);
-    setIsEditing(false);
-    setEditingEntryId(null);
-  }}
-  isEditing={isEditing}
-  entryId={editingEntryId || undefined} // ✅ pass the actual id
-  name={name}
-  notes={notes}
-  images={images}
-  setName={setName}
-  setNotes={setNotes}
-  setImages={setImages}
-  selectedDate={selectedDate}
-  saveEditedEntry={saveEditedEntry} // from useEntries()
-  saveEntry={saveEntry}
-/>
+      <CreateEntryModal
+        visible={isCreateModalVisible}
+        onClose={() => {
+          setIsCreateModalVisible(false);
+          setIsEditing(false);
+          setEditingEntryId(null);
+        }}
+        isEditing={isEditing}
+        entryId={editingEntryId || undefined} // ✅ pass the actual id
+        name={name}
+        notes={notes}
+        images={images}
+        setName={setName}
+        setNotes={setNotes}
+        setImages={setImages}
+        selectedDate={selectedDate}
+        saveEditedEntry={saveEditedEntry} // from useEntries()
+        saveEntry={saveEntry}
+      />
 
-<CreateUpdateEntryModal
-  visible={isUpdateModalVisible}
-  onClose={() => setIsUpdateModalVisible(false)}
-  saveEditedUpdateEntry={saveEditedUpdateEntry}
-  notes={notes}
-  setNotes={setNotes}
-  images={images}
-  setImages={setImages}
-  parentObjectId={parentObjectId}
-  setParentObjectId={setParentObjectId}
-  allNames={allNames}
-  name={name}
-  setName={setName}
-  isEditing={false}
-  editingEntry={null}
-  saveEntry={() =>
-    handleUpdate({ parentObjectId, notes, images }) 
-  }
-/>
+      <CreateUpdateEntryModal
+        visible={isUpdateModalVisible}
+        onClose={() => setIsUpdateModalVisible(false)}
+        saveEditedUpdateEntry={saveEditedUpdateEntry}
+        notes={notes}
+        setNotes={setNotes}
+        images={images}
+        setImages={setImages}
+        parentObjectId={parentObjectId}
+        setParentObjectId={setParentObjectId}
+        allNames={allNames}
+        name={name}
+        setName={setName}
+        isEditing={false}
+        editingEntry={null}
+        saveEntry={() =>
+          handleUpdate({ parentObjectId, notes, images })
+        }
+      />
 
-      {/* ⏰ CREATE REMINDER MODAL */}
       <CreateReminderModal
         visible={isReminderModalVisible}
         onClose={() => setIsReminderModalVisible(false)}

@@ -134,9 +134,7 @@ export const saveEntryHandler = async ({
   currentUserId,
   name,
   setMarkedDates,
-  setIsCreateModalVisible,
   setEntryForSelectedDate,
-  setSelectedOriginalEntry,
   setParentObjectId,
   fetchNames,
   handleDayPress,
@@ -165,8 +163,6 @@ export const saveEntryHandler = async ({
       ...prev,
       [selectedDate]: { marked: true, dotColor: '#4CAF50' },
     }));
-    setIsCreateModalVisible(false);
-    setSelectedOriginalEntry(null);
     setParentObjectId(null);
     fetchNames();
     handleDayPress({ dateString: selectedDate });
@@ -402,7 +398,6 @@ try {
     handleDayPress({ dateString: selectedDate });
   } catch (stateUpdateError) {
     console.error('State update failed:', stateUpdateError);
-    alert('Saved, but failed to update UI.');
   }
 } catch (error) {
   console.error('Save failed:', error);
@@ -424,3 +419,4 @@ export const fetchAllEntriesHandler = async ({
   const entries = await fetchAllEntries(userId);
   setEntries(entries);
 };
+

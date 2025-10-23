@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { UpdateEntryDisplay } from '../updateEntry/UpdateEntryDisplay';
-import { DeleteConfirmationModal } from '../DeleteConfirmationModal';
-import { AppIconButton } from '../AppIconButton';
-import { EntryDetailModal } from './EntryDetailModal';
-import { commonStyles } from '@/styles/SharedStyles';
-import { Ionicons } from '@expo/vector-icons';
-import { ReminderDisplay } from '../reminder/ReminderDisplay';
-import { fetchUpdateEntriesByParent, fetchRemindersByParent } from '@/utils/api';
-import { CardWithActions } from '../CardWithActions';
-
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { commonStyles } from "@/styles/SharedStyles";
+import { CardWithActions } from "../CardWithActions";
+import { EntryDetailModal } from "./EntryDetailModal";
+import { ReminderDisplay } from "../reminder/ReminderDisplay";
+import { UpdateEntryDisplay } from "../updateEntry/UpdateEntryDisplay";
+import { fetchUpdateEntriesByParent, fetchRemindersByParent } from "@/utils/api";
+import { AppIconButton } from "../AppIconButton";
+import { useTheme } from "@/styles/ThemeProvider";
 interface EntryProps {
   _id: string;
   name: string;
@@ -23,26 +22,21 @@ interface ReminderProps {
   notes: string;
   parentObjectId?: string;
 }
-interface EntryDisplayProps {
-  entry: EntryProps;
-  onEditEntry: (entry: EntryProps) => void;
-  onEditUpdate: (entry: UpdateEntryProps) => void;
-  onDeleteEntry: (id: string) => void;
-  onDeleteUpdate: (id: string) => void;
-  onPress?: () => void;
-  showUpdatesInline?: boolean;
-  disableDetailModal?: boolean;
- testID?: string;
-   onRequestCloseModal?: () => void;
-  updateEntries?: UpdateEntryProps[];
-}
 interface UpdateEntryProps {
   _id: string;
   date: string;
   notes: string;
   images?: string[];
   parentObjectId?: string;
-   testID?: string;
+}
+interface EntryDisplayProps {
+  entry: EntryProps;
+  onEditEntry: (entry: EntryProps) => void;
+  onEditUpdate: (entry: UpdateEntryProps) => void;
+  onDeleteEntry: (id: string) => void;
+  onDeleteUpdate: (id: string) => void;
+  disableDetailModal?: boolean;
+  onRequestCloseModal?: () => void;
 }
 
 export const EntryDisplay: React.FC<EntryDisplayProps> = ({
@@ -51,76 +45,121 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   onDeleteEntry,
   onEditUpdate,
   onDeleteUpdate,
-
- testID
+  disableDetailModal,
+  onRequestCloseModal,
 }) => {
-
   const [updateEntries, setUpdateEntries] = useState<UpdateEntryProps[]>([]);
+  const [reminders, setReminders] = useState<ReminderProps[]>([]);
   const [showEntryModal, setShowEntryModal] = useState(false);
   const [showUpdateList, setShowUpdateList] = useState(false);
-  const [reminders, setReminders] = useState<ReminderProps[]>([]);
+  const { theme } = useTheme();
 
-useEffect(() => {
-  const loadUpdateEntries = async () => {
-    if (!entry._id) return;
-
-    try {
-      const updates = await fetchUpdateEntriesByParent(entry._id);
-      setUpdateEntries(updates);
-    } catch (err) {
-      console.error('Error loading update entries:', err);
-    }
-  };
-
-  loadUpdateEntries();
-}, [entry._id]);
-
-useEffect(() => {
-  const loadReminders = async () => {
-    if (!entry._id) return;
-
-    try {
-      const fetchedReminders = await fetchRemindersByParent(entry._id);
-      setReminders(fetchedReminders);
-    } catch (err) {
-      console.error('Error loading reminders:', err);
-    }
-  };
-
-  loadReminders();
-}, [entry._id]);
-
+  useEffect(() => {
+    const loadData = async () => {
+      if (!entry._id) return;
+      try {
+        const [updates, fetchedReminders] = await Promise.all([
+          fetchUpdateEntriesByParent(entry._id),
+          fetchRemindersByParent(entry._id),
+        ]);
+        setUpdateEntries(updates);
+        setReminders(fetchedReminders);
+      } catch (err) {
+        console.error("Error loading entry data:", err);
+      }
+    };
+    loadData();
+  }, [entry._id]);
 
   return (
-<CardWithActions
-  title={`${entry.name} (${entry.date})`}
-  subtitle={entry.name}
-  notes={entry.notes}
-  images={entry.images ?? []}
-  onEdit={() => onEditEntry(entry)}
-  onDelete={() => onDeleteEntry(entry._id)}
-  extraActions={
-    updateEntries.length > 0 && (
-      <TouchableOpacity onPress={() => setShowUpdateList((prev) => !prev)}>
-        <Text style={commonStyles.link}>
-          <Ionicons name="eye" size={16} color="#1E90FF" style={commonStyles.icon} />
-          {showUpdateList ? 'Hide Updates' : 'View Updates'}
-        </Text>
-      </TouchableOpacity>
-    )
-  }
-  detailModal={
-    <EntryDetailModal
-      visible={showEntryModal}
-      entry={entry}
-      onClose={() => setShowEntryModal(false)}
-      onEditUpdate={onEditUpdate}
-      onDeleteUpdate={onDeleteUpdate}
-      onDeleteEntry={onDeleteEntry}
-      onEditEntry={onEditEntry}
-    />
-  }
-/>
+    <View
+      style={{
+        flex: 1,
 
+      }}
+    >
+      <CardWithActions
+        title={
+          <Text
+            style={{
+              fontSize: theme.fontSize.lg,
+              color: theme.colors.text,
+              fontWeight: 'bold',
+            }}
+          >
+
+            {entry.name}
+
+          </Text>
+        }
+        notes={entry.notes}
+        images={entry.images ?? []}
+        onPress={() => {
+          if (!disableDetailModal) setShowEntryModal(true);
+        }}
+        onImagePress={() => setShowEntryModal(true)}
+        onEdit={() => {
+          onEditEntry(entry);
+          onRequestCloseModal?.();
+        }}
+        onParentPress={() => setShowEntryModal(true)}
+        onDelete={() => onDeleteEntry(entry._id)}
+        extraActions={
+          updateEntries.length > 0 && (
+            <TouchableOpacity onPress={() => setShowUpdateList((prev) => !prev)}>
+              <Text
+                style={{
+                  fontSize: theme.fontSize.md,
+                  color: '#1E90FF',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Ionicons
+                  name={showUpdateList ? 'eye-off' : 'eye'}
+                  size={theme.fontSize.md}
+                  color="#1E90FF"
+                  style={{ marginRight: theme.spacing.xs }}
+                />
+                {showUpdateList ? 'Hide Updates' : 'View Updates'}
+              </Text>
+            </TouchableOpacity>
+          )
+        }
+      />
+
+      {/* Toggle update list */}
+      {showUpdateList &&
+        updateEntries.map((u) => (
+          <UpdateEntryDisplay
+            key={u._id}
+            entry={{ ...u, images: u.images ?? [] }}
+            onEditUpdate={onEditUpdate}
+            onDeleteUpdate={onDeleteUpdate}
+          />
+        ))}
+
+      {/* Related reminders */}
+      {reminders.length > 0 &&
+        reminders.map((reminder) => (
+          <ReminderDisplay
+            key={reminder._id}
+            reminder={reminder}
+            onEditReminder={() => { }}
+            onDeleteReminder={() => { }}
+          />
+        ))}
+
+      {/* Single entry detail modal */}
+      <EntryDetailModal
+        visible={showEntryModal}
+        entry={entry}
+        onClose={() => setShowEntryModal(false)}
+        onEditUpdate={onEditUpdate}
+        onDeleteUpdate={onDeleteUpdate}
+        onDeleteEntry={onDeleteEntry}
+        onEditEntry={onEditEntry}
+      />
+    </View>
   );
 };

@@ -12,32 +12,33 @@ import {
 } from '../utils/entryHandler';
 import { useNames } from '../utils/api';
 import { useCurrentUser } from '../components/CurrentUser';
-
-export const useEntries = (_id: string) => {
+export const useEntries = (_id?: string) => {
   const { currentUserId } = useCurrentUser();
-  const { allNames, fetchNames } = useNames(currentUserId);
 
-  // --- Shared state ---
+  const { allNames, fetchNames } = useNames(currentUserId ?? ''); 
+
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [notes, setNotes] = useState<string>('');
+  const [notes, setNotes] = useState('');
   const [images, setImages] = useState<string[]>([]);
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState('');
   const [markedDates, setMarkedDates] = useState<{ [date: string]: any }>({});
   const [entryForSelectedDate, setEntryForSelectedDate] = useState<any[]>([]);
   const [updateEntryForSelectedDate, setUpdateEntryForSelectedDate] = useState<any[]>([]);
   const [reminderForSelectedDate, setReminderForSelectedDate] = useState<any[]>([]);
   const [parentObjectId, setParentObjectId] = useState<string | null>(null);
-const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
-
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
 
-
+    useEffect(() => {
+    if (!currentUserId) return;
+    handleDayPress(selectedDate);
+  }, [currentUserId]);
 
   const handleDayPress = async (day: any) => {
     if (!currentUserId) return;
 
-    const dateString = day.dateString || day;
+    const dateString = day?.dateString || day;
     setSelectedDate(dateString);
 
     try {
@@ -53,11 +54,7 @@ const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
     }
   };
 
-  useEffect(() => {
-    if (currentUserId) handleDayPress(selectedDate);
-  }, [currentUserId]);
 
-  // --- CRUD handlers (unified and re-exported) ---
   const saveEntry = () => saveEntryHandler({
     selectedDate, notes, images, currentUserId, name,
     setMarkedDates, setEntryForSelectedDate, setParentObjectId, fetchNames, handleDayPress
