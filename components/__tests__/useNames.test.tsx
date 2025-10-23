@@ -22,7 +22,7 @@ describe('fetchNamesForUser', () => {
     const result = await fetchNamesForUser(fakeUserId);
 
     expect(mockedAxios.get).toHaveBeenCalledWith(
-      'http://localhost:5000/entries/names',
+      'https://calendarappnative.onrender.com/entries/names',
       { params: { userId: fakeUserId } }
     );
     expect(result).toEqual(fakeData);
