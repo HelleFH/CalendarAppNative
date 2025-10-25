@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { AppIconButton } from '@/components/AppIconButton';
+
 import { CalendarComponent } from '../../components/CalendarComponent';
 import { EntryDisplay } from '@/components/entry/EntryDisplay';
 import { UpdateEntryDisplay } from '@/components/updateEntry/UpdateEntryDisplay';
@@ -9,7 +9,6 @@ import { CreateEntryModal } from '@/components/entry/CreateEntryModal';
 import { CreateUpdateEntryModal } from '@/components/updateEntry/CreateUpdateEntryModal';
 import { CreateReminderModal } from '@/components/reminder/CreateReminderModal';
 import { AddOptionsModal } from '@/components/AddOptionsModal';
-import { commonStyles } from '@/styles/SharedStyles';
 import { useEntries } from '@/hooks/useEntries';
 import { TopMenu } from '@/components/TopMenu';
 import { useCurrentUser } from '@/components/CurrentUser';
@@ -20,6 +19,9 @@ import { deleteReminder } from '@/utils/api';
 import { UpdateEntryProps } from '@/types/UpdateEntryProps';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedButton } from '@/styles/ThemedTouchable';
+import { ThemeProvider } from '@/styles/ThemeProvider';
 
 interface EntryProps {
   _id: string;
@@ -84,7 +86,6 @@ const HomeScreen = () => {
   };
   const [firstName, setFirstName] = useState<string | null>(null);
 
-
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   useEffect(() => {
     const loadUserName = async () => {
@@ -106,17 +107,11 @@ const HomeScreen = () => {
 
 
   return (
-    <ScrollView contentContainerStyle={commonStyles.appContainer}>
+    
+    <ScrollView>
       <View
-        style={{
-          flex: 1,
-          padding: 15,
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >     <Text>Hi, {firstName}</Text>
+
+      >     <ThemedText>Hi, {firstName}</ThemedText>
         <TopMenu
           navigation={navigation}
           currentUserId={currentUserId}
@@ -124,7 +119,7 @@ const HomeScreen = () => {
         />
       </View>
 
-      <Text style={commonStyles.header}>Plant Calendar</Text>
+      <ThemedText>Plant Calendar</ThemedText>
 
       <CalendarComponent
         selectedDate={selectedDate}
@@ -133,8 +128,8 @@ const HomeScreen = () => {
       />
 
       {/* ➕ ADD BUTTON */}
-      <View style={commonStyles.buttonWrapper}>
-        <AppIconButton
+      <View>
+        <ThemedButton
           icon="add"
           label="Add"
           onPress={() => setIsAddOptionsVisible(true)}

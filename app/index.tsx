@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import React from 'react';
+import { ThemeProvider } from '@/styles/ThemeProvider';
 
 export default function Index() {
   const router = useRouter();
@@ -15,9 +16,11 @@ export default function Index() {
   }, []);
 
   return (
+    <ThemeProvider>
     <View style={styles.container}>
       <ActivityIndicator size="large" color="#007AFF" />
     </View>
+    </ThemeProvider>
   );
 }
 

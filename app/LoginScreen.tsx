@@ -3,24 +3,26 @@ import { ScrollView, Dimensions, KeyboardAvoidingView, Platform, Text, Image, Vi
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { FormInput } from '@/components/FormInput';
-import { AppIconButton } from '@/components/AppIconButton';
+
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/App';
 import { GoogleSignInButton } from '@/components/GoogleSignInButton';
 import Images from '@/assets/images';
-import { useTheme } from '../styles/ThemeProvider';
-import { router } from 'expo-router';
-import { getImageStyle } from '@/styles/ThemeHelpers';
 
-const { theme } = useTheme();
+import { router } from 'expo-router';
+import { buttonStyle, container, getImageStyle, imageStyle, scrollContent, textError, themedText } from '@/styles/ThemeHelpers';
+import { ThemedText } from '@/components/ThemedText';
+import { useTheme } from '@/styles/ThemeProvider';
+import { ThemedButton } from '@/styles/ThemedTouchable';
 
 const googleProvider = new GoogleAuthProvider();
 const screenWidth = Dimensions.get('window').width;
 
 export default function LoginScreen() {
+  const { theme } = useTheme();
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { theme } = useTheme(); // <-- get theme here
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -79,82 +81,30 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: theme.spacing.lg,
-        backgroundColor: theme.colors.background,
-      }}
-    >
+    <KeyboardAvoidingView style={container(theme)} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
 
-      <Image
-        source={Images.HomeScreenBG}
-        style={[getImageStyle(theme, 'small'), { marginHorizontal: theme.spacing.sm }]}
-
-      />
+      <Image source={Images.HomeScreenBG} style={imageStyle(theme, 'small')} />
 
       <Image
         source={Images.Logo}
-        style={{
-          width: theme.sizes.logoLarge.width,
-          height: theme.sizes.logoLarge.height,
-          resizeMode: 'contain',
-          marginBottom: theme.spacing.md,
-        }}
+        style={{ width: theme.sizes.logoLarge.width, height: theme.sizes.logoLarge.height, resizeMode: 'contain', marginBottom: theme.spacing.md }}
       />
 
-      <Text style={{ textAlign: 'center', color: theme.colors.text, marginBottom: theme.spacing.md }}>
+      <ThemedText style={themedText(theme, 'body')}>
         Sign in with your email and password to continue.
-      </Text>
+      </ThemedText>
 
-      <ScrollView
-        contentContainerStyle={{
-          padding: theme.spacing.md,
-          width: screenWidth,
-          flexDirection: 'column',
-          gap: theme.spacing.md,
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
+      <ScrollView contentContainerStyle={scrollContent(theme, screenWidth)}>
         <FormInput label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
         <FormInput label="Password" value={password} onChangeText={setPassword} secureTextEntry />
 
-        {error ? <Text style={{ color: theme.colors.error, marginBottom: theme.spacing.sm }}>{error}</Text> : null}
+        {error && <ThemedText style={[textError(theme), { marginBottom: theme.spacing.sm }]}>{error}</ThemedText>}
 
-        <AppIconButton
-          icon="log-in"
-          label="Login"
-          variant='Primary'
-          style={{
-            borderRadius: theme.radius.md,
-            width: 175,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={login}
-        />
-
+        <ThemedButton icon="log-in" label="Login" variant="Primary"  onPress={login} />
         <GoogleSignInButton onPress={signInWithGoogle} />
-        <Text style={{ textAlign: 'left', fontWeight: '500', color: theme.colors.text }}>
-          Don't have an account yet?
-        </Text>
 
-        <AppIconButton
-          icon="clipboard"
-          label="Register"
-          variant='Tertiary'
-          style={{
-            borderRadius: theme.radius.md,
-            width: 175,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={register}
-        />
+        <ThemedText style={themedText(theme, 'body')}>Don't have an account yet?</ThemedText>
+        <ThemedButton icon="clipboard" label="Register" variant="Tertiary"  onPress={register} />
       </ScrollView>
     </KeyboardAvoidingView>
   );

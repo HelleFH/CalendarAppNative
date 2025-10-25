@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { DeleteConfirmationModal } from '../DeleteConfirmationModal';
-import { AppIconButton } from '../AppIconButton';
-import { commonStyles } from '@/styles/SharedStyles';
 import { UpdateEntryDetailModal } from './UpdateEntryDetailModal';
-import { Ionicons } from '@expo/vector-icons';
 import { fetchAndSetParentEntry } from '@/utils/entryHandler';
 import { EntryDetailModal } from '../entry/EntryDetailModal';
 import { CardWithActions } from '../CardWithActions';
-import { useTheme } from '@/styles/ThemeProvider';
+;
+import { ThemedText } from '../ThemedText';
+
 
 interface UpdateEntryProps {
   _id: string;
@@ -53,7 +51,7 @@ export const UpdateEntryDisplay: React.FC<UpdateEntryDisplayProps> = ({
   const [parentEntry, setParentEntry] = useState<EntryProps | null>(null);
 
   const images = entry.images ?? [];
-  const { theme } = useTheme();
+  
 
   const handleNextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -84,22 +82,21 @@ useEffect(() => {
 }, [entry?.parentObjectId]);
 return (
   <>
-      <View style={commonStyles.container}>
+      <View >
   
  <CardWithActions
   title={
-    <Text style={{ fontSize: theme.fontSize.lg, color: theme.colors.text, fontWeight: 'bold' }}>
+    <ThemedText>
       Update for{' '}
       {parentEntry?.name ? (
-        <Text
-          style={{ color: '#1E90FF', textDecorationLine: 'underline' }}
+        <ThemedText
           onPress={() => setShowEntryModal(true)}
         >
           {parentEntry.name}
-        </Text>
+        </ThemedText>
       ) : 'Unknown Parent'}{' '}
       ({entry.date})
-    </Text>
+    </ThemedText>
   }
   notes={entry.notes}
   images={entry.images ?? []}

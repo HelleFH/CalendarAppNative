@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { useTheme } from '@/styles/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { AppIconButton } from './AppIconButton';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
-import { useTheme } from '../styles/ThemeProvider';
-import { getImageStyle } from '@/styles/ThemeHelpers';
+import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
+import { ThemedButton } from '@/styles/ThemedTouchable';
+import { ThemedImage } from '@/styles/ThemedImage';
 
 interface CardWithActionsProps {
- title: React.ReactNode; 
-   subtitle?: string;
+  title: React.ReactNode;
+  subtitle?: string;
   notes: string;
   images?: string[];
   onEdit?: () => void;
@@ -17,8 +18,6 @@ interface CardWithActionsProps {
   onImagePress?: () => void;
   extraActions?: React.ReactNode;
   detailModal?: React.ReactNode;
-    onParentPress?: () => void;
-
 }
 
 export const CardWithActions: React.FC<CardWithActionsProps> = ({
@@ -36,68 +35,46 @@ export const CardWithActions: React.FC<CardWithActionsProps> = ({
   const [showDelete, setShowDelete] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const { theme } = useTheme();
+
   const handleNext = () => setCurrentImageIndex((i) => (i + 1) % images.length);
   const handlePrev = () =>
     setCurrentImageIndex((i) => (i - 1 + images.length) % images.length);
+  const { theme } = useTheme();
 
   return (
-    <View
-      style={{
-        backgroundColor: theme.colors.background,
-        borderRadius: theme.radius.md,
-        padding: theme.spacing.xl,
-        marginVertical: theme.spacing.sm,
-        display:'flex',
-        maxWidth:400,
-        marginHorizontal:'auto',
-        gap:30,
-      }}
-    >
-      <TouchableOpacity     style={{
-   
-        display:'flex',
-        gap:20,
-        justifyContent:'center',
-        alignItems:'center',
-      }}onPress={onPress} activeOpacity={0.7}>
-        <Text style={{ fontSize: theme.fontSize.lg, color: theme.colors.text, fontWeight: 'bold' }}>
-          {title}
-        </Text>
-        {subtitle && (
-          <Text style={{ fontSize: theme.fontSize.md, color: theme.colors.text }}>
-            {subtitle}
-          </Text>
-        )}
-        <Text style={{ fontSize: theme.fontSize.md, color: theme.colors.text }}>{notes}</Text>
+    
+    <ThemedView variant="cardSmall">
+      <ThemedButton onPress={onPress}>
+        <ThemedText variant="title">{title}</ThemedText>
+        {subtitle && <ThemedText variant="subtitle">{subtitle}</ThemedText>}
+        <ThemedText variant="body">{notes}</ThemedText>
 
         {images.length > 0 && (
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: theme.spacing.sm }}>
+          <ThemedView style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
             {images.length > 1 && (
-              <TouchableOpacity onPress={handlePrev}>
+              <ThemedButton onPress={handlePrev}>
                 <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
-              </TouchableOpacity>
+              </ThemedButton>
             )}
-            <TouchableOpacity onPress={onImagePress}>
-              <Image
-                source={{ uri: images[currentImageIndex] }}
-                style={[getImageStyle(theme, 'large'), { marginHorizontal: theme.spacing.sm }]}
-              />
-            </TouchableOpacity>
-            {images.length > 1 && (
-              <TouchableOpacity onPress={handleNext}>
-                <Ionicons name="chevron-forward" size={24} color={theme.colors.text} />
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-      </TouchableOpacity>
 
-      <View style={{ flexDirection: 'row', gap: theme.spacing.sm,  justifyContent:'center', }}>
-        {onEdit && <AppIconButton icon="pencil" label="Edit" onPress={onEdit} variant="Primary" />}
-        {onDelete && <AppIconButton icon="remove" label="Delete" onPress={() => setShowDelete(true)} variant="Delete" />}
+            <ThemedButton onPress={onImagePress}>
+              <ThemedImage  source={{ uri: images[currentImageIndex] }} style={{ marginHorizontal: theme.spacing.sm }} />
+            </ThemedButton>
+
+            {images.length > 1 && (
+              <ThemedButton onPress={handleNext}>
+                <Ionicons name="chevron-forward" size={24} color={theme.colors.text} />
+              </ThemedButton>
+            )}
+          </ThemedView>
+        )}
+      </ThemedButton>
+
+      <ThemedView style={{ flexDirection: 'row', marginTop: theme.spacing.sm, gap: theme.spacing.sm }}>
+        {onEdit && <ThemedButton icon="pencil" label="Edit" onPress={onEdit} variant="Primary" />}
+        {onDelete && <ThemedButton icon="remove" label="Delete" onPress={() => setShowDelete(true)} variant="Delete" />}
         {extraActions}
-      </View>
+      </ThemedView>
 
       {detailModal}
 
@@ -110,6 +87,6 @@ export const CardWithActions: React.FC<CardWithActionsProps> = ({
         }}
         itemType="entry"
       />
-    </View>
+    </ThemedView>
   );
 };

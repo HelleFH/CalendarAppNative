@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, TouchableOpacity, View } from 'react-native';
 import { UpdateEntryDisplay } from './UpdateEntryDisplay';
-import { commonStyles } from '@/styles/SharedStyles';
+
 import { Ionicons } from '@expo/vector-icons';
 
 interface UpdateEntryProps {
@@ -31,17 +31,10 @@ export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View style={commonStyles.modalOverlay}>
-        <View style={commonStyles.modalContainer}>
+      <View>
+        <View >
           <TouchableOpacity
-            onPress={onClose}
-            style={{
-              position: 'absolute',
-              top: 10,
-              right: 10,
-              zIndex: 1,
-              padding: 8,
-            }}
+   
           >
             <Ionicons name="close" size={24} color="black" />
           </TouchableOpacity>

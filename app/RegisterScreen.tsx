@@ -4,10 +4,14 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { UserForm } from '@/components/UserForm';
-import { useTheme } from '../styles/ThemeProvider';
+
+import { ThemedText } from '@/components/ThemedText';
+import { useTheme } from '@/styles/ThemeProvider';
+
 
 export default function RegisterScreen({ navigation }: any) {
-  const { theme } = useTheme(); // <-- get theme
+  const { theme } = useTheme();
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -52,7 +56,7 @@ export default function RegisterScreen({ navigation }: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: theme.colors.background }}
+      style={theme.layout.screenContainer} // <-- use existing layout style
     >
       <ScrollView contentContainerStyle={{ padding: theme.spacing.md }}>
         <View style={{ marginBottom: theme.spacing.lg }}>
@@ -81,11 +85,11 @@ export default function RegisterScreen({ navigation }: any) {
           />
         </View>
 
-        {error ? (
-          <Text style={{ color: theme.colors.error, fontSize: theme.fontSize.sm, marginBottom: theme.spacing.md }}>
+        {error && (
+          <ThemedText style={{ color: theme.colors.error, marginBottom: theme.spacing.md }}>
             {error}
-          </Text>
-        ) : null}
+          </ThemedText>
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );

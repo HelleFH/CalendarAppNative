@@ -2,10 +2,16 @@ import React from 'react';
 import { View, ScrollView, Text, Image, StyleSheet } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Images from '../../assets/images';
-import { commonStyles } from '@/styles/SharedStyles';
-import { AppIconButton } from '@/components/AppIconButton';
+
 import { getImageStyle } from '@/styles/ThemeHelpers';
-import { useTheme } from '@/styles/ThemeProvider';
+;
+import { ThemedText } from '@/components/ThemedText';
+import { useTheme
+
+ } from '@/styles/ThemeProvider';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedScrollView } from '@/styles/ThemedScrollView';
+import { ThemedButton } from '@/styles/ThemedTouchable';
 type RootStackParamList = {
   LoginScreen: undefined;
   Calendar: undefined;
@@ -15,68 +21,41 @@ type RootStackParamList = {
 
 export default function IndexScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { theme } = useTheme();
+    const {theme} = useTheme();
+
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: theme.colors.background }}
-      contentContainerStyle={{
-        padding: theme.spacing.lg,
-        alignItems: 'center',
-        justifyContent:'center',
-        height:'100%',
-        gap:theme.spacing.lg,
-      }}
+    <ThemedScrollView
+
     >
       <Image
         source={Images.HomeScreenBG}
-        style={[getImageStyle(theme, 'large'), { marginBottom: theme.spacing.md }]}
+        style={[getImageStyle(theme, 'large')]}
       />
 
-      <Text
-        style={{
-          fontSize: theme.fontSize.xl,
-          color: theme.colors.text,
-          fontWeight: 'bold',
-          marginBottom: theme.spacing.sm,
-          textAlign: 'center',
-        }}
+      <ThemedText
+  
       >
         The Plant Calendar 🌱
-      </Text>
+      </ThemedText>
 
-      <Text
-        style={{
-          fontSize: theme.fontSize.lg,
-          color: theme.colors.text,
-          textAlign: 'center',
-          marginBottom: theme.spacing.md,
-        }}
+      <ThemedText
+
       >
         Plant Calendar helps you care for your plants with ease. Upload images, track growth, and never forget to water again.
-      </Text>
+      </ThemedText>
 
-      <Text
-        style={{
-          fontSize: theme.fontSize.lg,
-          color: '#2e7d32',
-          textAlign: 'center',
-          marginBottom: theme.spacing.lg,
-          lineHeight: 22,
-        }}
+      <ThemedText
+
       >
         ✔️ Smart reminders{'\n'}✔️ Growth tracking & notes{'\n'}
-      </Text>
+      </ThemedText>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          gap:20,
-          marginBottom: theme.spacing.lg,
-        }}
+      <ThemedView
+ 
+ 
       >
-        <AppIconButton
+        <ThemedButton
           icon="log-in"
           label="Login"
           onPress={() => navigation.navigate('LoginScreen')}
@@ -84,14 +63,14 @@ export default function IndexScreen() {
           variant="Primary"
         />
 
-        <AppIconButton
+        <ThemedButton
           icon="add"
           label="Get Started"
           onPress={() => navigation.navigate('LoginScreen')}
           disabled={false}
           variant="Secondary"
         />
-      </View>
-    </ScrollView>
+      </ThemedView>
+    </ThemedScrollView>
   );
 };

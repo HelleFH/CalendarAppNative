@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Button, TextInput, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { AppIconButton } from '../AppIconButton';
-import { commonStyles } from '@/styles/SharedStyles';
+
 import { SelectEntryForReminder } from './SelectEntryForReminder';
 import { BaseModal } from '../baseModal';
-import { useTheme } from '@/styles/ThemeProvider'; // <-- import your hook
+; // <-- import your hook
 
 interface CreateReminderModalProps {
   visible: boolean;
@@ -36,7 +35,7 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
   setName,
   setImages,
 }) => {
-  const { theme } = useTheme(); // <-- get theme here
+   // <-- get theme here
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -88,17 +87,8 @@ export const CreateReminderModal: React.FC<CreateReminderModalProps> = ({
       />
 
       <TextInput
-        style={{
-          borderWidth: 1,
-          borderColor: theme.colors.border,
-          borderRadius: theme.radius.md,
-          padding: theme.spacing.sm,
-          color: theme.colors.text,
-          backgroundColor: theme.colors.background,
-          marginBottom: theme.spacing.md,
-        }}
+
         placeholder="Enter reminder notes"
-        placeholderTextColor={theme.colors.placeholder}
         value={notes}
         onChangeText={setNotes}
       />

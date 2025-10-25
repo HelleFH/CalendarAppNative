@@ -5,7 +5,7 @@ jest.mock('@expo/vector-icons', () => {
   return {
     Ionicons: (props) => {
       const { name, testID } = props;
-      return <Text testID={testID}>{name}</Text>;
+      return <ThemedText testID={testID}>{name}</ThemedText>;
     },
   };
 });

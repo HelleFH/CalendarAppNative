@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, TextInput, Image, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { AppIconButton } from './AppIconButton';
-import { useTheme } from '@/styles/ThemeProvider';
+
+;
 import { deleteImageHandler } from '@/utils/entryHandler';
 import { getImageStyle } from '@/styles/ThemeHelpers';
-
+import { ThemedButton } from '@/styles/ThemedTouchable';
+import { useTheme } from '@/styles/ThemeProvider';
 interface EditableNotesWithImagesProps {
   name?: string;
   setName?: (name: string) => void;
@@ -31,7 +32,8 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
   allowImages = false,
   allowDeleteImages = false,
 }) => {
-  const { theme } = useTheme();
+  
+const {theme}= useTheme();
 
   const pickImages = async () => {
     if (!setImages) return;
@@ -77,7 +79,7 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
   };
 
   return (
-    <View style={{ width: '100%' }}>
+    <View>
       {showName && setName && (
         <TextInput
           style={inputStyle}
@@ -99,14 +101,14 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
 
       {allowImages && setImages && (
         <>
-          <AppIconButton
+          <ThemedButton
             icon="add"
             label="Pick Images"
             variant="Secondary"
             onPress={pickImages}
           />
 
-          <ScrollView horizontal style={{ marginTop: theme.spacing.sm }}>
+          <ScrollView horizontal >
             <View >
               {images.map((uri, index) => (
                 <View key={index}>
@@ -115,7 +117,7 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
                   
  />
                   {allowDeleteImages && (
-                    <AppIconButton
+                    <ThemedButton
                       icon="trash"
                       label="Delete"
                       variant="Delete"

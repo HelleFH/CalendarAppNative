@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { DeleteConfirmationModal } from '../DeleteConfirmationModal';
-import { AppIconButton } from '../AppIconButton';
-import { commonStyles } from '@/styles/SharedStyles';
+
 import { fetchAndSetParentEntry } from '@/utils/entryHandler';
 import { EntryDetailModal } from '../entry/EntryDetailModal';
 import { Ionicons } from '@expo/vector-icons';

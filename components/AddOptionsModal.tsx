@@ -1,7 +1,9 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { AppIconButton } from '@/components/AppIconButton';
+import { Modal, View, TouchableOpacity } from 'react-native';
+
+import { ThemedText } from './ThemedText';
 import { useTheme } from '@/styles/ThemeProvider';
+import  { ThemedButton } from '@/styles/ThemedTouchable';
 
 interface AddOptionsModalProps {
   visible: boolean;
@@ -28,59 +30,38 @@ export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'rgba(0,0,0,0.3)',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: theme.spacing.md,
-        }}
-      >
+      {/* Overlay */}
+      <View style={theme.layout.screenContainer as any}>
         <View
           style={{
-            backgroundColor: theme.colors.background,
-            borderRadius: theme.radius.md,
-            padding: theme.spacing.md,
-            width: '100%',
+            ...theme.layout.card,
             maxWidth: 350,
             alignItems: 'center',
           }}
         >
-          <Text
-            style={{
-              fontSize: theme.fontSize.xl,
-              fontWeight: '700',
-              marginBottom: theme.spacing.md,
-              color: theme.colors.text,
-              textAlign: 'center',
-            }}
-          >
+          <ThemedText style={{ ...theme.textVariants.title, marginBottom: theme.spacing.md }}>
             What would you like to add?
-          </Text>
+          </ThemedText>
 
-          <AppIconButton
+          <ThemedButton
             icon="document-text-outline"
             variant="Secondary"
             label="New Plant"
             onPress={onAddEntry}
-            style={{ width: BUTTON_WIDTH, marginBottom: theme.spacing.sm }}
           />
 
-          <AppIconButton
+          <ThemedButton
             icon="add"
             variant="Primary"
             label="Plant Update"
             onPress={onAddUpdate}
-            style={{ width: BUTTON_WIDTH, marginBottom: theme.spacing.sm }}
           />
 
-          <AppIconButton
+          <ThemedButton
             icon="alarm-outline"
             variant="Tertiary"
             label="Reminder"
             onPress={onAddReminder}
-            style={{ width: BUTTON_WIDTH, marginBottom: theme.spacing.md }}
           />
 
           <TouchableOpacity
@@ -90,7 +71,9 @@ export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
               paddingHorizontal: theme.spacing.md,
             }}
           >
-            <Text style={{ color: theme.colors.text, fontSize: theme.fontSize.md }}>Cancel</Text>
+            <ThemedText style={{ ...theme.textVariants.body }}>
+              Cancel
+            </ThemedText>
           </TouchableOpacity>
         </View>
       </View>

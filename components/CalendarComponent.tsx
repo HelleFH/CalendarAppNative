@@ -2,6 +2,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { ThemedText } from './ThemedText';
+
 
 interface CalendarComponentProps {
   selectedDate: string;
@@ -50,27 +52,20 @@ dayComponent={({
 
   return (
     <TouchableOpacity onPress={() => onDayPress(date)}>
-      <View style={{ alignItems: 'center', padding: 10 }}>
-        <Text
-          style={{
-            fontWeight: isSelected ? 'bold' : 'normal',
-            color: isSelected ? '#00adf5' : '#000',
-          }}
+      <View >
+        <ThemedText
+
         >
           {date.day}
-        </Text>
-        <View style={{ flexDirection: 'row', gap: 2 }}>
+        </ThemedText>
+        <View>
           {icons.map((iconType, index) => (
-            <Text
+            <ThemedText
               key={index}
-              style={{
-                fontSize: iconType === 'update' ? 10 : 12,
-                marginRight: 2,
-                position:'absolute'
-              }}
+       
             >
               {iconMap[iconType]}
-            </Text>
+            </ThemedText>
           ))}
         </View>
       </View>

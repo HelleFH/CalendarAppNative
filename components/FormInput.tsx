@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, TextInput, TextInputProps, StyleSheet } from 'react-native';
-import { useTheme } from '../styles/ThemeProvider';
+import { View, TextInput, TextInputProps } from 'react-native';
+import { useTheme } from '@/styles/ThemeProvider';
+import { ThemedText } from './ThemedText';
 
 interface FormInputProps extends TextInputProps {
   label: string;
@@ -8,37 +9,42 @@ interface FormInputProps extends TextInputProps {
   required?: boolean;
 }
 
-export const FormInput: React.FC<FormInputProps> = ({ label, error, required, style, ...props }) => {
+export const FormInput: React.FC<FormInputProps> = ({
+  label,
+  error,
+  required,
+  style,
+  editable = true,
+  ...props
+}) => {
   const { theme } = useTheme();
-  const inputState = props.editable === false ? 'disabled' : 'rest';
 
-  const inputStyle = theme.TextInput[inputState];
+  const inputState: 'rest' | 'disabled' = editable ? 'rest' : 'disabled';
+  const inputVariant = theme.TextInput[inputState];
 
   return (
     <View style={{ marginBottom: theme.spacing.md }}>
-      <Text style={{ fontSize: theme.fontSize.md, marginBottom: theme.spacing.xs, fontWeight: '600', color: theme.colors.text }}>
+      <ThemedText variant="body" style={{ marginBottom: theme.spacing.xs }}>
         {label}
-        {required && <Text style={{ color: theme.colors.error }}> *</Text>}
-      </Text>
+        {required && <ThemedText variant="body" style={{ color: theme.colors.error }}> *</ThemedText>}
+      </ThemedText>
+
       <TextInput
         {...props}
-        style={[
-          {
-            borderWidth: 1,
-            borderColor: inputState === 'disabled' ? inputStyle.border : inputStyle.border,
-            borderRadius: theme.radius.md,
-            paddingHorizontal: theme.spacing.sm,
-            paddingVertical: theme.spacing.sm,
-            fontSize: theme.fontSize.lg,
-            color: inputStyle.text,
-            backgroundColor: inputStyle.background,
-          },
-          style,
-        ]}
+        editable={editable}
         placeholder={props.placeholder || label}
-        placeholderTextColor={inputStyle.placeholder}
+        placeholderTextColor={inputVariant.placeholder}
+        style={[
+          inputVariant.style,
+          style, // allow additional style overrides
+        ]}
       />
-      {error && <Text style={{ color: theme.colors.error, fontSize: theme.fontSize.sm, marginTop: theme.spacing.xs }}>{error}</Text>}
+
+      {error && (
+        <ThemedText variant="note" style={{ color: theme.colors.error, marginTop: theme.spacing.xs }}>
+          {error}
+        </ThemedText>
+      )}
     </View>
   );
 };

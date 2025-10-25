@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { commonStyles } from '@/styles/SharedStyles';
+
 import { formStyles } from '@/styles/FormStyles';
 interface Entry {
   _id: string;

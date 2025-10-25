@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { commonStyles } from "@/styles/SharedStyles";
 import { CardWithActions } from "../CardWithActions";
 import { EntryDetailModal } from "./EntryDetailModal";
 import { ReminderDisplay } from "../reminder/ReminderDisplay";
 import { UpdateEntryDisplay } from "../updateEntry/UpdateEntryDisplay";
 import { fetchUpdateEntriesByParent, fetchRemindersByParent } from "@/utils/api";
-import { AppIconButton } from "../AppIconButton";
-import { useTheme } from "@/styles/ThemeProvider";
+import { ThemeProvider } from "@/styles/ThemeProvider";
 interface EntryProps {
   _id: string;
   name: string;
@@ -52,7 +50,6 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   const [reminders, setReminders] = useState<ReminderProps[]>([]);
   const [showEntryModal, setShowEntryModal] = useState(false);
   const [showUpdateList, setShowUpdateList] = useState(false);
-  const { theme } = useTheme();
 
   useEffect(() => {
     const loadData = async () => {
@@ -81,11 +78,7 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
       <CardWithActions
         title={
           <Text
-            style={{
-              fontSize: theme.fontSize.lg,
-              color: theme.colors.text,
-              fontWeight: 'bold',
-            }}
+ 
           >
 
             {entry.name}
@@ -108,18 +101,11 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
           updateEntries.length > 0 && (
             <TouchableOpacity onPress={() => setShowUpdateList((prev) => !prev)}>
               <Text
-                style={{
-                  fontSize: theme.fontSize.md,
-                  color: '#1E90FF',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
+    
               >
                 <Ionicons
                   name={showUpdateList ? 'eye-off' : 'eye'}
-                  size={theme.fontSize.md}
                   color="#1E90FF"
-                  style={{ marginRight: theme.spacing.xs }}
                 />
                 {showUpdateList ? 'Hide Updates' : 'View Updates'}
               </Text>

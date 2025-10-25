@@ -3,7 +3,7 @@ import { ScrollView, KeyboardAvoidingView, Platform, Text, Alert, View } from 'r
 import { auth, db } from '../firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { FormInput } from '@/components/FormInput';
-import { AppIconButton } from '@/components/AppIconButton';
+
 import {
   updateEmail,
   updatePassword,
@@ -12,6 +12,9 @@ import {
 } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native'; // 👈 Import navigation
 import { Ionicons } from '@expo/vector-icons'; // 👈 For a close icon
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedButton } from '@/styles/ThemedTouchable';
+
 
 export default function ProfileScreen() {
   const navigation = useNavigation(); // 👈 Hook
@@ -111,15 +114,15 @@ export default function ProfileScreen() {
     }
   };
 
-  if (loading) return <Text style={{ textAlign: 'center', marginTop: 50 }}>Loading...</Text>;
+  if (loading) return <ThemedText>Loading...</ThemedText>;
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}
+ 
     >
       <ScrollView contentContainerStyle={{ padding: 20 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10 }}>
+        <View >
           <Ionicons
             name="close"
             size={28}
@@ -134,7 +137,7 @@ export default function ProfileScreen() {
         <FormInput label="Country" value={country} onChangeText={setCountry} />
         <FormInput label="Postcode" value={postcode} onChangeText={setPostcode} />
 
-        <Text style={{ fontWeight: '600', marginTop: 20 }}>Change Password</Text>
+        <ThemedText style={{ fontWeight: '600', marginTop: 20 }}>Change Password</ThemedText>
 
         <FormInput
           label="Current Password"
@@ -155,15 +158,15 @@ export default function ProfileScreen() {
           secureTextEntry
         />
 
-        <AppIconButton
+        <ThemedButton
           icon="key"
           label="Change Password"
           onPress={handleChangePassword}
         />
 
-        {error ? <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text> : null}
+        {error ? <ThemedText style={{ color: 'red', marginBottom: 10 }}>{error}</ThemedText> : null}
 
-        <AppIconButton icon="save" label="Save Changes" onPress={saveProfile} />
+        <ThemedButton icon="save" label="Save Changes" onPress={saveProfile} />
       </ScrollView>
     </KeyboardAvoidingView>
   );

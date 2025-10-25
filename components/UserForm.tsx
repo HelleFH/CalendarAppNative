@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { FormInput } from '@/components/FormInput';
-import { AppIconButton } from '@/components/AppIconButton';
+import { ScrollView, View } from 'react-native';
+import { FormInput } from './FormInput';
 import { CountryPicker } from './CountryPicker';
+import { ThemedText } from './ThemedText';
+import { ThemedButton } from '@/styles/ThemedTouchable';
+import { useTheme } from '@/styles/ThemeProvider';
+import { ThemedScrollView } from '@/styles/ThemedScrollView';
+import { ThemedView } from './ThemedView';
 
 interface UserFormProps {
   firstName: string;
@@ -38,100 +42,98 @@ export const UserForm: React.FC<UserFormProps> = ({
   submitLabel,
   error,
 }) => {
-  const [showPicker, setShowPicker] = useState(false);
+  const { theme } = useTheme();
   const [country, setCountry] = useState('');
 
-  return (
-    <ScrollView contentContainerStyle={{ padding: 20 }}>
+    return (
+    <ScrollView contentContainerStyle={theme.layout.screenContainer}>
       {/* Required Fields */}
-
-      {/* 🔐 Password Fields */}
       <FormInput
-        label="Password"
+        label="First Name *"
+        value={firstName}
+        onChangeText={v => onChange('firstName', v)}
+      />
+      <FormInput
+        label="Last Name *"
+        value={lastName}
+        onChangeText={v => onChange('lastName', v)}
+      />
+      <FormInput
+        label="Email *"
+        value={email}
+        onChangeText={v => onChange('email', v)}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+
+      {/* Password Fields */}
+      <FormInput
+        label="Password *"
         value={password}
         onChangeText={v => onChange('password', v)}
         secureTextEntry
-        placeholder="Create a password"
       />
-
       <FormInput
-        label="Confirm Password"
+        label="Confirm Password *"
         value={confirmPassword}
         onChangeText={v => onChange('confirmPassword', v)}
         secureTextEntry
-        placeholder="Re-enter your password"
       />
 
       {/* Country Picker */}
-      <View style={{ marginVertical: 8 }}>
-        <Text style={{ marginBottom: 4 }}>Country</Text>
+      <View style={theme.layout.card.small}>
+        <ThemedText variant="body">Country *</ThemedText>
         <CountryPicker
           value={country}
-          onValueChange={(val) => {
+          onValueChange={val => {
             setCountry(val);
             onChange('country', val);
           }}
         />
-        <Text style={{ marginTop: 4 }}>{country}</Text>
+        <ThemedText variant="body">{country}</ThemedText>
       </View>
 
-  <FormInput
-  label="First Name *"
-  value={firstName}
-  onChangeText={v => onChange('firstName', v)}
-/>
+      {/* Optional Fields */}
+      <FormInput
+        label="Postcode"
+        value={postcode || ''}
+        onChangeText={v => onChange('postcode', v)}
+      />
+      <FormInput
+        label="City"
+        value={city || ''}
+        onChangeText={v => onChange('city', v)}
+      />
+      <FormInput
+        label="Address Line 1"
+        value={addressLine1 || ''}
+        onChangeText={v => onChange('addressLine1', v)}
+      />
+      <FormInput
+        label="Address Line 2"
+        value={addressLine2 || ''}
+        onChangeText={v => onChange('addressLine2', v)}
+      />
+      <FormInput
+        label="Company"
+        value={company || ''}
+        onChangeText={v => onChange('company', v)}
+      />
 
-<FormInput
-  label="Last Name *"
-  value={lastName}
-  onChangeText={v => onChange('lastName', v)}
-/>
+      {/* Error */}
+      {error && (
+        <ThemedText variant="note" style={{ color: theme.colors.error }}>
+          {error}
+        </ThemedText>
+      )}
 
-<FormInput
-  label="Email *"
-  value={email}
-  onChangeText={v => onChange('email', v)}
-  keyboardType="email-address"
-  autoCapitalize="none"
-/>
-
-<FormInput
-  label="Password *"
-  value={password}
-  onChangeText={v => onChange('password', v)}
-  secureTextEntry
-  placeholder="Create a password"
-/>
-
-<FormInput
-  label="Confirm Password *"
-  value={confirmPassword}
-  onChangeText={v => onChange('confirmPassword', v)}
-  secureTextEntry
-  placeholder="Re-enter your password"
-/>
-
-<View style={{ marginVertical: 8 }}>
-  <Text style={{ marginBottom: 4 }}>Country *</Text>
-  <CountryPicker
-    value={country}
-    onValueChange={(val) => {
-      setCountry(val);
-      onChange('country', val);
-    }}
-  />
-  <Text style={{ marginTop: 4 }}>{country}</Text>
-</View>
-
-<FormInput
-  label="Postcode *"
-  value={postcode || ''}
-  onChangeText={v => onChange('postcode', v)}
-/>
-
-      {error ? <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text> : null}
-
-      <AppIconButton icon="save" label={submitLabel} onPress={onSubmit} variant="Primary" />
+      {/* Submit */}
+      <ThemedButton
+        icon="save"
+        label={submitLabel}
+        onPress={onSubmit}
+        variant="Primary"
+      />
     </ScrollView>
   );
 };

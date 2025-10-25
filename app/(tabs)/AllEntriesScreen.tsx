@@ -3,8 +3,10 @@ import { ScrollView, Text } from 'react-native';
 import { EntryDisplay } from '@/components/entry/EntryDisplay';
 import { useCurrentUser } from '@/components/CurrentUser';
 import { fetchAllEntries } from '@/utils/api';
-import { commonStyles } from '@/styles/SharedStyles';
 import { useEntries } from '@/hooks/useEntries';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedScrollView } from '@/styles/ThemedScrollView';
+
 
 interface EntryProps {
   _id: string;
@@ -34,10 +36,10 @@ interface EntryProps {
     loadEntries();
   }, [currentUserId]);
 
-  if (!currentUserId) return <Text>Loading...</Text>; // prevent rendering hooks prematurely
+  if (!currentUserId) return <ThemedText>Loading...</ThemedText>; // prevent rendering hooks prematurely
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16 }}>
+    <ThemedScrollView>
       {entries.length > 0 ? (
         entries.map((entry) => (
           <EntryDisplay
@@ -50,9 +52,9 @@ interface EntryProps {
           />
         ))
       ) : (
-        <Text>No entries available.</Text>
+        <ThemedText>No entries available.</ThemedText>
       )}
-    </ScrollView>
+    </ThemedScrollView>
   );
 };
 export default AllEntriesScreen;

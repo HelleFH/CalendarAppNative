@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Modal, Pressable, Dimensions } from 'react-native';
+import { View, Modal, Pressable, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '@/styles/ThemeProvider';
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/App';
+import { useTheme } from '@/styles/ThemeProvider';
+import { ThemedButton } from '@/styles/ThemedTouchable';
 
 interface TopMenuProps {
   navigation: NavigationProp<RootStackParamList>;
@@ -14,7 +15,7 @@ interface TopMenuProps {
 export const TopMenu: React.FC<TopMenuProps> = ({ navigation, currentUserId, onLogout }) => {
   const { theme } = useTheme();
   const [menuVisible, setMenuVisible] = useState(false);
-  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number; width: number }>({ x: 0, y: 0, width: 0 });
+  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const buttonRef = useRef<View>(null);
 
   const toggleMenu = () => {
@@ -23,48 +24,40 @@ export const TopMenu: React.FC<TopMenuProps> = ({ navigation, currentUserId, onL
         const screenWidth = Dimensions.get('window').width;
         const menuWidth = theme.sizes.menuWidth;
         const safeLeft = Math.min(px, screenWidth - menuWidth - theme.spacing.sm);
-        setMenuPosition({ x: safeLeft, y: py + height, width: menuWidth });
+        setMenuPosition({ x: safeLeft, y: py + height });
       });
     }
     setMenuVisible(!menuVisible);
   };
 
+  const handleNavigate = (screen: keyof RootStackParamList) => {
+    toggleMenu();
+    navigation.navigate(screen);
+  };
+
   return (
-    <View style={{ alignItems: 'flex-start', padding: theme.spacing.sm }}>
-      <TouchableOpacity ref={buttonRef} onPress={toggleMenu} style={{ padding: theme.spacing.xs }}>
-        <Ionicons name="menu" size={28} color={theme.colors.text} />
-      </TouchableOpacity>
+    <View style={theme.layout.topMenu.container}>
+      <ThemedButton
+        icon="menu"
+        variant="Tertiary"
+        onPress={toggleMenu}
+      />
 
       <Modal transparent visible={menuVisible} animationType="fade">
-        <Pressable style={styles.overlay} onPress={toggleMenu}>
-          <View
-            style={[
-              styles.menu,
-              {
-                top: menuPosition.y,
-                left: menuPosition.x,
-                backgroundColor: theme.colors.background,
-                width: theme.sizes.menuWidth,
-                borderRadius: theme.radius.md,
-                shadowColor: theme.colors.border,
-              },
-            ]}
-          >
+        <Pressable style={theme.layout.topMenu.overlay} onPress={toggleMenu}>
+          <View style={[theme.layout.topMenu.menu, { top: menuPosition.y, left: menuPosition.x }]}>
             {currentUserId ? (
               <>
-                <MenuItem
+                <ThemedButton
                   icon="person-circle-outline"
-                  text="Profile"
-                  color={theme.colors.text}
-                  onPress={() => {
-                    toggleMenu();
-                    navigation.navigate('ProfileScreen');
-                  }}
+                  label="Profile"
+                  variant="Tertiary"
+                  onPress={() => handleNavigate('ProfileScreen')}
                 />
-                <MenuItem
+                <ThemedButton
                   icon="log-out-outline"
-                  text="Logout"
-                  color={theme.colors.error}
+                  label="Logout"
+                  variant="Delete"
                   onPress={() => {
                     toggleMenu();
                     onLogout();
@@ -72,14 +65,11 @@ export const TopMenu: React.FC<TopMenuProps> = ({ navigation, currentUserId, onL
                 />
               </>
             ) : (
-              <MenuItem
+              <ThemedButton
                 icon="log-in-outline"
-                text="Login"
-                color={theme.colors.text}
-                onPress={() => {
-                  toggleMenu();
-                  navigation.navigate('LoginScreen');
-                }}
+                label="Login"
+                variant="Tertiary"
+                onPress={() => handleNavigate('LoginScreen')}
               />
             )}
           </View>
@@ -88,44 +78,3 @@ export const TopMenu: React.FC<TopMenuProps> = ({ navigation, currentUserId, onL
     </View>
   );
 };
-
-const MenuItem = ({
-  icon,
-  text,
-  color,
-  onPress,
-}: {
-  icon: keyof typeof Ionicons.glyphMap;
-  text: string;
-  color: string;
-  onPress: () => void;
-}) => (
-  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
-    <Ionicons name={icon} size={22} color={color} />
-    <Text style={[styles.menuText, { color }]}>{text}</Text>
-  </TouchableOpacity>
-);
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-  },
-  menu: {
-    position: 'absolute',
-    paddingVertical: 4,
-    elevation: 5,
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-  },
-  menuText: {
-    fontSize: 16,
-    marginLeft: 10,
-  },
-});

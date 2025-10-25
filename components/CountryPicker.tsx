@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+;
+import { ThemedText } from './ThemedText';
+
 import { useTheme } from '@/styles/ThemeProvider';
+
 
 interface CountryPickerProps {
   value: string;
@@ -16,14 +20,15 @@ const countries = [
 ];
 
 export const CountryPicker: React.FC<CountryPickerProps> = ({ value, onValueChange }) => {
-  const { theme } = useTheme();
+  const {theme} = useTheme();
+
   const inputStyle = theme.TextInput.rest;
 
   return (
-    <View style={{ marginBottom: theme.spacing.md }}>
-      <Text style={{ marginBottom: theme.spacing.xs, fontWeight: '600', fontSize: theme.fontSize.md, color: theme.colors.text }}>
+    <View>
+      <ThemedText>
         Country
-      </Text>
+      </ThemedText>
       <RNPickerSelect
         onValueChange={onValueChange}
         items={countries}
