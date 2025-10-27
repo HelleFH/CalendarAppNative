@@ -12,7 +12,7 @@ import {
 } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native'; // 👈 Import navigation
 import { Ionicons } from '@expo/vector-icons'; // 👈 For a close icon
-import { ThemedText } from '@/components/ThemedText';
+import { ThemedText } from '@/styles/ThemedText';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 
 

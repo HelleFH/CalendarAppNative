@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Modal, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { EntryDisplay } from './EntryDisplay';
-import { ThemedView } from '../ThemedView';
+import { ThemedView } from '@/styles/ThemedView';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 import { useTheme } from '@/styles/ThemeProvider';
 import { ThemedScrollView } from '@/styles/ThemedScrollView';
+import { BaseModal } from '../baseModal';
 
 interface EntryProps {
   _id: string;
@@ -64,41 +65,35 @@ export const EntryDetailModal: React.FC<EntryDetailModalProps> = ({
   if (!entry) return null;
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <ThemedView variant="modalOverlay" style={{ paddingTop: theme.spacing.lg }}>
-        <ThemedScrollView contentContainerStyle={{ paddingHorizontal: theme.spacing.md }}>
-          <ThemedButton
-            onPress={onClose}
-       
-          >
-            <Ionicons name="close" size={24} color={theme.colors.text} />
-          </ThemedButton>
+<BaseModal
+  visible={visible}
+  onClose={onClose}
+  title={entry.name} 
+>
+    <EntryDisplay
+      key={entry._id}
+      entry={entry}
+      onEditUpdate={onEditUpdate}
+      onDeleteUpdate={onDeleteUpdate}
+      onDeleteEntry={onDeleteEntry}
+      onEditEntry={onEditEntry}
+      disableDetailModal={true}
+      onRequestCloseModal={onClose}
+    />
 
-          <EntryDisplay
-            key={entry._id}
-            entry={entry}
-            onEditUpdate={onEditUpdate}
-            onDeleteUpdate={onDeleteUpdate}
-            onDeleteEntry={onDeleteEntry}
-            onEditEntry={onEditEntry}
-            disableDetailModal={true}
-            onRequestCloseModal={onClose}
-          />
+    {updateEntries.map((update) => (
+      <EntryDisplay
+        key={update._id}
+        entry={update as EntryProps}
+        onEditUpdate={onEditUpdate}
+        onDeleteUpdate={onDeleteUpdate}
+        onDeleteEntry={onDeleteEntry}
+        onEditEntry={onEditEntry}
+        disableDetailModal={true}
+        onRequestCloseModal={onClose}
+      />
+    ))}
+</BaseModal>
 
-          {updateEntries.map((update) => (
-            <EntryDisplay
-              key={update._id}
-              entry={update as EntryProps} // cast because update may have different fields
-              onEditUpdate={onEditUpdate}
-              onDeleteUpdate={onDeleteUpdate}
-              onDeleteEntry={onDeleteEntry}
-              onEditEntry={onEditEntry}
-              disableDetailModal={true}
-              onRequestCloseModal={onClose}
-            />
-          ))}
-        </ThemedScrollView>
-      </ThemedView>
-    </Modal>
   );
 };

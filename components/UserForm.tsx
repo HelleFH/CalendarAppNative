@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { FormInput } from './FormInput';
 import { CountryPicker } from './CountryPicker';
-import { ThemedText } from './ThemedText';
+import { ThemedText } from '../styles/ThemedText';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 import { useTheme } from '@/styles/ThemeProvider';
 import { ThemedScrollView } from '@/styles/ThemedScrollView';

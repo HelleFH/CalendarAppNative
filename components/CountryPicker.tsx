@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 ;
-import { ThemedText } from './ThemedText';
+import { ThemedText } from '../styles/ThemedText';
 
 import { useTheme } from '@/styles/ThemeProvider';
 

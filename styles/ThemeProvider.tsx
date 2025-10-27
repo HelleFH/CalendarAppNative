@@ -1,6 +1,6 @@
 // ThemeProvider.tsx
 import React, { ReactNode, createContext, useContext, useState } from 'react';
-import { TextStyle, ViewStyle, ImageStyle } from 'react-native';
+import { TextStyle, ViewStyle } from 'react-native';
 
 // ======================
 // Type Definitions
@@ -34,6 +34,7 @@ export type ImageVariant = {
   width: number;
   height: number;
   borderRadius: number;
+  margin:number;
   resizeMode: 'cover' | 'contain' | 'stretch' | 'center' | 'repeat';
 };
 
@@ -42,6 +43,7 @@ export type TextVariants = {
   subtitle: TextStyle;
   body: TextStyle;
   note: TextStyle;
+  link: TextStyle;
 };
 
 // Card variants
@@ -64,10 +66,14 @@ export type LayoutVariants = {
   screenContainer: ViewStyle;
   card: CardVariants;
   buttonRow: ViewStyle;
-  button: Record<'Primary' | 'Secondary' | 'Tertiary' | 'Delete', ViewStyle>;
   modal: ModalVariants;
   topMenu: topMenu;
-
+  viewVariants: {
+    flexRowLarge: ViewStyle;
+    flexRowSmall: ViewStyle;
+    flexColumnLarge: ViewStyle;
+    flexColumnSmall: ViewStyle;
+  };
 };
 
 export type topMenu = {
@@ -82,6 +88,7 @@ export type topMenu = {
 
 export type Theme = {
   colors: {
+    primary: any;
     text: string;
     textSecondary: string;
     placeholder: string;
@@ -106,12 +113,19 @@ export type Theme = {
     Secondary: ButtonVariant;
     Tertiary: ButtonVariant;
     Delete: ButtonVariant;
+    Edit: ButtonVariant;
+    Close: ButtonVariant;
+
+
   };
   TextInput: TextInputVariant;
+
   Image: {
     small: ImageVariant;
     medium: ImageVariant;
     large: ImageVariant;
+    cardSmall: ImageVariant;
+    cardLarge: ImageVariant;
   };
 };
 
@@ -141,6 +155,39 @@ export const useTheme = (): ThemeContextProps => {
 // ======================
 
 export const lightTheme: Theme = {
+  Button: {
+    Primary: {
+      rest: { background: '#0E4732', text: '#FFFFFF' },
+      pressed: { background: '#0C3E2C', text: '#FFFFFF' },
+      disabled: { background: '#0E4732', text: '#FFFFFF' },
+    },
+    Secondary: {
+      rest: { background: '#2E7D32', text: '#FFFFFF' },
+      pressed: { background: '#276B2C', text: '#FFFFFF' },
+      disabled: { background: '#2E7D32', text: '#FFFFFF' },
+    },
+    Edit: {
+      rest: { background: '#1976D2', text: '#FFFFFF' },
+      pressed: { background: '#1565C0', text: '#FFFFFF' },
+      disabled: { background: '#1976D2', text: '#FFFFFF' },
+    },
+    Tertiary: {
+      rest: { background: 'transparent', text: 'Black' },
+      pressed: { background: 'transparent', text: 'Black' },
+      disabled: { background: 'transparent', text: 'Black' },
+    },
+    Delete: {
+      rest: { background: '#D32F2F', text: '#FFFFFF' },
+      pressed: { background: '#B71C1C', text: '#FFFFFF' },
+      disabled: { background: '#D32F2F', text: '#FFFFFF' },
+    },
+    Close: {
+      rest: { background: 'transparent', text: '#E53E3E' },
+      pressed: { background: 'transparent', text: '#C53030' },
+      disabled: { background: 'transparent', text: '#FFBABA' },
+    },
+  },
+
   colors: {
     text: '#333',
     textSecondary: '#555',
@@ -159,64 +206,78 @@ export const lightTheme: Theme = {
     subtitle: { fontSize: 18, fontWeight: '500', color: '#555', textAlign: 'center' },
     body: { fontSize: 16, color: '#222', textAlign: 'center' },
     note: { fontSize: 14, color: '#777', textAlign: 'center' },
+    link: { fontSize: 14, color: '#777', textAlign: 'center', textDecorationLine: 'underline', },
   },
   layout: {
-
+    viewVariants: {
+      flexRowLarge: { display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: 700, marginHorizontal: 'auto', gap:18, paddingVertical:16, },
+      flexRowSmall: { display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: 400, marginHorizontal: 'auto',gap:16, paddingVertical:16, },
+      flexColumnLarge: { display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: 700, marginHorizontal: 'auto',gap:18, paddingVertical:16, },
+      flexColumnSmall: { display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: 400, marginHorizontal: 'auto' ,gap:16, paddingVertical:16,},
+    },
     topMenu: {
-  container: {
-    alignItems: 'flex-start',
-    padding: 16, // you can use theme.spacing.sm
-  },
-  button: {
-    padding: 8, // theme.spacing.xs
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-  },
-  menu: {
-    position: 'absolute',
-    paddingVertical: 8, // theme.spacing.xs
-    borderRadius: 10, // theme.radius.md
-    backgroundColor: '#fff', // theme.colors.background
-    elevation: 5,
-    shadowColor: '#000', // theme.colors.shadow
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-  },
-  menuItemText: {
-    fontSize: 16,
-    marginLeft: 10,
-    color: '#222', // theme.colors.text
-  },
-},
+      container: {
+        alignItems: 'flex-start',
+        padding: 16,
+      },
+
+      button: {
+        padding: 8,
+      },
+      overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.2)',
+      },
+      menu: {
+        position: 'absolute',
+        paddingVertical: 8, // theme.spacing.xs
+        borderRadius: 10, // theme.radius.md
+        backgroundColor: '#fff', // theme.colors.background
+        elevation: 5,
+        shadowColor: '#000', // theme.colors.shadow
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 2 },
+      },
+      menuItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+      },
+      menuItemText: {
+        fontSize: 16,
+        marginLeft: 10,
+        color: '#222', // theme.colors.text
+      },
+    },
     screenContainer: {
       flexGrow: 1,
       alignItems: 'center',
       justifyContent: 'center',
       padding: 20,
     },
+
     card: {
       small: {
-        backgroundColor: '#f8f9fa',
-        padding: 12,
+        backgroundColor: '#fff',
         borderRadius: 10,
         alignSelf: 'center',
-        width: '80%',
+        width: '100%',
+        maxWidth: 300,
+        marginVertical: 16,
+
+
       },
       large: {
-        backgroundColor: '#f8f9fa',
-        padding: 24,
+        backgroundColor: '#fff',
         borderRadius: 16,
         alignSelf: 'center',
         width: '95%',
+        maxWidth: 500,
+
+
       },
+
       shadow: {
         backgroundColor: '#fff',
         padding: 20,
@@ -227,6 +288,7 @@ export const lightTheme: Theme = {
         elevation: 3,
         alignSelf: 'center',
         width: '90%',
+
       },
     },
     buttonRow: {
@@ -234,37 +296,11 @@ export const lightTheme: Theme = {
       justifyContent: 'center',
       alignItems: 'center',
       gap: 16,
+      width: '100%',
+      padding: 16,
     },
-    button: {
-      Primary: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-      },
-      Secondary: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-      },
-      Tertiary: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-      },
-      Delete: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-      },
-    },
+
+
     modal: {
       overlay: {
         flex: 1,
@@ -274,7 +310,7 @@ export const lightTheme: Theme = {
         padding: 16,
       },
       content: {
-        backgroundColor: '#fff',
+        backgroundColor: 'white',
         borderRadius: 12,
         padding: 20,
         width: '100%',
@@ -293,8 +329,6 @@ export const lightTheme: Theme = {
         width: 200,
       },
     },
-
-
   },
   sizes: {
     logoSmall: {
@@ -307,151 +341,100 @@ export const lightTheme: Theme = {
     },
     menuWidth: 0
   },
-  Button: {
-    Primary: {
-      rest: {
-        background: '',
-        text: '',
-        border: undefined
-      },
-      pressed: {
-        background: '',
-        text: '',
-        border: undefined
-      },
-      disabled: {
-        background: '',
-        text: '',
-        border: undefined
-      }
-    },
-    Secondary: {
-      rest: {
-        background: '',
-        text: '',
-        border: undefined
-      },
-      pressed: {
-        background: '',
-        text: '',
-        border: undefined
-      },
-      disabled: {
-        background: '',
-        text: '',
-        border: undefined
-      }
-    },
-    Tertiary: {
-      rest: {
-        background: '',
-        text: '',
-        border: undefined
-      },
-      pressed: {
-        background: '',
-        text: '',
-        border: undefined
-      },
-      disabled: {
-        background: '',
-        text: '',
-        border: undefined
-      }
-    },
-    Delete: {
-      rest: {
-        background: '',
-        text: '',
-        border: undefined
-      },
-      pressed: {
-        background: '',
-        text: '',
-        border: undefined
-      },
-      disabled: {
-        background: '',
-        text: '',
-        border: undefined
-      }
-    }
-  },
+
   TextInput: {
-  rest: {
-    background: '#fff',
-    border: '#ccc',
-    text: '#000',
-    placeholder: '#aaa',
-    style: {
-      borderWidth: 1,
-      borderRadius: 10,
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      fontSize: 16,
-      color: '#000',
-      backgroundColor: '#fff',
+    rest: {
+      background: '#fff',
+      border: '#ccc',
+      text: '#000',
+      placeholder: '#aaa',
+      style: {
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        fontSize: 16,
+        color: '#000',
+        backgroundColor: '#fff',
+      },
+    },
+    focus: {
+      background: '#fff',
+      border: '#4A90E2',
+      text: '#000',
+      placeholder: '#aaa',
+      style: {
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        fontSize: 16,
+        color: '#000',
+        backgroundColor: '#fff',
+        borderColor: '#4A90E2',
+      },
+    },
+    disabled: {
+      background: '#F5F5F5',
+      border: '#ccc',
+      text: '#aaa',
+      placeholder: '#ccc',
+      style: {
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        fontSize: 16,
+        color: '#aaa',
+        backgroundColor: '#F5F5F5',
+        borderColor: '#ccc',
+      },
     },
   },
-  focus: {
-    background: '#fff',
-    border: '#4A90E2',
-    text: '#000',
-    placeholder: '#aaa',
-    style: {
-      borderWidth: 1,
-      borderRadius: 10,
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      fontSize: 16,
-      color: '#000',
-      backgroundColor: '#fff',
-      borderColor: '#4A90E2',
-    },
-  },
-  disabled: {
-    background: '#F5F5F5',
-    border: '#ccc',
-    text: '#aaa',
-    placeholder: '#ccc',
-    style: {
-      borderWidth: 1,
-      borderRadius: 10,
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      fontSize: 16,
-      color: '#aaa',
-      backgroundColor: '#F5F5F5',
-      borderColor: '#ccc',
-    },
-  },
-},
-// inside LayoutVariants
 
-
-// inside lightTheme.layout
 
 
   Image: {
     small: {
-      width: 0,
-      height: 0,
+      width: 200,
+      height: 100,
       borderRadius: 0,
-      resizeMode: 'contain'
+      resizeMode: 'contain',
+      margin:16,
     },
     medium: {
-      width: 0,
-      height: 0,
-      borderRadius: 0,
-      resizeMode: 'contain'
+      width: 300,
+      height: 200,
+      resizeMode: 'contain',
+      borderRadius: 10,
+      margin:18,
     },
     large: {
-      width: 0,
-      height: 0,
+      width: 400,
+      height: 300,
       borderRadius: 0,
-      resizeMode: 'contain'
-    }
-  }
+      resizeMode: 'cover',
+      margin:22,
+
+    },
+    cardSmall: {
+      width: 120,
+      height: 80,
+      borderRadius: 8,
+      resizeMode: 'cover',
+      margin:16,
+    },
+    cardLarge: {
+      width: 300,
+      height: 200,
+      borderRadius: 12,
+      resizeMode: 'cover',
+            margin:0,
+
+    },
+  },
+
+
 };
 
 
@@ -470,59 +453,86 @@ export const darkTheme: Theme = {
     placeholder: '#bbb',
   },
   Button: {
-    Primary: { rest: { background: '#357ABD', text: '#fff' }, pressed: { background: '#2A5A8D', text: '#fff' }, disabled: { background: '#6B8FBF', text: '#fff' } },
-    Secondary: { rest: { background: '#3AB89E', text: '#fff' }, pressed: { background: '#2C8C78', text: '#fff' }, disabled: { background: '#6ED8C9', text: '#fff' } },
-    Tertiary: { rest: { background: '#858585', text: '#fff' }, pressed: { background: '#2C8C78', text: '#fff' }, disabled: { background: '#6ED8C9', text: '#fff' } },
-    Delete: { rest: { background: '#858585', text: '#fff' }, pressed: { background: '#2C8C78', text: '#fff' }, disabled: { background: '#6ED8C9', text: '#fff' } },
+    Primary: {
+      rest: { background: '#0E4732', text: '#FFFFFF' },
+      pressed: { background: '#0C3E2C', text: '#FFFFFF' },
+      disabled: { background: '#0E4732', text: '#FFFFFF' },
+    },
+    Secondary: {
+      rest: { background: '#2E7D32', text: '#FFFFFF' },
+      pressed: { background: '#276B2C', text: '#FFFFFF' },
+      disabled: { background: '#2E7D32', text: '#FFFFFF' },
+    },
+    Edit: {
+      rest: { background: '#1976D2', text: '#FFFFFF' },
+      pressed: { background: '#1565C0', text: '#FFFFFF' },
+      disabled: { background: '#1976D2', text: '#FFFFFF' },
+    },
+    Delete: {
+      rest: { background: '#D32F2F', text: '#FFFFFF' },
+      pressed: { background: '#B71C1C', text: '#FFFFFF' },
+      disabled: { background: '#D32F2F', text: '#FFFFFF' },
+    },
+    Close: {
+      rest: { background: 'transparent', text: '#E53E3E' },
+      pressed: { background: 'transparent', text: '#C53030' },
+      disabled: { background: 'transparent', text: '#FFBABA' },
+    },
+    Tertiary: {
+      rest: { background: 'transparent', text: '#E53E3E' },
+      pressed: { background: 'transparent', text: '#C53030' },
+      disabled: { background: 'transparent', text: '#FFBABA' },
+    },
+      
   },
   TextInput: {
-  rest: {
-    background: '#fff',
-    border: '#ccc',
-    text: '#000',
-    placeholder: '#aaa',
-    style: {
-      borderWidth: 1,
-      borderRadius: 10,
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      fontSize: 16,
-      color: '#000',
-      backgroundColor: '#fff',
+    rest: {
+      background: '#fff',
+      border: '#ccc',
+      text: '#000',
+      placeholder: '#aaa',
+      style: {
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        fontSize: 16,
+        color: '#000',
+        backgroundColor: '#fff',
+      },
+    },
+
+    focus: {
+      background: '#fff',
+      border: '#4A90E2',
+      text: '#000',
+      placeholder: '#aaa',
+      style: {
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        fontSize: 16,
+        color: '#000',
+        backgroundColor: '#fff',
+      },
+    },
+    disabled: {
+      background: '#F5F5F5',
+      border: '#ccc',
+      text: '#aaa',
+      placeholder: '#ccc',
+      style: {
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        fontSize: 16,
+        color: '#aaa',
+        backgroundColor: '#F5F5F5',
+      },
     },
   },
-  
-  focus: {
-    background: '#fff',
-    border: '#4A90E2',
-    text: '#000',
-    placeholder: '#aaa',
-    style: {
-      borderWidth: 1,
-      borderRadius: 10,
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      fontSize: 16,
-      color: '#000',
-      backgroundColor: '#fff',
-    },
-  },
-  disabled: {
-    background: '#F5F5F5',
-    border: '#ccc',
-    text: '#aaa',
-    placeholder: '#ccc',
-    style: {
-      borderWidth: 1,
-      borderRadius: 10,
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      fontSize: 16,
-      color: '#aaa',
-      backgroundColor: '#F5F5F5',
-    },
-  },
-},
 
 };
 

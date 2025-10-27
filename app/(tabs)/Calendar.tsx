@@ -19,7 +19,7 @@ import { deleteReminder } from '@/utils/api';
 import { UpdateEntryProps } from '@/types/UpdateEntryProps';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
-import { ThemedText } from '@/components/ThemedText';
+import { ThemedText } from '@/styles/ThemedText';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 import { ThemeProvider } from '@/styles/ThemeProvider';
 
@@ -107,8 +107,15 @@ const HomeScreen = () => {
 
 
   return (
-    
-    <ScrollView>
+
+    <ScrollView style={{
+      width: '100%',
+      maxWidth: 700,
+      alignSelf: 'center',
+      top: 20,
+      padding: 16,
+    }
+    }>
       <View
 
       >     <ThemedText>Hi, {firstName}</ThemedText>
@@ -171,6 +178,7 @@ const HomeScreen = () => {
             onEditEntry={handleEdit}
             onEditUpdate={handleEditUpdate}
             onDeleteUpdate={handleDeleteUpdateEntry}
+              disableDetailModal={false}
           />
         ))}
 

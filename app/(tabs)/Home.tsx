@@ -5,11 +5,11 @@ import Images from '../../assets/images';
 
 import { getImageStyle } from '@/styles/ThemeHelpers';
 ;
-import { ThemedText } from '@/components/ThemedText';
+import { ThemedText } from '@/styles/ThemedText';
 import { useTheme
 
  } from '@/styles/ThemeProvider';
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedView } from '@/styles/ThemedView';
 import { ThemedScrollView } from '@/styles/ThemedScrollView';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 type RootStackParamList = {

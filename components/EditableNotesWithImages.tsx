@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, TextInput, Image, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-
-;
 import { deleteImageHandler } from '@/utils/entryHandler';
-import { getImageStyle } from '@/styles/ThemeHelpers';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 import { useTheme } from '@/styles/ThemeProvider';
+import { ThemedImage } from '@/styles/ThemedImage';
+import { ThemedScrollView } from '@/styles/ThemedScrollView';
+import { FormInput } from './FormInput';
+import { ThemedView } from '@/styles/ThemedView';
+
 interface EditableNotesWithImagesProps {
   name?: string;
   setName?: (name: string) => void;
@@ -18,6 +20,9 @@ interface EditableNotesWithImagesProps {
   showName?: boolean;
   allowImages?: boolean;
   allowDeleteImages?: boolean;
+  onSave: () => void;
+
+
 }
 
 export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = ({
@@ -31,10 +36,12 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
   showName = false,
   allowImages = false,
   allowDeleteImages = false,
-}) => {
-  
-const {theme}= useTheme();
+  onSave,
 
+}) => {
+  const { theme } = useTheme();
+
+  // ✅ Pick images
   const pickImages = async () => {
     if (!setImages) return;
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -50,55 +57,36 @@ const {theme}= useTheme();
     }
   };
 
+  // ✅ Delete image
   const handleDeleteImage = (uri: string) => {
     if (!setImages) return;
     setImages((prev) => prev.filter((img) => img !== uri));
     if (entryId) deleteImageHandler({ entryId, imageUrl: uri, setImages });
   };
 
-  const inputStyle = {
-    backgroundColor: theme.TextInput.rest.background,
-    borderColor: theme.TextInput.rest.border,
-    color: theme.TextInput.rest.text,
-    padding: theme.spacing.sm,
-    borderRadius: theme.radius.md,
-    marginBottom: theme.spacing.md,
-    fontSize: theme.fontSize.md,
-  };
-
-  const imageWrapperStyle = {
-    flexDirection: 'row',
-    marginTop: theme.spacing.sm,
-    gap: theme.spacing.sm,
-  };
-
-  const imageStyle = {
-    width: 100,
-    height: 100,
-    borderRadius: theme.radius.md,
-  };
-
   return (
-    <View>
+    <ThemedScrollView variant="flexColumnSmall">
+      {/* ✅ Use FormInput for Name */}
       {showName && setName && (
-        <TextInput
-          style={inputStyle}
+        <FormInput
+          label="Plant Name"
           placeholder="Enter name"
-          placeholderTextColor={theme.colors.placeholder}
           value={name}
           onChangeText={setName}
+          required
         />
       )}
 
-      <TextInput
-        style={inputStyle}
+      {/* ✅ Use FormInput for Notes */}
+      <FormInput
+        label="Notes"
         placeholder="Add notes"
-        placeholderTextColor={theme.colors.placeholder}
         value={notes}
         onChangeText={setNotes}
         multiline
       />
 
+      {/* ✅ Image Picker */}
       {allowImages && setImages && (
         <>
           <ThemedButton
@@ -108,14 +96,12 @@ const {theme}= useTheme();
             onPress={pickImages}
           />
 
-          <ScrollView horizontal >
-            <View >
+          <ThemedScrollView horizontal variant='flexColumnSmall'>
+            <ThemedView variant='flexRowSmall'>
               {images.map((uri, index) => (
-                <View key={index}>
-                  <Image source={{ uri }}    
-                  style={[getImageStyle(theme, 'large'), { marginHorizontal: theme.spacing.sm }]}
-                  
- />
+                <ThemedView  key={index}>
+                  <ThemedImage source={{ uri }} size="cardSmall" />
+
                   {allowDeleteImages && (
                     <ThemedButton
                       icon="trash"
@@ -124,12 +110,22 @@ const {theme}= useTheme();
                       onPress={() => handleDeleteImage(uri)}
                     />
                   )}
-                </View>
+                </ThemedView>
               ))}
-            </View>
-          </ScrollView>
+             
+            </ThemedView>
+             {(setNotes !== undefined || setName !== undefined || setImages !== undefined) && (
+              <ThemedButton
+                icon="save"
+                label="Save"
+                variant="Primary"
+                onPress={() => onSave()}
+              />
+            )}
+
+          </ThemedScrollView>
         </>
       )}
-    </View>
+    </ThemedScrollView>
   );
 };

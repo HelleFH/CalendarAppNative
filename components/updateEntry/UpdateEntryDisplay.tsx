@@ -5,7 +5,7 @@ import { fetchAndSetParentEntry } from '@/utils/entryHandler';
 import { EntryDetailModal } from '../entry/EntryDetailModal';
 import { CardWithActions } from '../CardWithActions';
 ;
-import { ThemedText } from '../ThemedText';
+import { ThemedText } from '../../styles/ThemedText';
 
 
 interface UpdateEntryProps {

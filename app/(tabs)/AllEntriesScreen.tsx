@@ -4,7 +4,7 @@ import { EntryDisplay } from '@/components/entry/EntryDisplay';
 import { useCurrentUser } from '@/components/CurrentUser';
 import { fetchAllEntries } from '@/utils/api';
 import { useEntries } from '@/hooks/useEntries';
-import { ThemedText } from '@/components/ThemedText';
+import { ThemedText } from '@/styles/ThemedText';
 import { ThemedScrollView } from '@/styles/ThemedScrollView';
 
 

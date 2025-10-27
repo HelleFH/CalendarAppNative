@@ -5,7 +5,7 @@ import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { UserForm } from '@/components/UserForm';
 
-import { ThemedText } from '@/components/ThemedText';
+import { ThemedText } from '@/styles/ThemedText';
 import { useTheme } from '@/styles/ThemeProvider';
 
 

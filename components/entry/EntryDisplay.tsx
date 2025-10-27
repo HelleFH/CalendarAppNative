@@ -7,6 +7,8 @@ import { ReminderDisplay } from "../reminder/ReminderDisplay";
 import { UpdateEntryDisplay } from "../updateEntry/UpdateEntryDisplay";
 import { fetchUpdateEntriesByParent, fetchRemindersByParent } from "@/utils/api";
 import { ThemeProvider } from "@/styles/ThemeProvider";
+import { ThemedView } from "@/styles/ThemedView";
+import { ThemedText } from "../../styles/ThemedText";
 interface EntryProps {
   _id: string;
   name: string;
@@ -50,6 +52,7 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   const [reminders, setReminders] = useState<ReminderProps[]>([]);
   const [showEntryModal, setShowEntryModal] = useState(false);
   const [showUpdateList, setShowUpdateList] = useState(false);
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -69,46 +72,47 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
   }, [entry._id]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-
-      }}
-    >
+    <ThemedView variant="flexColumnSmall">
       <CardWithActions
         title={
-          <Text
- 
+          <ThemedText variant="title"
           >
 
             {entry.name}
 
-          </Text>
+          </ThemedText>
         }
         notes={entry.notes}
         images={entry.images ?? []}
-        onPress={() => {
-          if (!disableDetailModal) setShowEntryModal(true);
-        }}
-        onImagePress={() => setShowEntryModal(true)}
-        onEdit={() => {
-          onEditEntry(entry);
-          onRequestCloseModal?.();
-        }}
-        onParentPress={() => setShowEntryModal(true)}
+        onPress={(e) => {
+    // prevent bubbling from image tap
+    e?.stopPropagation?.();
+    if (!disableDetailModal) setShowEntryModal(false);
+  }}
+
+  onImagePress={(e) => {
+    // prevent triggering card onPress
+    e?.stopPropagation?.();
+    setShowEntryModal(true); // or whatever you intend (e.g. open image viewer)
+  }}
+     onEdit={() => {
+  onRequestCloseModal?.();
+  setTimeout(() => onEditEntry(entry), 300);
+}}
+        
+        size={disableDetailModal ? 'large' : 'small'} 
         onDelete={() => onDeleteEntry(entry._id)}
         extraActions={
           updateEntries.length > 0 && (
             <TouchableOpacity onPress={() => setShowUpdateList((prev) => !prev)}>
-              <Text
-    
+              <ThemedText variant="link"
               >
                 <Ionicons
                   name={showUpdateList ? 'eye-off' : 'eye'}
                   color="#1E90FF"
                 />
                 {showUpdateList ? 'Hide Updates' : 'View Updates'}
-              </Text>
+              </ThemedText>
             </TouchableOpacity>
           )
         }
@@ -146,6 +150,6 @@ export const EntryDisplay: React.FC<EntryDisplayProps> = ({
         onDeleteEntry={onDeleteEntry}
         onEditEntry={onEditEntry}
       />
-    </View>
+    </ThemedView>
   );
 };

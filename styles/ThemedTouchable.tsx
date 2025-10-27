@@ -3,8 +3,8 @@ import React from 'react';
 import { ViewStyle, StyleProp, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/styles/ThemeProvider';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/styles/ThemedText';
+import { ThemedView } from '@/styles/ThemedView';
 
 interface ThemedButtonProps {
   label?: string; // optional now

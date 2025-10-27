@@ -1,9 +1,10 @@
 import React from 'react';
-import { Modal, View, TouchableOpacity } from 'react-native';
-
-import { ThemedText } from './ThemedText';
+import { TouchableOpacity } from 'react-native';
+import { ThemedText } from '../styles/ThemedText';
+import { ThemedButton } from '@/styles/ThemedTouchable';
+import { ThemedView } from '@/styles/ThemedView';
 import { useTheme } from '@/styles/ThemeProvider';
-import  { ThemedButton } from '@/styles/ThemedTouchable';
+import { BaseModal } from './baseModal';
 
 interface AddOptionsModalProps {
   visible: boolean;
@@ -21,62 +22,46 @@ export const AddOptionsModal: React.FC<AddOptionsModalProps> = ({
   onAddReminder,
 }) => {
   const { theme } = useTheme();
-  const BUTTON_WIDTH = 200;
 
   return (
-    <Modal
+    <BaseModal
       visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
+      onClose={onClose}
+      title="What would you like to add?"
+      onSave={() => {}} // not used in this modal
     >
-      {/* Overlay */}
-      <View style={theme.layout.screenContainer as any}>
-        <View
+      {/* 👇 Modal content (children) */}
+      <ThemedView variant="flexColumnSmall">
+        <ThemedButton
+          icon="document-text-outline"
+          variant="Secondary"
+          label="New Plant"
+          onPress={onAddEntry}
+        />
+
+        <ThemedButton
+          icon="add"
+          variant="Primary"
+          label="Plant Update"
+          onPress={onAddUpdate}
+        />
+
+        <ThemedButton
+          icon="alarm-outline"
+          variant="Tertiary"
+          label="Reminder"
+          onPress={onAddReminder}
+        />
+
+        <TouchableOpacity
+          onPress={onClose}
           style={{
-            ...theme.layout.card,
-            maxWidth: 350,
-            alignItems: 'center',
+            paddingVertical: theme.spacing.sm,
+            paddingHorizontal: theme.spacing.md,
           }}
         >
-          <ThemedText style={{ ...theme.textVariants.title, marginBottom: theme.spacing.md }}>
-            What would you like to add?
-          </ThemedText>
-
-          <ThemedButton
-            icon="document-text-outline"
-            variant="Secondary"
-            label="New Plant"
-            onPress={onAddEntry}
-          />
-
-          <ThemedButton
-            icon="add"
-            variant="Primary"
-            label="Plant Update"
-            onPress={onAddUpdate}
-          />
-
-          <ThemedButton
-            icon="alarm-outline"
-            variant="Tertiary"
-            label="Reminder"
-            onPress={onAddReminder}
-          />
-
-          <TouchableOpacity
-            onPress={onClose}
-            style={{
-              paddingVertical: theme.spacing.sm,
-              paddingHorizontal: theme.spacing.md,
-            }}
-          >
-            <ThemedText style={{ ...theme.textVariants.body }}>
-              Cancel
-            </ThemedText>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
+        </TouchableOpacity>
+      </ThemedView>
+    </BaseModal>
   );
 };

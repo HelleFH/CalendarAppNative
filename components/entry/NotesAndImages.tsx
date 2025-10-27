@@ -1,9 +1,5 @@
 import React from 'react';
-import { View, TextInput, Image, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-
-import { formStyles } from '@/styles/FormStyles';
-import { deleteImageHandler } from '@/utils/entryHandler';
 import { EditableNotesWithImages } from '../EditableNotesWithImages';
 
 interface NotesAndImagesProps {
@@ -57,17 +53,18 @@ export const NotesAndImages: React.FC<NotesAndImagesProps> = ({
 };
   return (
   <EditableNotesWithImages
-  showName
-  allowImages
-  allowDeleteImages
-  name={name}
-  setName={setName}
-  notes={notes}
-  setNotes={setNotes}
-  images={images}
-  setImages={setImages}
-  entryId={entryId}
-/>
+      showName
+      allowImages
+      allowDeleteImages
+      name={name}
+      setName={setName}
+      notes={notes}
+      setNotes={setNotes}
+      images={images}
+      setImages={setImages}
+      entryId={entryId} 
+      onSave={saveEntry}
+     />
 
   );
 };

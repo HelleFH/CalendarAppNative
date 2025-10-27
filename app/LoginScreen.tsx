@@ -12,9 +12,10 @@ import Images from '@/assets/images';
 
 import { router } from 'expo-router';
 import { buttonStyle, container, getImageStyle, imageStyle, scrollContent, textError, themedText } from '@/styles/ThemeHelpers';
-import { ThemedText } from '@/components/ThemedText';
+import { ThemedText } from '@/styles/ThemedText';
 import { useTheme } from '@/styles/ThemeProvider';
 import { ThemedButton } from '@/styles/ThemedTouchable';
+import { ThemedScrollView } from '@/styles/ThemedScrollView';
 
 const googleProvider = new GoogleAuthProvider();
 const screenWidth = Dimensions.get('window').width;
@@ -94,7 +95,7 @@ export default function LoginScreen() {
         Sign in with your email and password to continue.
       </ThemedText>
 
-      <ScrollView contentContainerStyle={scrollContent(theme, screenWidth)}>
+<ThemedScrollView variant="flexColumnLarge">
         <FormInput label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
         <FormInput label="Password" value={password} onChangeText={setPassword} secureTextEntry />
 
@@ -105,7 +106,7 @@ export default function LoginScreen() {
 
         <ThemedText style={themedText(theme, 'body')}>Don't have an account yet?</ThemedText>
         <ThemedButton icon="clipboard" label="Register" variant="Tertiary"  onPress={register} />
-      </ScrollView>
+      </ThemedScrollView>
     </KeyboardAvoidingView>
   );
 }

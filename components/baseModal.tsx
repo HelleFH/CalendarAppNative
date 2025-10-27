@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal } from 'react-native';
 
-import { ThemedText } from './ThemedText';
-import { ThemedView } from './ThemedView';
+import { ThemedText } from '../styles/ThemedText';
+import { ThemedView } from '@/styles/ThemedView';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 import { useTheme } from '@/styles/ThemeProvider';
 
@@ -10,47 +10,32 @@ interface BaseModalProps {
   visible: boolean;
   onClose: () => void;
   title: string;
-  saveLabel: string;
-  onSave: () => void;
   children: React.ReactNode;
-  saveVariant?: 'Primary' | 'Secondary' | 'Edit';
 }
 
 export const BaseModal: React.FC<BaseModalProps> = ({
   visible,
   onClose,
   title,
-  saveLabel,
-  onSave,
   children,
-  saveVariant = 'Primary',
 }) => {
   const { theme } = useTheme();
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal visible={visible} animationType="slide" onRequestClose={onClose} transparent={true} >
       {/* Overlay */}
       <ThemedView variant="modalOverlay">
         {/* Modal Content */}
-        <ThemedView variant="modalContent">
-          {/* Title */}
-          <ThemedText variant="title">{title}</ThemedText>
+        {/* Title */}
 
-          {/* Children */}
-          <ThemedView>{children}</ThemedView>
+        {/* Children */}
+        <ThemedView variant='cardLarge'>
+     <ThemedButton onPress={onClose} variant="Tertiary" label='' icon="close"/>
 
-          {/* Save Button */}
-          <ThemedButton
-            icon="save"
-            label={saveLabel}
-            onPress={onSave}
-          />
 
-          {/* Cancel Button */}
-          <ThemedButton onPress={onClose} variant="Tertiary">
-            <ThemedText variant="body">Cancel</ThemedText>
-          </ThemedButton>
+          {children}
         </ThemedView>
+        {/* Cancel Button */}
       </ThemedView>
     </Modal>
   );

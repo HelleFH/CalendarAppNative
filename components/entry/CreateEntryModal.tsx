@@ -7,7 +7,7 @@ interface CreateEntryModalProps {
   onClose: () => void;
   isEditing: boolean;
   saveEntry: () => void | Promise<void>;
-  saveEditedEntry: (id: string) => void | Promise<void>; 
+  saveEditedEntry: (id: string) => void | Promise<void>;
   notes: string;
   setNotes: (notes: string) => void;
   images: string[];
@@ -15,7 +15,7 @@ interface CreateEntryModalProps {
   name: string;
   setName: (name: string) => void;
   selectedDate: string;
-  entryId?: string; 
+  entryId?: string;
 }
 
 interface EntryProps {
@@ -30,7 +30,7 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
   visible,
   onClose,
   isEditing,
-  entryId,           // ✅ add this line
+  entryId,
   saveEntry,
   saveEditedEntry,
   notes,
@@ -43,27 +43,29 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({
 }) => {
   const [editingEntry, setEditingEntry] = useState<EntryProps | null>(null);
 
-const handleSave = async () => {
-  try {
-    if (isEditing && entryId) {
-      await saveEditedEntry(entryId); // ✅ pass the correct entry id
-    } else {
-      await saveEntry();
+  const handleSave = async () => {
+    try {
+      if (isEditing && entryId) {
+        await saveEditedEntry(entryId);
+      } else {
+        await saveEntry();
+      }
+      onClose();
+    } catch (err) {
+      console.error('Error saving entry:', err);
     }
-    onClose();
-  } catch (err) {
-    console.error('Error saving entry:', err);
-  }
-};
+  };
+
+  const modalTitle = isEditing
+    ? `Edit ${name || 'Plant'}`
+    : `Add a plant for ${selectedDate}`;
 
   return (
     <BaseModal
       visible={visible}
       onClose={onClose}
-      title={`Add a plant for ${selectedDate}`}
-      saveLabel={isEditing ? 'Save Changes' : 'Save Entry'}
-      onSave={handleSave}
-      saveVariant="Edit"
+      title={modalTitle} 
+
     >
       <NotesAndImages
         name={name}
@@ -72,8 +74,10 @@ const handleSave = async () => {
         setNotes={setNotes}
         images={images}
         setImages={setImages}
-        saveEntry={saveEntry}
-    entryId={editingEntry?._id} />
+        entryId={editingEntry?._id} 
+        saveEntry={handleSave}
+        
+      />
     </BaseModal>
   );
 };
