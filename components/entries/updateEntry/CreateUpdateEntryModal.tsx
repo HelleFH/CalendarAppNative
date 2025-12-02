@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, TouchableOpacity } from 'react-native';
+import React, {  useEffect } from 'react';
 import { UpdateNotesAndImages } from './UpdateNotesAndImages';
 import { SelectEntryToUpdate } from './SelectEntryToUpdate';
 

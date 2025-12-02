@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { EntryDisplay } from './EntryDisplay';
-import { ThemedView } from '@/styles/ThemedView';
-import { ThemedButton } from '@/styles/ThemedTouchable';
 import { useTheme } from '@/styles/ThemeProvider';
-import { ThemedScrollView } from '@/styles/ThemedScrollView';
 import { BaseModal } from '../baseModal';
 
 interface EntryProps {

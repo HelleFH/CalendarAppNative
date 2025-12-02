@@ -1,7 +1,7 @@
 // __tests__/DeleteConfirmationModal.test.tsx
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { DeleteConfirmationModal } from '../DeleteConfirmationModal';
+import { DeleteConfirmationModal } from '../entries/DeleteConfirmationModal';
 
 describe('DeleteConfirmationModal', () => {
   const onCancelMock = jest.fn();

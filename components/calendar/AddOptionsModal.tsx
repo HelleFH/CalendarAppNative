@@ -1,10 +1,10 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import { ThemedText } from '../styles/ThemedText';
+import { ThemedText } from '@/styles/ThemedText';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 import { ThemedView } from '@/styles/ThemedView';
 import { useTheme } from '@/styles/ThemeProvider';
-import { BaseModal } from './baseModal';
+import { BaseModal } from '../entries/baseModal';
 
 interface AddOptionsModalProps {
   visible: boolean;

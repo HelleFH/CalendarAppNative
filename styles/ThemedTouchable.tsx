@@ -31,7 +31,7 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
   const btnStyle = btnVariant[state];
 
   return (
-    <ThemedView style={{ marginVertical: theme.spacing.xs }}>
+    <ThemedView style={{zIndex:9999}}>
       <ThemedView>
         <Ionicons />
       </ThemedView>
@@ -57,7 +57,6 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
             name={icon}
             size={20}
             color={btnStyle.text}
-            style={{ marginRight: theme.spacing.sm }}
           />
         )}
         <ThemedText

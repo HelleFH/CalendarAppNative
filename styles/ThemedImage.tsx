@@ -3,7 +3,7 @@ import { Image, ImageProps, StyleProp, ImageStyle } from 'react-native';
 import { useTheme } from '@/styles/ThemeProvider';
 
 interface ThemedImageProps extends Omit<ImageProps, 'style'> {
-  size?: 'small' | 'medium' | 'large' | 'cardSmall' | 'cardLarge'; // ✅ added
+  size?: 'small' | 'medium' | 'large' | 'cardSmall' | 'cardLarge'| 'cardMedium'; // ✅ added
   style?: StyleProp<ImageStyle>;
 }
 

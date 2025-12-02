@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-import { View, TextInput, Button, Image, ScrollView, StyleSheet } from 'react-native';
-
+import React from 'react';
 import { EditableNotesWithImages } from '../EditableNotesWithImages';
 
 

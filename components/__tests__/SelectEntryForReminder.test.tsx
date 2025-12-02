@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { SelectEntryForReminder } from '../reminder/SelectEntryForReminder';
+import { SelectEntryForReminder } from '../entries/reminder/SelectEntryForReminder';
 
 describe('SelectEntryForReminder', () => {
   const allNames = [

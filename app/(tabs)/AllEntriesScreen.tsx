@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text } from 'react-native';
-import { EntryDisplay } from '@/components/entry/EntryDisplay';
+import { EntryDisplay } from '@/components/entries/entry/EntryDisplay';
 import { useCurrentUser } from '@/components/CurrentUser';
 import { fetchAllEntries } from '@/utils/api';
 import { useEntries } from '@/hooks/useEntries';

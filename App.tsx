@@ -39,8 +39,8 @@ export default function App() {
 
   return (
     <ThemeProvider> 
-      <NavigationContainer>
-        <Stack.Navigator
+      <NavigationContainer >
+        <Stack.Navigator 
           initialRouteName={user ? 'Calendar' : 'IndexScreen'}
           screenOptions={{ headerShown: false }}
         >

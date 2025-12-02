@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { CreateReminderModal } from '../reminder/CreateReminderModal';
+import { CreateReminderModal } from '../entries/reminder/CreateReminderModal';
 
 jest.mock('../AppIconButton', () => ({
   AppIconButton: ({ onPress, label }: any) => (

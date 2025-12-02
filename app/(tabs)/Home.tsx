@@ -1,17 +1,16 @@
 import React from 'react';
-import { View, ScrollView, Text, Image, StyleSheet } from 'react-native';
+import { Image } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Images from '../../assets/images';
-
 import { getImageStyle } from '@/styles/ThemeHelpers';
-;
 import { ThemedText } from '@/styles/ThemedText';
-import { useTheme
-
- } from '@/styles/ThemeProvider';
+import {
+  useTheme
+} from '@/styles/ThemeProvider';
 import { ThemedView } from '@/styles/ThemedView';
 import { ThemedScrollView } from '@/styles/ThemedScrollView';
 import { ThemedButton } from '@/styles/ThemedTouchable';
+
 type RootStackParamList = {
   LoginScreen: undefined;
   Calendar: undefined;
@@ -21,11 +20,11 @@ type RootStackParamList = {
 
 export default function IndexScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const {theme} = useTheme();
+  const { theme } = useTheme();
 
 
   return (
-    <ThemedScrollView
+    <ThemedScrollView variant='large'
 
     >
       <Image
@@ -34,7 +33,7 @@ export default function IndexScreen() {
       />
 
       <ThemedText
-  
+
       >
         The Plant Calendar 🌱
       </ThemedText>
@@ -51,10 +50,7 @@ export default function IndexScreen() {
         ✔️ Smart reminders{'\n'}✔️ Growth tracking & notes{'\n'}
       </ThemedText>
 
-      <ThemedView
- 
- 
-      >
+      <ThemedView variant='flexColumnLarge'>
         <ThemedButton
           icon="log-in"
           label="Login"

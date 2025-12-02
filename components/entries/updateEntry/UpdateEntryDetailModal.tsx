@@ -1,8 +1,6 @@
 import React from 'react';
-import { Modal, TouchableOpacity, View } from 'react-native';
 import { UpdateEntryDisplay } from './UpdateEntryDisplay';
-
-import { Ionicons } from '@expo/vector-icons';
+import { BaseModal } from '../baseModal';
 
 interface UpdateEntryProps {
   _id: string;
@@ -30,14 +28,11 @@ export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
   if (!entry) return null;
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View>
-        <View >
-          <TouchableOpacity
-   
-          >
-            <Ionicons name="close" size={24} color="black" />
-          </TouchableOpacity>
+    <BaseModal
+      visible={visible}
+      onClose={onClose}
+      title={entry.date}
+    >    
 
           <UpdateEntryDisplay
             key={entry._id}
@@ -47,8 +42,7 @@ export const UpdateEntryDetailModal: React.FC<UpdateEntryDetailModalProps> = ({
             disableDetailModal={true}
             onRequestCloseModal={onClose}
           />
-        </View>
-      </View>
-    </Modal>
+   
+    </BaseModal>
   );
 };

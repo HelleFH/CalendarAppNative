@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Button, TextInput, Text, Platform } from 'react-native';
+import { Button, TextInput, Text, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { SelectEntryForReminder } from './SelectEntryForReminder';

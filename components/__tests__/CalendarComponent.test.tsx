@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { CalendarComponent } from '../CalendarComponent';
+import { CalendarComponent } from '../calendar/CalendarComponent';
 
 describe('CalendarComponent', () => {
   const selectedDate = '2025-10-16';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { UpdateNotesAndImages } from '../updateEntry/UpdateNotesAndImages';
-import { ReminderNotesAndImages } from '../reminder/ReminderNotesAndImages';
+import { UpdateNotesAndImages } from '../entries/updateEntry/UpdateNotesAndImages';
+import { ReminderNotesAndImages } from '../entries/reminder/ReminderNotesAndImages';
 
 describe('UpdateNotesAndImages', () => {
   const mockSetNotes = jest.fn();

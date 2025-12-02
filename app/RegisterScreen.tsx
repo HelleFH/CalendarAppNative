@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, View, Text } from 'react-na
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
-import { UserForm } from '@/components/UserForm';
+import { UserForm } from '@/components/forms/UserForm';
 
 import { ThemedText } from '@/styles/ThemedText';
 import { useTheme } from '@/styles/ThemeProvider';

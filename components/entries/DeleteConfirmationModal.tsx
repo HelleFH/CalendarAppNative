@@ -1,8 +1,7 @@
 import React from 'react';
 import { Modal } from 'react-native';
-
-import { ThemedText } from '../styles/ThemedText';
-import { ThemedView } from '../styles/ThemedView';
+import { ThemedText } from '../../styles/ThemedText';
+import { ThemedView } from '../../styles/ThemedView';
 import { useTheme } from '@/styles/ThemeProvider';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 

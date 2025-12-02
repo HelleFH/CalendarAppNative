@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, Dimensions, KeyboardAvoidingView, Platform, Text, Image, View } from 'react-native';
+import {  Dimensions, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { FormInput } from '@/components/FormInput';
+import { FormInput } from '@/components/forms/FormInput';
 
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -11,7 +11,7 @@ import { GoogleSignInButton } from '@/components/GoogleSignInButton';
 import Images from '@/assets/images';
 
 import { router } from 'expo-router';
-import { buttonStyle, container, getImageStyle, imageStyle, scrollContent, textError, themedText } from '@/styles/ThemeHelpers';
+import {  container, imageStyle, textError, themedText } from '@/styles/ThemeHelpers';
 import { ThemedText } from '@/styles/ThemedText';
 import { useTheme } from '@/styles/ThemeProvider';
 import { ThemedButton } from '@/styles/ThemedTouchable';

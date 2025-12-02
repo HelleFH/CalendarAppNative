@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { deleteImageHandler } from '@/utils/entryHandler';
 import { ThemedButton } from '@/styles/ThemedTouchable';
 import { useTheme } from '@/styles/ThemeProvider';
 import { ThemedImage } from '@/styles/ThemedImage';
 import { ThemedScrollView } from '@/styles/ThemedScrollView';
-import { FormInput } from './FormInput';
+import { FormInput } from '../forms/FormInput';
 import { ThemedView } from '@/styles/ThemedView';
 
 interface EditableNotesWithImagesProps {
@@ -41,7 +40,6 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
 }) => {
   const { theme } = useTheme();
 
-  // ✅ Pick images
   const pickImages = async () => {
     if (!setImages) return;
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -65,8 +63,7 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
   };
 
   return (
-    <ThemedScrollView variant="flexColumnSmall">
-      {/* ✅ Use FormInput for Name */}
+    <ThemedScrollView variant="flexColumnLarge">
       {showName && setName && (
         <FormInput
           label="Plant Name"
@@ -77,7 +74,6 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
         />
       )}
 
-      {/* ✅ Use FormInput for Notes */}
       <FormInput
         label="Notes"
         placeholder="Add notes"
@@ -86,7 +82,6 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
         multiline
       />
 
-      {/* ✅ Image Picker */}
       {allowImages && setImages && (
         <>
           <ThemedButton
@@ -97,23 +92,22 @@ export const EditableNotesWithImages: React.FC<EditableNotesWithImagesProps> = (
           />
 
           <ThemedScrollView horizontal variant='flexColumnSmall'>
-            <ThemedView variant='flexRowSmall'>
               {images.map((uri, index) => (
                 <ThemedView  key={index}>
-                  <ThemedImage source={{ uri }} size="cardSmall" />
-
-                  {allowDeleteImages && (
+                          {allowDeleteImages && (
                     <ThemedButton
                       icon="trash"
-                      label="Delete"
                       variant="Delete"
                       onPress={() => handleDeleteImage(uri)}
+                      style={{width:15, height:15, paddingHorizontal:16, paddingVertical:16, position:'absolute', opacity:0.7, right:0,}}
                     />
                   )}
+                  <ThemedImage source={{ uri }} size="cardSmall" />
+
+          
                 </ThemedView>
               ))}
              
-            </ThemedView>
              {(setNotes !== undefined || setName !== undefined || setImages !== undefined) && (
               <ThemedButton
                 icon="save"

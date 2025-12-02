@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
-import { View, TextInput, Image, ScrollView, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-
-import { formStyles } from '@/styles/FormStyles';
-
 import { EditableNotesWithImages } from '../EditableNotesWithImages';
+
 interface UpdateNotesAndImagesProps {
   notes: string;
   setNotes: (notes: string) => void;

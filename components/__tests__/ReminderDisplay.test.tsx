@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { ReminderDisplay } from '../reminder/ReminderDisplay';
+import { ReminderDisplay } from '../entries/reminder/ReminderDisplay';
 
 // Mock dependencies
 jest.mock('../../components/AppIconButton', () => ({

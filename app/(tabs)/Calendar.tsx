@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
-import { CalendarComponent } from '../../components/CalendarComponent';
-import { EntryDisplay } from '@/components/entry/EntryDisplay';
-import { UpdateEntryDisplay } from '@/components/updateEntry/UpdateEntryDisplay';
-import { ReminderDisplay } from '@/components/reminder/ReminderDisplay';
-import { CreateEntryModal } from '@/components/entry/CreateEntryModal';
-import { CreateUpdateEntryModal } from '@/components/updateEntry/CreateUpdateEntryModal';
-import { CreateReminderModal } from '@/components/reminder/CreateReminderModal';
-import { AddOptionsModal } from '@/components/AddOptionsModal';
+import { CalendarComponent } from '../../components/calendar/CalendarComponent';
+import { EntryDisplay } from '@/components/entries/entry/EntryDisplay';
+import { UpdateEntryDisplay } from '@/components/entries/updateEntry/UpdateEntryDisplay';
+import { ReminderDisplay } from '@/components/entries/reminder/ReminderDisplay';
+import { CreateEntryModal } from '@/components/entries/entry/CreateEntryModal';
+import { CreateUpdateEntryModal } from '@/components/entries/updateEntry/CreateUpdateEntryModal';
+import { CreateReminderModal } from '@/components/entries/reminder/CreateReminderModal';
+import { AddOptionsModal } from '@/components/calendar/AddOptionsModal';
 import { useEntries } from '@/hooks/useEntries';
 import { TopMenu } from '@/components/TopMenu';
 import { useCurrentUser } from '@/components/CurrentUser';
@@ -21,7 +21,6 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { ThemedText } from '@/styles/ThemedText';
 import { ThemedButton } from '@/styles/ThemedTouchable';
-import { ThemeProvider } from '@/styles/ThemeProvider';
 
 interface EntryProps {
   _id: string;
@@ -110,20 +109,20 @@ const HomeScreen = () => {
 
     <ScrollView style={{
       width: '100%',
-      maxWidth: 700,
       alignSelf: 'center',
       top: 20,
       padding: 16,
     }
     }>
-      <View
-
-      >     <ThemedText>Hi, {firstName}</ThemedText>
+      <View>     
+        
+        <ThemedText>Hi, {firstName}</ThemedText>
         <TopMenu
           navigation={navigation}
           currentUserId={currentUserId}
           onLogout={() => logoutUser(navigation)}
         />
+        
       </View>
 
       <ThemedText>Plant Calendar</ThemedText>
@@ -134,15 +133,14 @@ const HomeScreen = () => {
         onDayPress={handleDayPress}
       />
 
-      {/* ➕ ADD BUTTON */}
-      <View>
         <ThemedButton
           icon="add"
           label="Add"
           onPress={() => setIsAddOptionsVisible(true)}
           disabled={false}
+          style={{maxWidth:700, width:'100%', marginTop:16, marginHorizontal:'auto'}}
         />
-      </View>
+
 
       {/* ⚙️ ADD OPTIONS MODAL */}
       <AddOptionsModal
@@ -178,7 +176,7 @@ const HomeScreen = () => {
             onEditEntry={handleEdit}
             onEditUpdate={handleEditUpdate}
             onDeleteUpdate={handleDeleteUpdateEntry}
-              disableDetailModal={false}
+            disableDetailModal={false}
           />
         ))}
 
