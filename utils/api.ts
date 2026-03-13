@@ -9,7 +9,7 @@ interface ReminderData {
   parentObjectId:string;
 }
 
-const API_URL = 'https://calendarappnative.onrender.com';
+const API_URL = 'https://calendarappnative-oqld.onrender.com';
 // Fetch combined marked dates with icons
 export const fetchMarkedDatesCombined = async (userId: string) => {
   try {
